@@ -1,0 +1,1615 @@
+# Complete Dual-Theme Interactive Maths Worksheet
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hareem & Husnain — Maths Mission</title>
+
+<style>
+:root {
+    --primary: #d85b9c;
+    --primary-dark: #b83f7e;
+    --secondary: #f5d9ea;
+    --accent: #9b6bc4;
+    --success: #2eaa65;
+    --error: #e05252;
+    --bg: #fff5fa;
+    --card: #ffffff;
+    --text: #3c3040;
+    --muted: #806f80;
+    --border: #ead6e3;
+    --scratch: #fffafd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.9), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(245,217,234,.8), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* =========================
+   APP HEADER
+========================= */
+
+.app-header {
+    padding: 18px 24px;
+    background: rgba(255,255,255,.92);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(10px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    font-size: 25px;
+    box-shadow: 0 6px 15px rgba(150,80,130,.2);
+}
+
+.brand h1 {
+    font-size: 21px;
+    line-height: 1.1;
+    color: var(--primary-dark);
+}
+
+.brand p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.theme-switcher {
+    display: flex;
+    background: var(--secondary);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.theme-btn {
+    border: none;
+    padding: 9px 15px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.theme-btn.active {
+    background: white;
+    color: var(--primary-dark);
+    box-shadow: 0 2px 7px rgba(0,0,0,.08);
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(310px, .9fr);
+    gap: 18px;
+    padding: 18px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+.worksheet-panel,
+.scratchpad-panel {
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(60,30,60,.07);
+}
+
+/* =========================
+   WORKSHEET
+========================= */
+
+.worksheet-panel {
+    padding: 22px;
+}
+
+.sheet-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 17px;
+    border-bottom: 2px solid var(--border);
+}
+
+.sheet-title h2 {
+    color: var(--primary-dark);
+    font-size: 20px;
+}
+
+.sheet-title p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.check-btn {
+    border: none;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 11px 19px;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(150,80,130,.18);
+    transition: transform .2s, box-shadow .2s;
+    white-space: nowrap;
+}
+
+.check-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(150,80,130,.25);
+}
+
+/* =========================
+   PROBLEM GRID
+========================= */
+
+.problems-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 18px;
+}
+
+.problem-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.problem-card {
+    border: 2px solid var(--border);
+    background: linear-gradient(180deg, #fff, var(--card));
+    border-radius: 16px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+}
+
+.problem-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(
+        to bottom,
+        var(--primary),
+        var(--accent)
+    );
+}
+
+.card-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.card-number {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--secondary);
+    color: var(--primary-dark);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
+
+.card-title h3 {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+/* =========================
+   VERTICAL QUESTIONS
+========================= */
+
+.question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 14px;
+    background: #fcfafc;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    min-height: 50px;
+}
+
+.question-text {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+.answer-input {
+    width: 105px;
+    height: 38px;
+    flex-shrink: 0;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 800;
+    outline: none;
+    transition: .2s;
+}
+
+.answer-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(216,91,156,.12);
+}
+
+.answer-input.correct {
+    border-color: var(--success);
+    background: #ecfbf2;
+    color: #18733f;
+}
+
+.answer-input.incorrect {
+    border-color: var(--error);
+    background: #fff0f0;
+    color: #a52f2f;
+}
+
+.question-number {
+    color: var(--primary-dark);
+    margin-right: 6px;
+}
+
+/* =========================
+   COLUMN ADDITION VISUAL
+========================= */
+
+.column-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 14px;
+    background: #fcfafc;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+}
+
+.column-work {
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.45;
+    text-align: right;
+    min-width: 105px;
+}
+
+.column-work .line {
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 4px;
+}
+
+.column-answer {
+    width: 100px;
+}
+
+/* =========================
+   FEEDBACK
+========================= */
+
+.feedback {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 800;
+    display: none;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.success {
+    background: #eaf9f0;
+    color: #19703e;
+    border: 1px solid #b9e5ca;
+}
+
+.feedback.error {
+    background: #fff0f0;
+    color: #a22d2d;
+    border: 1px solid #efbcbc;
+}
+
+/* =========================
+   SCORE
+========================= */
+
+.score-box {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.score-number {
+    color: var(--primary-dark);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+/* =========================
+   SCRATCHPAD
+========================= */
+
+.scratchpad-panel {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+.scratchpad-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.scratch-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.scratch-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--secondary);
+    display: grid;
+    place-items: center;
+}
+
+.scratch-title h3 {
+    font-size: 15px;
+}
+
+.scratch-title p {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.toolbar {
+    display: flex;
+    gap: 5px;
+}
+
+.tool-btn {
+    border: none;
+    background: #edf0f3;
+    color: #39434d;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tool-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.clear-btn {
+    background: #ef6262;
+    color: white;
+}
+
+.canvas-container {
+    flex: 1;
+    min-height: 500px;
+    position: relative;
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: var(--scratch);
+    background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 25px 25px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+/* =========================
+   DECORATIONS
+========================= */
+
+.decor {
+    position: fixed;
+    pointer-events: none;
+    opacity: .18;
+    z-index: -1;
+    font-size: 42px;
+}
+
+.decor.one {
+    top: 110px;
+    left: 18px;
+}
+
+.decor.two {
+    bottom: 20px;
+    right: 20px;
+}
+
+.decor.three {
+    top: 45%;
+    right: 25%;
+}
+
+/* =========================
+   HUSNAIN THEME
+========================= */
+
+body.husnain {
+    --primary: #2685c7;
+    --primary-dark: #145d91;
+    --secondary: #d8ecfb;
+    --accent: #36a89e;
+    --bg: #f0f8fd;
+    --text: #263844;
+    --muted: #657985;
+    --border: #d1e2ec;
+    --scratch: #f9fdff;
+}
+
+body.husnain .decor.one::after {
+    content: "🚀";
+}
+
+body.husnain .decor.two::after {
+    content: "⚡";
+}
+
+body.husnain .decor.three::after {
+    content: "⭐";
+}
+
+/* =========================
+   HAREEM THEME
+========================= */
+
+body.hareem .decor.one::after {
+    content: "🌸";
+}
+
+body.hareem .decor.two::after {
+    content: "💗";
+}
+
+body.hareem .decor.three::after {
+    content: "✨";
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1050px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .scratchpad-panel {
+        min-height: 500px;
+    }
+
+    .canvas-container {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 760px) {
+    body {
+        overflow: auto;
+    }
+
+    .app-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .theme-switcher {
+        justify-content: center;
+    }
+
+    .workspace {
+        padding: 10px;
+    }
+
+    .worksheet-panel {
+        padding: 14px;
+    }
+
+    .problems-container {
+        grid-template-columns: 1fr;
+    }
+
+    .sheet-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .check-btn {
+        width: 100%;
+    }
+
+    .question {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .answer-input {
+        width: 100%;
+    }
+
+    .scratchpad-panel {
+        min-height: 450px;
+    }
+}
+</style>
+</head>
+
+<body class="hareem">
+
+<div class="decor one"></div>
+<div class="decor two"></div>
+<div class="decor three"></div>
+
+<header class="app-header">
+
+    <div class="brand">
+        <div class="brand-icon" id="brandIcon">🌸</div>
+
+        <div>
+            <h1 id="studentTitle">Hareem's Maths Mission</h1>
+            <p id="studentSubtitle">
+                Place Value • Addition • Subtraction
+            </p>
+        </div>
+    </div>
+
+    <div class="theme-switcher">
+
+        <button
+            class="theme-btn active"
+            id="hareemBtn"
+            onclick="setTheme('hareem')">
+            🌸 Hareem
+        </button>
+
+        <button
+            class="theme-btn"
+            id="husnainBtn"
+            onclick="setTheme('husnain')">
+            🚀 Husnain
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="workspace">
+
+    <!-- =========================
+         WORKSHEET
+    ========================== -->
+
+    <section class="worksheet-panel">
+
+        <div class="sheet-top">
+
+            <div class="sheet-title">
+
+                <h2>
+                    Place Value, Part-Whole Models & Column Addition
+                </h2>
+
+                <p>
+                    Solve each question carefully. Show your working on the scratchpad!
+                </p>
+
+            </div>
+
+            <button
+                class="check-btn"
+                onclick="checkAnswers()">
+                ✓ Check Answers
+            </button>
+
+        </div>
+
+
+        <div class="problems-container">
+
+            <!-- =========================
+                 LEFT COLUMN
+            ========================== -->
+
+            <div class="problem-column">
+
+                <!-- PART 1 -->
+
+                <div class="problem-card">
+
+                    <div class="card-title">
+
+                        <div class="card-number">1</div>
+
+                        <h3>
+                            Complete the part-whole models and number sentences.
+                        </h3>
+
+                    </div>
+
+
+                    <div class="question-list">
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">a.</span>
+                                2 + 4 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="6"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="Question 1a">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">b.</span>
+                                20 + ___ = 60
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="40"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="Question 1b">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">c.</span>
+                                300 + 200 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="500"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="Question 1c">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">d.</span>
+                                3,000 + 4,000 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="7000"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="Question 1d">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PART 2 -->
+
+                <div class="problem-card">
+
+                    <div class="card-title">
+
+                        <div class="card-number">2</div>
+
+                        <h3>
+                            Use place value to complete the number sentences.
+                            <br>
+                            Base number: <strong>1,364</strong>
+                        </h3>
+
+                    </div>
+
+
+                    <div class="question-list">
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">a.</span>
+                                1,364 + 3 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1367"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">b.</span>
+                                1,364 + 30 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1394"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">c.</span>
+                                1,364 + 300 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1664"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">d.</span>
+                                1,364 + 6,000 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="7364"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 RIGHT COLUMN
+            ========================== -->
+
+            <div class="problem-column">
+
+                <!-- PART 3 -->
+
+                <div class="problem-card">
+
+                    <div class="card-title">
+
+                        <div class="card-number">3</div>
+
+                        <h3>
+                            Complete the subtraction place value sentences.
+                            <br>
+                            Base number: <strong>1,364</strong>
+                        </h3>
+
+                    </div>
+
+
+                    <div class="question-list">
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">a.</span>
+                                1,364 − 1 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1363"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">b.</span>
+                                1,364 − 60 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1304"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">c.</span>
+                                1,364 − 200 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="1164"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+                                <span class="question-number">d.</span>
+                                1,364 − 1,000 =
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="364"
+                                type="text"
+                                inputmode="numeric">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PART 4 -->
+
+                <div class="problem-card">
+
+                    <div class="card-title">
+
+                        <div class="card-number">4</div>
+
+                        <h3>
+                            Complete the column additions.
+                        </h3>
+
+                    </div>
+
+
+                    <div class="question-list">
+
+                        <div class="column-question">
+
+                            <div class="column-work">
+                                <div>4,135</div>
+                                <div>+ 2,614</div>
+                                <div class="line"></div>
+                            </div>
+
+                            <input
+                                class="answer-input column-answer"
+                                data-answer="6749"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="4135 plus 2614">
+
+                        </div>
+
+
+                        <div class="column-question">
+
+                            <div class="column-work">
+                                <div>3,142</div>
+                                <div>+ 5,337</div>
+                                <div class="line"></div>
+                            </div>
+
+                            <input
+                                class="answer-input column-answer"
+                                data-answer="8479"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="3142 plus 5337">
+
+                        </div>
+
+
+                        <div class="column-question">
+
+                            <div class="column-work">
+                                <div>5,081</div>
+                                <div>+ 3,704</div>
+                                <div class="line"></div>
+                            </div>
+
+                            <input
+                                class="answer-input column-answer"
+                                data-answer="8785"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="5081 plus 3704">
+
+                        </div>
+
+
+                        <div class="question">
+
+                            <div class="question-text">
+
+                                <span class="question-number">d.</span>
+
+                                Tommy:
+                                <strong>3,420 m</strong>
+                                <br>
+
+                                Eva:
+                                <strong>356 m</strong>
+                                <br>
+
+                                Total distance =
+
+                            </div>
+
+                            <input
+                                class="answer-input"
+                                data-answer="3776"
+                                type="text"
+                                inputmode="numeric"
+                                aria-label="Tommy and Eva total">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="overallFeedback"
+            class="feedback">
+        </div>
+
+
+        <div class="score-box">
+
+            <span>Score:</span>
+
+            <span
+                id="scoreNumber"
+                class="score-number">
+                —
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SCRATCHPAD
+    ========================== -->
+
+    <aside class="scratchpad-panel">
+
+        <div class="scratchpad-header">
+
+            <div class="scratch-title">
+
+                <div
+                    class="scratch-icon"
+                    id="scratchIcon">
+                    ✏️
+                </div>
+
+                <div>
+
+                    <h3>Rough Work Scratchpad</h3>
+
+                    <p>
+                        Draw your working here
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <button
+                    class="tool-btn active"
+                    id="penBtn"
+                    onclick="setTool('pen')">
+                    ✏ Pen
+                </button>
+
+                <button
+                    class="tool-btn"
+                    id="eraserBtn"
+                    onclick="setTool('eraser')">
+                    ⌫ Eraser
+                </button>
+
+                <button
+                    class="tool-btn clear-btn"
+                    onclick="clearCanvas()">
+                    Clear
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="canvas-container"
+            id="canvasContainer">
+
+            <canvas id="scratchpad"></canvas>
+
+        </div>
+
+    </aside>
+
+</main>
+
+
+<script>
+
+/* =========================================
+   THEME SYSTEM
+========================================= */
+
+function setTheme(theme) {
+
+    document.body.classList.remove("hareem", "husnain");
+    document.body.classList.add(theme);
+
+    const hareemBtn =
+        document.getElementById("hareemBtn");
+
+    const husnainBtn =
+        document.getElementById("husnainBtn");
+
+    hareemBtn.classList.toggle(
+        "active",
+        theme === "hareem"
+    );
+
+    husnainBtn.classList.toggle(
+        "active",
+        theme === "husnain"
+    );
+
+    const title =
+        document.getElementById("studentTitle");
+
+    const icon =
+        document.getElementById("brandIcon");
+
+    const scratchIcon =
+        document.getElementById("scratchIcon");
+
+    if (theme === "hareem") {
+
+        title.textContent =
+            "Hareem's Maths Mission";
+
+        icon.textContent = "🌸";
+
+        scratchIcon.textContent = "🌸";
+
+    } else {
+
+        title.textContent =
+            "Husnain's Maths Mission";
+
+        icon.textContent = "🚀";
+
+        scratchIcon.textContent = "🚀";
+
+    }
+
+}
+
+
+/* =========================================
+   ANSWER CHECKING
+========================================= */
+
+function checkAnswers() {
+
+    const inputs =
+        document.querySelectorAll(".answer-input");
+
+    let correct = 0;
+    let answered = 0;
+
+    inputs.forEach(input => {
+
+        const userValue =
+            input.value
+                .trim()
+                .replace(/,/g, "")
+                .replace(/\s/g, "");
+
+        const expectedValue =
+            input
+                .dataset
+                .answer
+                .replace(/,/g, "")
+                .replace(/\s/g, "");
+
+        input.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if (userValue === "") {
+            return;
+        }
+
+        answered++;
+
+        if (userValue === expectedValue) {
+
+            input.classList.add("correct");
+
+            correct++;
+
+        } else {
+
+            input.classList.add("incorrect");
+
+        }
+
+    });
+
+
+    const total =
+        inputs.length;
+
+    const feedback =
+        document.getElementById(
+            "overallFeedback"
+        );
+
+    const scoreNumber =
+        document.getElementById(
+            "scoreNumber"
+        );
+
+
+    scoreNumber.textContent =
+        `${correct} / ${total}`;
+
+
+    feedback.className =
+        "feedback show";
+
+
+    if (correct === total) {
+
+        feedback.classList.add("success");
+
+        const name =
+            document.body.classList.contains("husnain")
+                ? "Husnain"
+                : "Hareem";
+
+        feedback.textContent =
+            `🎉 Amazing, ${name}! You got every question correct!`;
+
+    } else {
+
+        feedback.classList.add("error");
+
+        feedback.textContent =
+            `You got ${correct} out of ${total} correct. ` +
+            `Check the red answers and try again!`;
+
+    }
+
+}
+
+
+/* =========================================
+   SCRATCHPAD
+========================================= */
+
+const canvas =
+    document.getElementById("scratchpad");
+
+const ctx =
+    canvas.getContext("2d");
+
+const container =
+    document.getElementById("canvasContainer");
+
+let isDrawing = false;
+let currentTool = "pen";
+
+
+function resizeCanvas() {
+
+    const rect =
+        container.getBoundingClientRect();
+
+    const oldCanvas =
+        document.createElement("canvas");
+
+    oldCanvas.width =
+        canvas.width;
+
+    oldCanvas.height =
+        canvas.height;
+
+    const oldCtx =
+        oldCanvas.getContext("2d");
+
+    if (canvas.width && canvas.height) {
+        oldCtx.drawImage(canvas, 0, 0);
+    }
+
+    canvas.width =
+        Math.max(1, rect.width);
+
+    canvas.height =
+        Math.max(1, rect.height);
+
+    if (oldCanvas.width && oldCanvas.height) {
+
+        ctx.drawImage(
+            oldCanvas,
+            0,
+            0,
+            oldCanvas.width,
+            oldCanvas.height,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+}
+
+
+function getPosition(event) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    return {
+        x:
+            event.clientX - rect.left,
+
+        y:
+            event.clientY - rect.top
+    };
+
+}
+
+
+canvas.addEventListener(
+    "pointerdown",
+    startDrawing
+);
+
+canvas.addEventListener(
+    "pointermove",
+    draw
+);
+
+canvas.addEventListener(
+    "pointerup",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointercancel",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopDrawing
+);
+
+
+function startDrawing(event) {
+
+    isDrawing = true;
+
+    canvas.setPointerCapture(
+        event.pointerId
+    );
+
+    const pos =
+        getPosition(event);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+}
+
+
+function draw(event) {
+
+    if (!isDrawing) return;
+
+    const pos =
+        getPosition(event);
+
+
+    ctx.lineTo(
+        pos.x,
+        pos.y
+    );
+
+
+    ctx.lineWidth =
+        currentTool === "pen"
+            ? 2.5
+            : 24;
+
+
+    ctx.lineCap =
+        "round";
+
+    ctx.lineJoin =
+        "round";
+
+
+    if (currentTool === "pen") {
+
+        ctx.globalCompositeOperation =
+            "source-over";
+
+        ctx.strokeStyle =
+            "#202020";
+
+    } else {
+
+        /*
+            Destination-out makes the eraser
+            genuinely transparent instead of
+            painting over the background.
+        */
+
+        ctx.globalCompositeOperation =
+            "destination-out";
+
+        ctx.strokeStyle =
+            "rgba(0,0,0,1)";
+
+    }
+
+
+    ctx.stroke();
+
+}
+
+
+function stopDrawing() {
+
+    if (!isDrawing) return;
+
+    isDrawing = false;
+
+    ctx.beginPath();
+
+    ctx.globalCompositeOperation =
+        "source-over";
+
+}
+
+
+function setTool(tool) {
+
+    currentTool =
+        tool;
+
+    document
+        .getElementById("penBtn")
+        .classList.toggle(
+            "active",
+            tool === "pen"
+        );
+
+    document
+        .getElementById("eraserBtn")
+        .classList.toggle(
+            "active",
+            tool === "eraser"
+        );
+
+}
+
+
+function clearCanvas() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+}
+
+
+/* =========================================
+   INITIALISE
+========================================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(
+            resizeCanvas,
+            50
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        resizeCanvas();
+
+    }
+);
+
+
+/* =========================================
+   ENTER KEY = CHECK ANSWERS
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter" &&
+            event.target.classList.contains(
+                "answer-input"
+            )
+        ) {
+
+            checkAnswers();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```

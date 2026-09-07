@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Lines to 10,000</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --blue: #4f7cff;
+        --purple: #7657e8;
+        --green: #22a06b;
+        --green-bg: #e9f8f0;
+        --red: #e55353;
+        --red-bg: #fff0f0;
+        --ink: #26344a;
+        --muted: #718096;
+        --line: #607086;
+        --card: #ffffff;
+        --background: #f3f7fc;
+        --yellow: #ffd45c;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+            radial-gradient(circle at 10% 10%, #e9f2ff 0, transparent 28%),
+            radial-gradient(circle at 90% 20%, #f2ecff 0, transparent 25%),
+            var(--background);
+    }
+
+    .page {
+        width: min(1200px, 94%);
+        margin: 0 auto;
+        padding: 28px 0 50px;
+    }
+
+    /* HEADER */
+
+    .header {
+        text-align: center;
+        background: linear-gradient(135deg, #527cff, #7357e8);
+        color: white;
+        padding: 28px 20px;
+        border-radius: 26px;
+        box-shadow: 0 14px 35px rgba(79, 124, 255, .2);
+        margin-bottom: 24px;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 42px);
+    }
+
+    .header p {
+        margin: 8px 0 0;
+        font-size: 17px;
+        opacity: .95;
+    }
+
+    .instructions {
+        margin-top: 14px;
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 30px;
+        background: rgba(255,255,255,.16);
+        font-size: 14px;
+    }
+
+    /* CARDS */
+
+    .worksheet {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 7px 25px rgba(50, 70, 100, .08);
+        border: 1px solid #e5ebf3;
+    }
+
+    .card.full {
+        grid-column: 1 / -1;
+    }
+
+    .question-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 20px;
+    }
+
+    .badge {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 50%;
+        background: var(--yellow);
+        color: #4a3a00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 21px;
+        box-shadow: 0 4px 0 #e5b738;
+    }
+
+    .question-heading h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .question-description {
+        color: var(--muted);
+        margin: -8px 0 18px 57px;
+        line-height: 1.5;
+    }
+
+    /* NUMBER LINE */
+
+    .number-line-wrap {
+        padding: 40px 18px 20px;
+        overflow-x: auto;
+    }
+
+    .number-line {
+        position: relative;
+        min-width: 650px;
+        height: 105px;
+        margin: 0 auto;
+    }
+
+    .main-line {
+        position: absolute;
+        left: 2%;
+        right: 2%;
+        top: 48px;
+        height: 4px;
+        background: var(--line);
+        border-radius: 5px;
+    }
+
+    .tick {
+        position: absolute;
+        top: 38px;
+        width: 3px;
+        height: 24px;
+        background: var(--line);
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    .tick-label {
+        position: absolute;
+        top: 68px;
+        transform: translateX(-50%);
+        font-weight: 700;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .arrow-marker {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 2;
+    }
+
+    .arrow-marker .arrow {
+        font-size: 32px;
+        line-height: 30px;
+        color: #e55353;
+        font-weight: 900;
+    }
+
+    .arrow-marker .arrow-name {
+        background: #fff3f3;
+        color: #d43d3d;
+        border: 1px solid #ffcaca;
+        border-radius: 8px;
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    /* INPUTS */
+
+    .answers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 14px;
+    }
+
+    .answer-box {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .answer-box label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        border: 2px solid #d4ddea;
+        background: #fbfcff;
+        padding: 12px 13px;
+        border-radius: 12px;
+        outline: none;
+        font-size: 17px;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(79,124,255,.1);
+    }
+
+    input.correct {
+        border-color: var(--green);
+        background: var(--green-bg);
+        color: #157347;
+    }
+
+    input.incorrect {
+        border-color: var(--red);
+        background: var(--red-bg);
+        color: #bd3030;
+    }
+
+    .feedback {
+        min-height: 24px;
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .feedback.correct {
+        color: var(--green);
+    }
+
+    .feedback.incorrect {
+        color: var(--red);
+    }
+
+    /* SUB QUESTIONS */
+
+    .sub-question {
+        padding: 18px;
+        background: #f8faff;
+        border: 1px solid #e1e8f3;
+        border-radius: 18px;
+        margin-bottom: 15px;
+    }
+
+    .sub-question:last-child {
+        margin-bottom: 0;
+    }
+
+    .sub-title {
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: #465a76;
+    }
+
+    /* SMALL NUMBER LINES */
+
+    .mini-line-wrap {
+        padding: 25px 10px 15px;
+        overflow-x: auto;
+    }
+
+    .mini-line {
+        position: relative;
+        min-width: 560px;
+        height: 105px;
+    }
+
+    .mini-main-line {
+        position: absolute;
+        left: 3%;
+        right: 3%;
+        top: 50px;
+        height: 4px;
+        background: var(--line);
+    }
+
+    .mini-tick {
+        position: absolute;
+        top: 39px;
+        width: 3px;
+        height: 25px;
+        background: var(--line);
+        transform: translateX(-50%);
+    }
+
+    .mini-label {
+        position: absolute;
+        top: 70px;
+        transform: translateX(-50%);
+        font-size: 13px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .mini-arrow {
+        position: absolute;
+        top: 3px;
+        transform: translateX(-50%);
+        color: #e55353;
+        font-size: 29px;
+        font-weight: bold;
+    }
+
+    /* MATCHING */
+
+    .matching-area {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        align-items: center;
+    }
+
+    .given-values {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .value-chip {
+        background: #edf3ff;
+        border: 2px solid #b9caff;
+        color: #3858a5;
+        padding: 11px 17px;
+        border-radius: 13px;
+        font-weight: 800;
+    }
+
+    .matching-line {
+        position: relative;
+        height: 150px;
+        margin-top: 10px;
+    }
+
+    .matching-main {
+        position: absolute;
+        left: 3%;
+        right: 3%;
+        top: 75px;
+        height: 4px;
+        background: var(--line);
+    }
+
+    .matching-tick {
+        position: absolute;
+        top: 65px;
+        height: 25px;
+        width: 3px;
+        background: var(--line);
+        transform: translateX(-50%);
+    }
+
+    .matching-input {
+        position: absolute;
+        top: 8px;
+        transform: translateX(-50%);
+        width: 100px !important;
+        text-align: center;
+    }
+
+    .matching-label {
+        position: absolute;
+        top: 105px;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    /* SCORE */
+
+    .check-area {
+        text-align: center;
+        margin-top: 28px;
+    }
+
+    .check-button {
+        border: none;
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+        font-weight: 900;
+        padding: 16px 36px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #21b873, #168c59);
+        box-shadow: 0 6px 0 #0f7047;
+        transition: .15s;
+    }
+
+    .check-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .check-button:active {
+        transform: translateY(4px);
+        box-shadow: 0 2px 0 #0f7047;
+    }
+
+    .score-box {
+        display: none;
+        margin: 22px auto 0;
+        max-width: 650px;
+        padding: 20px;
+        border-radius: 20px;
+        background: white;
+        border: 2px solid #dfe7f1;
+        box-shadow: 0 8px 25px rgba(50,70,100,.08);
+    }
+
+    .score-number {
+        font-size: 34px;
+        font-weight: 900;
+    }
+
+    .score-message {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 16px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 850px) {
+        .worksheet {
+            grid-template-columns: 1fr;
+        }
+
+        .card.full {
+            grid-column: auto;
+        }
+
+        .matching-area {
+            grid-template-columns: 1fr;
+        }
+
+        .question-description {
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .page {
+            width: 96%;
+            padding-top: 15px;
+        }
+
+        .card {
+            padding: 17px;
+        }
+
+        .header {
+            padding: 22px 15px;
+        }
+
+        .question-heading h2 {
+            font-size: 18px;
+        }
+
+        .number {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+        }
+
+        .answers {
+            flex-direction: column;
+        }
+
+        .answer-box {
+            min-width: 100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+
+    <header class="header">
+        <h1>🔢 Number Lines Adventure</h1>
+        <p>Read the number line, follow the arrows and find the missing numbers!</p>
+        <div class="instructions">
+            ✏️ Type your answers and check your work when you're finished.
+        </div>
+    </header>
+
+
+    <main class="worksheet">
+
+        <!-- =====================================================
+             QUESTION 1
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+                <div class="badge">1</div>
+                <h2>What numbers are the arrows pointing to?</h2>
+            </div>
+
+            <p class="question-description">
+                Look carefully at the number line. Each big step is 1,000.
+            </p>
+
+            <div class="number-line-wrap">
+
+                <div class="number-line">
+
+                    <div class="main-line"></div>
+
+                    <!-- TICKS -->
+
+                    <div class="tick" style="left:2%"></div>
+                    <div class="tick" style="left:11.6%"></div>
+                    <div class="tick" style="left:21.2%"></div>
+                    <div class="tick" style="left:30.8%"></div>
+                    <div class="tick" style="left:40.4%"></div>
+                    <div class="tick" style="left:50%"></div>
+                    <div class="tick" style="left:59.6%"></div>
+                    <div class="tick" style="left:69.2%"></div>
+                    <div class="tick" style="left:78.8%"></div>
+                    <div class="tick" style="left:88.4%"></div>
+                    <div class="tick" style="left:98%"></div>
+
+                    <!-- LABELS -->
+
+                    <div class="tick-label" style="left:2%">0</div>
+                    <div class="tick-label" style="left:11.6%">1,000</div>
+                    <div class="tick-label" style="left:21.2%">2,000</div>
+                    <div class="tick-label" style="left:30.8%">3,000</div>
+                    <div class="tick-label" style="left:40.4%">4,000</div>
+                    <div class="tick-label" style="left:50%">5,000</div>
+                    <div class="tick-label" style="left:59.6%">6,000</div>
+                    <div class="tick-label" style="left:69.2%">7,000</div>
+                    <div class="tick-label" style="left:78.8%">8,000</div>
+                    <div class="tick-label" style="left:88.4%">9,000</div>
+                    <div class="tick-label" style="left:98%">10,000</div>
+
+                    <!-- ARROWS -->
+
+                    <div class="arrow-marker" style="left:30.8%">
+                        <span class="arrow-name">A</span>
+                        <span class="arrow">↓</span>
+                    </div>
+
+                    <div class="arrow-marker" style="left:59.6%">
+                        <span class="arrow-name">B</span>
+                        <span class="arrow">↓</span>
+                    </div>
+
+                    <div class="arrow-marker" style="left:88.4%">
+                        <span class="arrow-name">C</span>
+                        <span class="arrow">↓</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="answers">
+
+                <div class="answer-box">
+                    <label>Arrow A</label>
+                    <input id="q1a" type="text" placeholder="Enter the number">
+                </div>
+
+                <div class="answer-box">
+                    <label>Arrow B</label>
+                    <input id="q1b" type="text" placeholder="Enter the number">
+                </div>
+
+                <div class="answer-box">
+                    <label>Arrow C</label>
+                    <input id="q1c" type="text" placeholder="Enter the number">
+                </div>
+
+            </div>
+
+            <div id="feedback1" class="feedback"></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 2
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+                <div class="badge">2</div>
+                <h2>Read each number line carefully.</h2>
+            </div>
+
+            <p class="question-description">
+                The spaces between the marks may represent different amounts.
+                Work out the value at each arrow.
+            </p>
+
+
+            <!-- 2A -->
+
+            <div class="sub-question">
+
+                <div class="sub-title">
+                    (a) What number is the arrow pointing to?
+                </div>
+
+                <div class="mini-line-wrap">
+
+                    <div class="mini-line">
+
+                        <div class="mini-main-line"></div>
+
+                        <div class="mini-tick" style="left:3%"></div>
+                        <div class="mini-tick" style="left:27%"></div>
+                        <div class="mini-tick" style="left:51%"></div>
+                        <div class="mini-tick" style="left:75%"></div>
+                        <div class="mini-tick" style="left:97%"></div>
+
+                        <div class="mini-label" style="left:3%">0</div>
+                        <div class="mini-label" style="left:27%">1,000</div>
+                        <div class="mini-label" style="left:51%">2,000</div>
+                        <div class="mini-label" style="left:75%">3,000</div>
+                        <div class="mini-label" style="left:97%">4,000</div>
+
+                        <div class="mini-arrow" style="left:51%">
+                            ↓
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <input
+                    id="q2a"
+                    type="text"
+                    placeholder="What number is the arrow pointing to?"
+                >
+
+            </div>
+
+
+            <!-- 2B -->
+
+            <div class="sub-question">
+
+                <div class="sub-title">
+                    (b) What number is the arrow pointing to?
+                </div>
+
+                <div class="mini-line-wrap">
+
+                    <div class="mini-line">
+
+                        <div class="mini-main-line"></div>
+
+                        <div class="mini-tick" style="left:3%"></div>
+                        <div class="mini-tick" style="left:27%"></div>
+                        <div class="mini-tick" style="left:51%"></div>
+                        <div class="mini-tick" style="left:75%"></div>
+                        <div class="mini-tick" style="left:97%"></div>
+
+                        <div class="mini-label" style="left:3%">2,000</div>
+                        <div class="mini-label" style="left:27%">4,000</div>
+                        <div class="mini-label" style="left:51%">6,000</div>
+                        <div class="mini-label" style="left:75%">8,000</div>
+                        <div class="mini-label" style="left:97%">10,000</div>
+
+                        <div class="mini-arrow" style="left:75%">
+                            ↓
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <input
+                    id="q2b"
+                    type="text"
+                    placeholder="What number is the arrow pointing to?"
+                >
+
+            </div>
+
+            <div id="feedback2" class="feedback"></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 3
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+                <div class="badge">3</div>
+                <h2>Label the number line.</h2>
+            </div>
+
+            <p class="question-description">
+                Use these values to label the correct points on the number line:
+                <strong>3,000 · 500 · 5,000 · 7,000</strong>
+            </p>
+
+
+            <div class="matching-area">
+
+                <div>
+
+                    <h3>Numbers to use</h3>
+
+                    <div class="given-values">
+
+                        <div class="value-chip">3,000</div>
+                        <div class="value-chip">500</div>
+                        <div class="value-chip">5,000</div>
+                        <div class="value-chip">7,000</div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div class="matching-line">
+
+                        <div class="matching-main"></div>
+
+                        <!-- TICKS -->
+
+                        <div class="matching-tick" style="left:3%"></div>
+                        <div class="matching-tick" style="left:25%"></div>
+                        <div class="matching-tick" style="left:47%"></div>
+                        <div class="matching-tick" style="left:69%"></div>
+                        <div class="matching-tick" style="left:97%"></div>
+
+                        <!-- INPUTS -->
+
+                        <input
+                            id="q3a"
+                            class="matching-input"
+                            style="left:25%"
+                            type="text"
+                            placeholder="?"
+                        >
+
+                        <input
+                            id="q3b"
+                            class="matching-input"
+                            style="left:47%"
+                            type="text"
+                            placeholder="?"
+                        >
+
+                        <input
+                            id="q3c"
+                            class="matching-input"
+                            style="left:69%"
+                            type="text"
+                            placeholder="?"
+                        >
+
+                        <input
+                            id="q3d"
+                            class="matching-input"
+                            style="left:97%"
+                            type="text"
+                            placeholder="?"
+                        >
+
+                        <div class="matching-label" style="left:3%">
+                            0
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="feedback3" class="feedback"></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 4
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+                <div class="badge">4</div>
+                <h2>Read the number line from 1,000 to 2,000.</h2>
+            </div>
+
+            <p class="question-description">
+                The number line is divided into equal parts. What number is the
+                arrow pointing to?
+            </p>
+
+
+            <div class="number-line-wrap">
+
+                <div class="number-line">
+
+                    <div class="main-line"></div>
+
+                    <!-- 1000 TO 2000 -->
+
+                    <div class="tick" style="left:2%"></div>
+                    <div class="tick" style="left:21.2%"></div>
+                    <div class="tick" style="left:40.4%"></div>
+                    <div class="tick" style="left:59.6%"></div>
+                    <div class="tick" style="left:78.8%"></div>
+                    <div class="tick" style="left:98%"></div>
+
+                    <div class="tick-label" style="left:2%">
+                        1,000
+                    </div>
+
+                    <div class="tick-label" style="left:98%">
+                        2,000
+                    </div>
+
+                    <!-- ARROW AT 1,600 -->
+
+                    <div
+                        class="arrow-marker"
+                        style="left:59.6%"
+                    >
+                        <span class="arrow-name">A</span>
+                        <span class="arrow">↓</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="answers">
+
+                <div class="answer-box">
+
+                    <label>
+                        4(a) Answer
+                    </label>
+
+                    <input
+                        id="q4a"
+                        type="text"
+                        placeholder="Enter the number"
+                    >
+
+                </div>
+
+            </div>
+
+            <div id="feedback4" class="feedback"></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         CHECK
+    ====================================================== -->
+
+    <div class="check-area">
+
+        <button
+            class="check-button"
+            onclick="checkAnswers()"
+        >
+            ✅ Check Answers
+        </button>
+
+        <div
+            id="scoreBox"
+            class="score-box"
+        >
+
+            <div
+                id="scoreNumber"
+                class="score-number"
+            ></div>
+
+            <div
+                id="scoreMessage"
+                class="score-message"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ANSWER CONFIGURATION
+
+   Change these values easily if your exact worksheet image
+   has different arrow positions.
+========================================================= */
+
+const answers = {
+
+    q1: {
+        q1a: "3000",
+        q1b: "6000",
+        q1c: "9000"
+    },
+
+    q2: {
+        q2a: "2000",
+        q2b: "8000"
+    },
+
+    q3: {
+        q3a: "3000",
+        q3b: "5000",
+        q3c: "7000",
+        q3d: "500"
+    },
+
+    q4: {
+        q4a: "1600"
+    }
+
+};
+
+
+/* =========================================================
+   NORMALIZE ANSWERS
+========================================================= */
+
+function normalize(value) {
+
+    return String(value)
+        .toLowerCase()
+        .replace(/,/g, "")
+        .replace(/\s+/g, "")
+        .trim();
+
+}
+
+
+/* =========================================================
+   CHECK ONE INPUT
+========================================================= */
+
+function checkInput(id, correctAnswer) {
+
+    const input =
+        document.getElementById(id);
+
+    const userAnswer =
+        normalize(input.value);
+
+    const correct =
+        userAnswer === normalize(correctAnswer);
+
+    input.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if (correct) {
+
+        input.classList.add("correct");
+
+    } else {
+
+        input.classList.add("incorrect");
+
+    }
+
+    return correct;
+
+}
+
+
+/* =========================================================
+   QUESTION FEEDBACK
+========================================================= */
+
+function setQuestionFeedback(
+    id,
+    correct,
+    correctText,
+    incorrectText
+) {
+
+    const element =
+        document.getElementById(id);
+
+    element.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if (correct) {
+
+        element.textContent =
+            "✓ " + correctText;
+
+        element.classList.add("correct");
+
+    } else {
+
+        element.textContent =
+            "✗ " + incorrectText;
+
+        element.classList.add("incorrect");
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK ALL ANSWERS
+========================================================= */
+
+function checkAnswers() {
+
+    let score = 0;
+
+    const totalQuestions = 4;
+
+
+    /* -----------------------------------------------------
+       QUESTION 1
+    ----------------------------------------------------- */
+
+    const q1a =
+        checkInput(
+            "q1a",
+            answers.q1.q1a
+        );
+
+    const q1b =
+        checkInput(
+            "q1b",
+            answers.q1.q1b
+        );
+
+    const q1c =
+        checkInput(
+            "q1c",
+            answers.q1.q1c
+        );
+
+    const question1Correct =
+        q1a && q1b && q1c;
+
+    if (question1Correct) {
+        score++;
+    }
+
+    setQuestionFeedback(
+        "feedback1",
+        question1Correct,
+        "Excellent! You read all three arrows correctly.",
+        "Check the position of each arrow and count the 1,000s carefully."
+    );
+
+
+    /* -----------------------------------------------------
+       QUESTION 2
+    ----------------------------------------------------- */
+
+    const q2a =
+        checkInput(
+            "q2a",
+            answers.q2.q2a
+        );
+
+    const q2b =
+        checkInput(
+            "q2b",
+            answers.q2.q2b
+        );
+
+    const question2Correct =
+        q2a && q2b;
+
+    if (question2Correct) {
+        score++;
+    }
+
+    setQuestionFeedback(
+        "feedback2",
+        question2Correct,
+        "Great work! You understood both number lines.",
+        "Look at how much each interval represents before counting."
+    );
+
+
+    /* -----------------------------------------------------
+       QUESTION 3
+    ----------------------------------------------------- */
+
+    const q3a =
+        checkInput(
+            "q3a",
+            answers.q3.q3a
+        );
+
+    const q3b =
+        checkInput(
+            "q3b",
+            answers.q3.q3b
+        );
+
+    const q3c =
+        checkInput(
+            "q3c",
+            answers.q3.q3c
+        );
+
+    const q3d =
+        checkInput(
+            "q3d",
+            answers.q3.q3d
+        );
+
+    const question3Correct =
+        q3a && q3b && q3c && q3d;
+
+    if (question3Correct) {
+        score++;
+    }
+
+    setQuestionFeedback(
+        "feedback3",
+        question3Correct,
+        "Fantastic! You labelled the number line correctly.",
+        "Check each point carefully. Remember that 500 is halfway between 0 and 1,000."
+    );
+
+
+    /* -----------------------------------------------------
+       QUESTION 4
+    ----------------------------------------------------- */
+
+    const q4a =
+        checkInput(
+            "q4a",
+            answers.q4.q4a
+        );
+
+    if (q4a) {
+        score++;
+    }
+
+    setQuestionFeedback(
+        "feedback4",
+        q4a,
+        "Correct! You found the value between 1,000 and 2,000.",
+        "Count the equal intervals between 1,000 and 2,000."
+    );
+
+
+    /* -----------------------------------------------------
+       SCORE
+    ----------------------------------------------------- */
+
+    const percentage =
+        Math.round(
+            (score / totalQuestions) * 100
+        );
+
+    const scoreBox =
+        document.getElementById("scoreBox");
+
+    const scoreNumber =
+        document.getElementById("scoreNumber");
+
+    const scoreMessage =
+        document.getElementById("scoreMessage");
+
+
+    scoreBox.style.display = "block";
+
+
+    scoreNumber.textContent =
+        `${score} / ${totalQuestions} ⭐`;
+
+
+    if (score === 4) {
+
+        scoreMessage.textContent =
+            "🏆 Perfect! You are a Number Line Superstar!";
+
+    } else if (score === 3) {
+
+        scoreMessage.textContent =
+            "🌟 Excellent work! Just one more question to master.";
+
+    } else if (score === 2) {
+
+        scoreMessage.textContent =
+            "👏 Good effort! Keep practising number lines.";
+
+    } else {
+
+        scoreMessage.textContent =
+            "💪 Keep going! Remember to count the intervals carefully.";
+
+    }
+
+
+    scoreMessage.textContent +=
+        ` Your score is ${percentage}%.`;
+
+
+    /* Scroll score into view */
+
+    scoreBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+/* =========================================================
+   CLEAR ERROR/SUCCESS WHEN USER EDITS AN ANSWER
+========================================================= */
+
+document
+    .querySelectorAll("input[type='text']")
+    .forEach(input => {
+
+        input.addEventListener(
+            "input",
+            function() {
+
+                this.classList.remove(
+                    "correct",
+                    "incorrect"
+                );
+
+            }
+        );
+
+    });
+
+</script>
+
+</body>
+</html>

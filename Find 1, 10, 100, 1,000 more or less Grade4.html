@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Place Value & More/Less Challenge</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --blue: #527cff;
+        --purple: #7657e8;
+        --green: #20a36a;
+        --green-bg: #eaf9f1;
+        --red: #e55353;
+        --red-bg: #fff0f0;
+        --yellow: #ffd45c;
+        --orange: #ff9f43;
+        --ink: #26344a;
+        --muted: #718096;
+        --border: #e1e7f0;
+        --background: #f4f7fc;
+        --card: #ffffff;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+            radial-gradient(circle at 5% 10%, #e7f0ff 0, transparent 25%),
+            radial-gradient(circle at 95% 15%, #f0eaff 0, transparent 25%),
+            var(--background);
+    }
+
+    .page {
+        width: min(1150px, 94%);
+        margin: auto;
+        padding: 25px 0 55px;
+    }
+
+    /* ================= HEADER ================= */
+
+    .header {
+        text-align: center;
+        color: white;
+        padding: 30px 20px;
+        border-radius: 27px;
+        background: linear-gradient(
+            135deg,
+            #527cff,
+            #7657e8
+        );
+        box-shadow: 0 15px 35px rgba(70, 90, 180, .2);
+        margin-bottom: 24px;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 43px);
+    }
+
+    .header p {
+        margin: 10px 0 0;
+        font-size: 17px;
+    }
+
+    .header-pill {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        background: rgba(255,255,255,.18);
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    /* ================= CARDS ================= */
+
+    .worksheet {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(40,60,90,.07);
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    .question-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 12px;
+    }
+
+    .badge {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        border-radius: 50%;
+        background: var(--yellow);
+        color: #493a00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        font-weight: 900;
+        box-shadow: 0 4px 0 #e5b738;
+    }
+
+    .question-heading h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .description {
+        color: var(--muted);
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    /* ================= BASE 10 BLOCKS ================= */
+
+    .blocks-display {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        background: #f7f9ff;
+        border: 1px solid #e5eaf5;
+    }
+
+    .block-group {
+        display: flex;
+        align-items: flex-end;
+        gap: 7px;
+        padding: 10px;
+        border-radius: 14px;
+        background: white;
+        border: 1px solid #e1e7f0;
+    }
+
+    /* Large thousand block */
+
+    .thousand-block {
+        position: relative;
+        width: 88px;
+        height: 88px;
+        border-radius: 8px;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,.35) 1px,
+                transparent 1px
+            ),
+            linear-gradient(
+                rgba(255,255,255,.35) 1px,
+                transparent 1px
+            ),
+            #8db4ff;
+
+        background-size: 11px 11px;
+
+        border: 3px solid #5487ee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        /* IMPORTANT:
+           label is centered and always above the grid */
+        overflow: visible;
+    }
+
+    .thousand-block span {
+        position: absolute;
+        z-index: 5;
+        background: white;
+        color: #315ba8;
+        padding: 4px 7px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 900;
+        white-space: nowrap;
+        box-shadow: 0 2px 5px rgba(0,0,0,.08);
+    }
+
+    .hundred-block {
+        width: 58px;
+        height: 58px;
+        border-radius: 6px;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,255,255,.45) 1px,
+                transparent 1px
+            ),
+            linear-gradient(
+                rgba(255,255,255,.45) 1px,
+                transparent 1px
+            ),
+            #77d6a5;
+        background-size: 11px 11px;
+        border: 3px solid #38ad78;
+    }
+
+    .ten-block {
+        width: 20px;
+        height: 65px;
+        border-radius: 4px;
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                #ffca68 0,
+                #ffca68 8px,
+                #e9a83f 9px,
+                #e9a83f 11px
+            );
+        border: 2px solid #d89429;
+    }
+
+    .one-block {
+        width: 25px;
+        height: 25px;
+        border-radius: 4px;
+        background: #ff8c8c;
+        border: 2px solid #df5d5d;
+    }
+
+    .block-caption {
+        text-align: center;
+        margin-top: 7px;
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--muted);
+    }
+
+    /* ================= INPUTS ================= */
+
+    .sentence-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .sentence {
+        background: #f8faff;
+        border: 1px solid #e1e8f2;
+        border-radius: 14px;
+        padding: 13px;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    input[type="text"] {
+        width: 125px;
+        max-width: 100%;
+        padding: 9px 10px;
+        border-radius: 10px;
+        border: 2px solid #d5ddea;
+        background: white;
+        outline: none;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--ink);
+        transition: .2s;
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(82,124,255,.1);
+    }
+
+    input.correct {
+        border-color: var(--green);
+        background: var(--green-bg);
+        color: #147247;
+    }
+
+    input.incorrect {
+        border-color: var(--red);
+        background: var(--red-bg);
+        color: #b92f2f;
+    }
+
+    /* ================= COUNTERS ================= */
+
+    .counter-area {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        padding: 24px;
+        background: #f8faff;
+        border-radius: 20px;
+        border: 1px solid #e1e8f3;
+        margin-bottom: 20px;
+    }
+
+    .counter-group {
+        text-align: center;
+    }
+
+    .counter-row {
+        display: flex;
+        gap: 7px;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 260px;
+    }
+
+    .counter {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #ffcc65;
+        border: 3px solid #e9a83e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 900;
+        color: #6a4700;
+        box-shadow: 0 3px 0 #d99b32;
+    }
+
+    .counter.large {
+        width: 58px;
+        height: 58px;
+        background: #83b3ff;
+        border-color: #5688e8;
+        color: #244f9d;
+        box-shadow: 0 3px 0 #4777cc;
+    }
+
+    .counter-label {
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        color: var(--muted);
+    }
+
+    /* ================= EXTENSION ================= */
+
+    .challenge-box {
+        background: linear-gradient(
+            135deg,
+            #fff8e6,
+            #fff3d4
+        );
+        border: 2px solid #ffd77a;
+        border-radius: 20px;
+        padding: 22px;
+    }
+
+    .challenge-title {
+        font-weight: 900;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .big-number {
+        text-align: center;
+        font-size: 35px;
+        font-weight: 900;
+        margin: 15px 0;
+        color: #40568a;
+    }
+
+    .challenge-question {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        margin: 15px 0;
+    }
+
+    .center-input {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    /* ================= FEEDBACK ================= */
+
+    .feedback {
+        min-height: 25px;
+        margin-top: 14px;
+        font-weight: 800;
+        font-size: 14px;
+    }
+
+    .feedback.correct {
+        color: var(--green);
+    }
+
+    .feedback.incorrect {
+        color: var(--red);
+    }
+
+    /* ================= CHECK ================= */
+
+    .check-area {
+        text-align: center;
+        margin-top: 28px;
+    }
+
+    .check-button {
+        border: none;
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+        font-weight: 900;
+        padding: 17px 38px;
+        border-radius: 17px;
+        background: linear-gradient(
+            135deg,
+            #20b974,
+            #168d5a
+        );
+        box-shadow: 0 6px 0 #0e7046;
+        transition: .15s;
+    }
+
+    .check-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .check-button:active {
+        transform: translateY(4px);
+        box-shadow: 0 2px 0 #0e7046;
+    }
+
+    .score-box {
+        display: none;
+        max-width: 650px;
+        margin: 22px auto 0;
+        background: white;
+        border: 2px solid #dfe7f0;
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(30,50,80,.08);
+    }
+
+    .score-number {
+        font-size: 38px;
+        font-weight: 900;
+    }
+
+    .score-message {
+        margin-top: 6px;
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width: 800px) {
+
+        .worksheet {
+            grid-template-columns: 1fr;
+        }
+
+        .full {
+            grid-column: auto;
+        }
+
+        .sentence-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(max-width: 550px) {
+
+        .page {
+            width: 96%;
+        }
+
+        .card {
+            padding: 17px;
+        }
+
+        .question-heading h2 {
+            font-size: 18px;
+        }
+
+        .blocks-display {
+            padding: 14px;
+        }
+
+        .sentence {
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 105px;
+        }
+
+        .big-number {
+            font-size: 28px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="header">
+
+        <h1>🔢 Place Value Power!</h1>
+
+        <p>
+            Base-10 blocks • Counters • More & Less • Place Value
+        </p>
+
+        <div class="header-pill">
+            ✏️ Complete the number sentences and check your answers!
+        </div>
+
+    </header>
+
+
+    <main class="worksheet">
+
+
+        <!-- =====================================================
+             QUESTION 1
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+
+                <div class="badge">1</div>
+
+                <h2>
+                    Build the number using Base-10 blocks!
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                Look at the blocks. Work out the number and then find
+                how much it becomes when we add or subtract from it.
+
+            </div>
+
+
+            <!-- BASE 10 REPRESENTATION -->
+
+            <div class="blocks-display">
+
+                <!-- THOUSANDS -->
+
+                <div class="block-group">
+
+                    <div class="thousand-block">
+                        <span>1,000</span>
+                    </div>
+
+                    <div class="thousand-block">
+                        <span>1,000</span>
+                    </div>
+
+                </div>
+
+
+                <!-- HUNDREDS -->
+
+                <div class="block-group">
+
+                    <div>
+                        <div class="hundred-block"></div>
+                        <div class="block-caption">100</div>
+                    </div>
+
+                    <div>
+                        <div class="hundred-block"></div>
+                        <div class="block-caption">100</div>
+                    </div>
+
+                    <div>
+                        <div class="hundred-block"></div>
+                        <div class="block-caption">100</div>
+                    </div>
+
+                    <div>
+                        <div class="hundred-block"></div>
+                        <div class="block-caption">100</div>
+                    </div>
+
+                </div>
+
+
+                <!-- TENS -->
+
+                <div class="block-group">
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                    <div>
+                        <div class="ten-block"></div>
+                        <div class="block-caption">10</div>
+                    </div>
+
+                </div>
+
+
+                <!-- ONES -->
+
+                <div class="block-group">
+
+                    <div>
+                        <div class="one-block"></div>
+                        <div class="block-caption">1</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SENTENCES -->
+
+            <div class="sentence-list">
+
+                <div class="sentence">
+
+                    The number is
+
+                    <input
+                        id="q1number"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    1 more is
+
+                    <input
+                        id="q1plus1"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    1 less is
+
+                    <input
+                        id="q1minus1"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    10 more is
+
+                    <input
+                        id="q1plus10"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    10 less is
+
+                    <input
+                        id="q1minus10"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    100 more is
+
+                    <input
+                        id="q1plus100"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    100 less is
+
+                    <input
+                        id="q1minus100"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+            </div>
+
+            <div
+                id="feedback1"
+                class="feedback"
+            ></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 2
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+
+                <div class="badge">2</div>
+
+                <h2>
+                    What number do the counters show?
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                Count the counters using their place value.
+                Then find 1,000 more and 1,000 less.
+
+            </div>
+
+
+            <div class="counter-area">
+
+
+                <!-- THOUSANDS -->
+
+                <div class="counter-group">
+
+                    <div class="counter-row">
+
+                        <div class="counter large">1,000</div>
+                        <div class="counter large">1,000</div>
+                        <div class="counter large">1,000</div>
+
+                    </div>
+
+                    <div class="counter-label">
+                        Thousands
+                    </div>
+
+                </div>
+
+
+                <!-- HUNDREDS -->
+
+                <div class="counter-group">
+
+                    <div class="counter-row">
+
+                        <div class="counter">100</div>
+                        <div class="counter">100</div>
+                        <div class="counter">100</div>
+                        <div class="counter">100</div>
+                        <div class="counter">100</div>
+
+                    </div>
+
+                    <div class="counter-label">
+                        Hundreds
+                    </div>
+
+                </div>
+
+
+                <!-- TENS -->
+
+                <div class="counter-group">
+
+                    <div class="counter-row">
+
+                        <div class="counter">10</div>
+                        <div class="counter">10</div>
+                        <div class="counter">10</div>
+                        <div class="counter">10</div>
+
+                    </div>
+
+                    <div class="counter-label">
+                        Tens
+                    </div>
+
+                </div>
+
+
+                <!-- ONES -->
+
+                <div class="counter-group">
+
+                    <div class="counter-row">
+
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+                        <div class="counter">1</div>
+
+                    </div>
+
+                    <div class="counter-label">
+                        Ones
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="sentence-list">
+
+                <div class="sentence">
+
+                    The number is
+
+                    <input
+                        id="q2number"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    1,000 more is
+
+                    <input
+                        id="q2plus1000"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    1,000 less is
+
+                    <input
+                        id="q2minus1000"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="feedback2"
+                class="feedback"
+            ></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 3
+        ====================================================== -->
+
+        <section class="card">
+
+            <div class="question-heading">
+
+                <div class="badge">3</div>
+
+                <h2>
+                    More or less than 2,738?
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                Use your place-value knowledge to solve each one.
+
+            </div>
+
+
+            <div class="sentence-list"
+                 style="grid-template-columns:1fr;">
+
+                <div class="sentence">
+
+                    <strong>(a)</strong>
+                    100 more than 2,738 is
+
+                    <input
+                        id="q3a"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    <strong>(b)</strong>
+                    10 less than 2,738 is
+
+                    <input
+                        id="q3b"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    <strong>(c)</strong>
+                    1,000 less than 2,738 is
+
+                    <input
+                        id="q3c"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="feedback3"
+                class="feedback"
+            ></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 4
+        ====================================================== -->
+
+        <section class="card">
+
+            <div class="question-heading">
+
+                <div class="badge">4</div>
+
+                <h2>
+                    Extension Challenge
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                Can you change the place values without changing
+                the other digits?
+
+            </div>
+
+
+            <div class="challenge-box">
+
+                <div class="big-number">
+                    5,420
+                </div>
+
+
+                <div class="challenge-question">
+
+                    1,000 more than 5,420 is
+
+                </div>
+
+                <div class="center-input">
+
+                    <input
+                        id="q4a"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <div class="challenge-question">
+
+                    100 less than 5,420 is
+
+                </div>
+
+                <div class="center-input">
+
+                    <input
+                        id="q4b"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="feedback4"
+                class="feedback"
+            ></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 5
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+
+                <div class="badge">5</div>
+
+                <h2>
+                    🧠 Missing Number Challenge
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                Think carefully about the place value that changes.
+
+            </div>
+
+
+            <div class="challenge-box">
+
+                <div class="challenge-question">
+
+                    What number is <strong>350 less</strong> than 4,000?
+
+                </div>
+
+
+                <div class="center-input">
+
+                    <input
+                        id="q5a"
+                        type="text"
+                        placeholder="Your answer"
+                    >
+
+                </div>
+
+                <br>
+
+
+                <div class="challenge-question">
+
+                    What number is <strong>200 more</strong> than 3,650?
+
+                </div>
+
+
+                <div class="center-input">
+
+                    <input
+                        id="q5b"
+                        type="text"
+                        placeholder="Your answer"
+                    >
+
+                </div>
+
+
+                <br>
+
+
+                <div class="challenge-question">
+
+                    What number is <strong>1,000 less</strong> than 6,275?
+
+                </div>
+
+
+                <div class="center-input">
+
+                    <input
+                        id="q5c"
+                        type="text"
+                        placeholder="Your answer"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="feedback5"
+                class="feedback"
+            ></div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUESTION 6 EXTRA
+        ====================================================== -->
+
+        <section class="card full">
+
+            <div class="question-heading">
+
+                <div class="badge">6</div>
+
+                <h2>
+                    ⭐ Super Place-Value Challenge
+                </h2>
+
+            </div>
+
+            <div class="description">
+
+                This one mixes everything together. Be careful!
+
+            </div>
+
+
+            <div class="sentence-list">
+
+                <div class="sentence">
+
+                    4,999 + 1 =
+
+                    <input
+                        id="q6a"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    5,000 − 1 =
+
+                    <input
+                        id="q6b"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    2,738 + 100 =
+
+                    <input
+                        id="q6c"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+
+                <div class="sentence">
+
+                    2,738 − 1,000 =
+
+                    <input
+                        id="q6d"
+                        type="text"
+                        placeholder="?"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="feedback6"
+                class="feedback"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         CHECK ANSWERS
+    ====================================================== -->
+
+    <div class="check-area">
+
+        <button
+            class="check-button"
+            onclick="checkAnswers()"
+        >
+            ✅ Check Answers
+        </button>
+
+
+        <div
+            id="scoreBox"
+            class="score-box"
+        >
+
+            <div
+                id="scoreNumber"
+                class="score-number"
+            ></div>
+
+            <div
+                id="scoreMessage"
+                class="score-message"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================================
+   ANSWERS
+
+   The worksheet has 6 questions.
+   Each individual input is marked separately,
+   while the score is calculated by question.
+========================================================== */
+
+const answers = {
+
+    /* Question 1 */
+
+    q1: {
+        q1number: "2481",
+        q1plus1: "2482",
+        q1minus1: "2480",
+        q1plus10: "2491",
+        q1minus10: "2471",
+        q1plus100: "2581",
+        q1minus100: "2381"
+    },
+
+
+    /* Question 2 */
+
+    q2: {
+        q2number: "3547",
+        q2plus1000: "4547",
+        q2minus1000: "2547"
+    },
+
+
+    /* Question 3 */
+
+    q3: {
+        q3a: "2838",
+        q3b: "2728",
+        q3c: "1738"
+    },
+
+
+    /* Question 4 */
+
+    q4: {
+        q4a: "6420",
+        q4b: "5320"
+    },
+
+
+    /* Question 5 */
+
+    q5: {
+        q5a: "3650",
+        q5b: "3850",
+        q5c: "5275"
+    },
+
+
+    /* Question 6 */
+
+    q6: {
+        q6a: "5000",
+        q6b: "4999",
+        q6c: "2838",
+        q6d: "1738"
+    }
+
+};
+
+
+/* ==========================================================
+   NORMALIZE USER ANSWER
+
+   Allows:
+   2,838
+   2838
+   " 2838 "
+   to all count as the same answer.
+========================================================== */
+
+function normalize(value) {
+
+    return String(value)
+        .replace(/,/g, "")
+        .replace(/\s+/g, "")
+        .trim()
+        .toLowerCase();
+
+}
+
+
+/* ==========================================================
+   CHECK INPUT
+========================================================== */
+
+function checkInput(id, correctAnswer) {
+
+    const input =
+        document.getElementById(id);
+
+    const userAnswer =
+        normalize(input.value);
+
+    const correct =
+        userAnswer === normalize(correctAnswer);
+
+    input.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if (correct) {
+
+        input.classList.add("correct");
+
+    } else {
+
+        input.classList.add("incorrect");
+
+    }
+
+    return correct;
+
+}
+
+
+/* ==========================================================
+   QUESTION FEEDBACK
+========================================================== */
+
+function feedback(
+    elementId,
+    isCorrect,
+    correctMessage,
+    incorrectMessage
+) {
+
+    const element =
+        document.getElementById(elementId);
+
+    element.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if (isCorrect) {
+
+        element.textContent =
+            "✓ " + correctMessage;
+
+        element.classList.add("correct");
+
+    } else {
+
+        element.textContent =
+            "✗ " + incorrectMessage;
+
+        element.classList.add("incorrect");
+
+    }
+
+}
+
+
+/* ==========================================================
+   CHECK ALL QUESTIONS
+========================================================== */
+
+function checkAnswers() {
+
+    let score = 0;
+
+    const totalQuestions = 6;
+
+
+    /* ======================================================
+       QUESTION 1
+    ====================================================== */
+
+    const q1a =
+        checkInput(
+            "q1number",
+            answers.q1.q1number
+        );
+
+    const q1b =
+        checkInput(
+            "q1plus1",
+            answers.q1.q1plus1
+        );
+
+    const q1c =
+        checkInput(
+            "q1minus1",
+            answers.q1.q1minus1
+        );
+
+    const q1d =
+        checkInput(
+            "q1plus10",
+            answers.q1.q1plus10
+        );
+
+    const q1e =
+        checkInput(
+            "q1minus10",
+            answers.q1.q1minus10
+        );
+
+    const q1f =
+        checkInput(
+            "q1plus100",
+            answers.q1.q1plus100
+        );
+
+    const q1g =
+        checkInput(
+            "q1minus100",
+            answers.q1.q1minus100
+        );
+
+
+    const question1 =
+        q1a &&
+        q1b &&
+        q1c &&
+        q1d &&
+        q1e &&
+        q1f &&
+        q1g;
+
+
+    if (question1) score++;
+
+
+    feedback(
+        "feedback1",
+        question1,
+        "Excellent! You understand the base-10 blocks and place value.",
+        "Check the number represented by the blocks and remember which place value changes."
+    );
+
+
+    /* ======================================================
+       QUESTION 2
+    ====================================================== */
+
+    const q2a =
+        checkInput(
+            "q2number",
+            answers.q2.q2number
+        );
+
+    const q2b =
+        checkInput(
+            "q2plus1000",
+            answers.q2.q2plus1000
+        );
+
+    const q2c =
+        checkInput(
+            "q2minus1000",
+            answers.q2.q2minus1000
+        );
+
+
+    const question2 =
+        q2a &&
+        q2b &&
+        q2c;
+
+
+    if (question2) score++;
+
+
+    feedback(
+        "feedback2",
+        question2,
+        "Great! You correctly used the thousands place.",
+        "Look at the thousands counters carefully. Adding or subtracting 1,000 changes the thousands digit."
+    );
+
+
+    /* ======================================================
+       QUESTION 3
+    ====================================================== */
+
+    const q3a =
+        checkInput(
+            "q3a",
+            answers.q3.q3a
+        );
+
+    const q3b =
+        checkInput(
+            "q3b",
+            answers.q3.q3b
+        );
+
+    const q3c =
+        checkInput(
+            "q3c",
+            answers.q3.q3c
+        );
+
+
+    const question3 =
+        q3a &&
+        q3b &&
+        q3c;
+
+
+    if (question3) score++;
+
+
+    feedback(
+        "feedback3",
+        question3,
+        "Perfect! You know which place value changes.",
+        "Remember: +100 changes the hundreds place, −10 changes the tens place, and −1,000 changes the thousands place."
+    );
+
+
+    /* ======================================================
+       QUESTION 4
+    ====================================================== */
+
+    const q4a =
+        checkInput(
+            "q4a",
+            answers.q4.q4a
+        );
+
+    const q4b =
+        checkInput(
+            "q4b",
+            answers.q4.q4b
+        );
+
+
+    const question4 =
+        q4a &&
+        q4b;
+
+
+    if (question4) score++;
+
+
+    feedback(
+        "feedback4",
+        question4,
+        "Fantastic! You handled the extension challenge.",
+        "Carefully change only the place value mentioned in the question."
+    );
+
+
+    /* ======================================================
+       QUESTION 5
+    ====================================================== */
+
+    const q5a =
+        checkInput(
+            "q5a",
+            answers.q5.q5a
+        );
+
+    const q5b =
+        checkInput(
+            "q5b",
+            answers.q5.q5b
+        );
+
+    const q5c =
+        checkInput(
+            "q5c",
+            answers.q5.q5c
+        );
+
+
+    const question5 =
+        q5a &&
+        q5b &&
+        q5c;
+
+
+    if (question5) score++;
+
+
+    feedback(
+        "feedback5",
+        question5,
+        "Amazing! You solved the missing-number puzzles.",
+        "Break the number apart and think about what 350, 200, or 1,000 does to the number."
+    );
+
+
+    /* ======================================================
+       QUESTION 6
+    ====================================================== */
+
+    const q6a =
+        checkInput(
+            "q6a",
+            answers.q6.q6a
+        );
+
+    const q6b =
+        checkInput(
+            "q6b",
+            answers.q6.q6b
+        );
+
+    const q6c =
+        checkInput(
+            "q6c",
+            answers.q6.q6c
+        );
+
+    const q6d =
+        checkInput(
+            "q6d",
+            answers.q6.q6d
+        );
+
+
+    const question6 =
+        q6a &&
+        q6b &&
+        q6c &&
+        q6d;
+
+
+    if (question6) score++;
+
+
+    feedback(
+        "feedback6",
+        question6,
+        "🏆 Brilliant! You mastered the whole challenge.",
+        "Take another look at the place value that changes in each calculation."
+    );
+
+
+    /* ======================================================
+       SCORE
+    ====================================================== */
+
+    const percentage =
+        Math.round(
+            (score / totalQuestions) * 100
+        );
+
+
+    const scoreBox =
+        document.getElementById("scoreBox");
+
+    const scoreNumber =
+        document.getElementById("scoreNumber");
+
+    const scoreMessage =
+        document.getElementById("scoreMessage");
+
+
+    scoreBox.style.display = "block";
+
+
+    scoreNumber.textContent =
+        `${score} / ${totalQuestions} ⭐`;
+
+
+    if (score === 6) {
+
+        scoreMessage.textContent =
+            "🏆 PERFECT SCORE! You are a Place Value Superstar!";
+
+    }
+
+    else if (score === 5) {
+
+        scoreMessage.textContent =
+            "🌟 Excellent work! You are almost perfect!";
+
+    }
+
+    else if (score === 4) {
+
+        scoreMessage.textContent =
+            "👏 Great job! Your place-value skills are getting strong.";
+
+    }
+
+    else if (score >= 2) {
+
+        scoreMessage.textContent =
+            "💪 Good effort! Keep practising how each place value changes.";
+
+    }
+
+    else {
+
+        scoreMessage.textContent =
+            "🌱 Keep practising! Remember to look at the place value that changes.";
+
+    }
+
+
+    scoreMessage.textContent +=
+        ` Score: ${percentage}%.`;
+
+
+    scoreBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+/* ==========================================================
+   REMOVE FEEDBACK COLOURS WHILE USER TYPES AGAIN
+========================================================== */
+
+document
+    .querySelectorAll("input[type='text']")
+    .forEach(input => {
+
+        input.addEventListener(
+            "input",
+            function() {
+
+                this.classList.remove(
+                    "correct",
+                    "incorrect"
+                );
+
+            }
+        );
+
+    });
+
+</script>
+
+</body>
+</html>

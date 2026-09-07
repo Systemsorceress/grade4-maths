@@ -1,0 +1,2911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry — Place Value Adventure</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+:root {
+  --brown:#D97706;
+  --gold:#F59E0B;
+  --cream:#FEF3C7;
+
+  --tom:#475569;
+  --dark:#334155;
+  --light:#F1F5F9;
+
+  --cheese:#FACC15;
+
+  --red:#ef4444;
+  --green:#22c55e;
+  --purple:#8b5cf6;
+  --blue:#38bdf8;
+
+  --white:#ffffff;
+
+  --shadow:
+    0 8px 0 rgba(51,65,85,.14),
+    0 14px 28px rgba(51,65,85,.13);
+}
+
+* {
+  box-sizing:border-box;
+}
+
+html,
+body {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+body {
+  font-family:
+    "Fredoka",
+    "Quicksand",
+    system-ui,
+    sans-serif;
+
+  color:var(--dark);
+
+  background:
+    radial-gradient(
+      circle at 8% 15%,
+      rgba(250,204,21,.25) 0 55px,
+      transparent 56px
+    ),
+    radial-gradient(
+      circle at 92% 80%,
+      rgba(217,119,6,.17) 0 80px,
+      transparent 81px
+    ),
+    linear-gradient(
+      135deg,
+      #fff8e7,
+      #eef2f7
+    );
+}
+
+/* =========================
+   APP / DECK
+========================= */
+
+.app {
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:14px;
+}
+
+.deck {
+  position:relative;
+
+  width:min(1180px,96vw);
+  aspect-ratio:16 / 9;
+
+  max-height:calc(100vh - 82px);
+
+  background:#fffdf7;
+
+  border:6px solid var(--dark);
+  border-radius:28px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 14px 0 #b45309,
+    0 28px 55px rgba(51,65,85,.25);
+}
+
+/* =========================
+   SLIDES
+========================= */
+
+.slide {
+  position:absolute;
+  inset:0;
+
+  display:none;
+
+  padding:
+    42px
+    54px
+    62px;
+
+  overflow:auto;
+
+  background:
+    radial-gradient(
+      circle at 96% 7%,
+      rgba(250,204,21,.22) 0 70px,
+      transparent 71px
+    ),
+    radial-gradient(
+      circle at 4% 93%,
+      rgba(217,119,6,.11) 0 95px,
+      transparent 96px
+    ),
+    #fffdf7;
+}
+
+.slide.active {
+  display:block;
+  animation:slideIn .28s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity:0;
+    transform:scale(.985);
+  }
+
+  to {
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.slide::before,
+.slide::after {
+  content:"";
+
+  position:absolute;
+
+  border-radius:50%;
+
+  opacity:.16;
+
+  pointer-events:none;
+}
+
+.slide::before {
+  width:22px;
+  height:22px;
+
+  top:24px;
+  left:28px;
+
+  background:var(--brown);
+
+  box-shadow:
+    32px 14px 0 var(--gold),
+    -9px 34px 0 var(--brown);
+}
+
+.slide::after {
+  width:16px;
+  height:16px;
+
+  right:32px;
+  bottom:25px;
+
+  background:var(--dark);
+
+  box-shadow:
+    -26px 13px 0 var(--purple),
+    -48px -2px 0 var(--cheese);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+  position:relative;
+  z-index:2;
+
+  max-width:1000px;
+
+  margin:auto;
+}
+
+.center {
+  text-align:center;
+}
+
+.kicker {
+  display:inline-flex;
+
+  align-items:center;
+  gap:8px;
+
+  background:var(--dark);
+  color:white;
+
+  padding:7px 14px;
+
+  border-radius:999px;
+
+  font-size:15px;
+  font-weight:700;
+
+  letter-spacing:.5px;
+
+  box-shadow:
+    4px 4px 0 var(--gold);
+
+  margin-bottom:10px;
+}
+
+h1 {
+  font-size:
+    clamp(
+      36px,
+      5vw,
+      66px
+    );
+
+  line-height:.98;
+
+  margin:
+    6px
+    0
+    12px;
+
+  color:var(--dark);
+}
+
+h2 {
+  font-size:
+    clamp(
+      29px,
+      3.7vw,
+      48px
+    );
+
+  line-height:1.03;
+
+  margin:
+    6px
+    0
+    14px;
+}
+
+h3 {
+  font-size:
+    clamp(
+      21px,
+      2.5vw,
+      31px
+    );
+
+  margin:
+    8px
+    0;
+}
+
+p,
+li {
+  font-family:"Quicksand",sans-serif;
+
+  font-weight:700;
+
+  font-size:
+    clamp(
+      16px,
+      1.7vw,
+      23px
+    );
+
+  line-height:1.35;
+}
+
+.subtitle {
+  font-size:
+    clamp(
+      20px,
+      2.4vw,
+      31px
+    );
+
+  color:var(--brown);
+
+  font-weight:700;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+  background:#fff;
+
+  border:4px solid var(--dark);
+
+  border-radius:18px;
+
+  padding:17px;
+
+  box-shadow:var(--shadow);
+}
+
+.card b {
+  display:block;
+
+  font-size:20px;
+
+  margin-bottom:5px;
+}
+
+.goal-grid {
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:16px;
+
+  margin-top:22px;
+}
+
+.badge {
+  display:inline-block;
+
+  padding:5px 10px;
+
+  border-radius:10px;
+
+  font-weight:700;
+
+  color:white;
+
+  margin-bottom:8px;
+}
+
+.red {
+  background:var(--red);
+}
+
+.green {
+  background:var(--green);
+}
+
+.purple {
+  background:var(--purple);
+}
+
+.gold {
+  background:var(--gold);
+}
+
+/* =========================
+   PLACE VALUE
+========================= */
+
+.place-grid {
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:12px;
+
+  margin:16px 0;
+}
+
+.place-grid.four {
+  grid-template-columns:
+    repeat(4,1fr);
+}
+
+.place {
+  text-align:center;
+
+  border:4px solid var(--dark);
+
+  border-radius:17px;
+
+  padding:13px;
+
+  background:white;
+
+  box-shadow:
+    0 7px 0 rgba(51,65,85,.13);
+}
+
+.place .digit {
+  font-size:
+    clamp(
+      35px,
+      5vw,
+      64px
+    );
+
+  font-weight:700;
+}
+
+.place .name {
+  font-size:18px;
+
+  font-weight:700;
+}
+
+.place .value {
+  font-size:17px;
+
+  font-weight:700;
+
+  color:var(--tom);
+}
+
+.hundreds {
+  border-color:var(--red);
+  background:#fff1f2;
+}
+
+.tens {
+  border-color:var(--purple);
+  background:#f5f3ff;
+}
+
+.ones {
+  border-color:var(--green);
+  background:#f0fdf4;
+}
+
+.thousands {
+  border-color:var(--gold);
+  background:#fffbeb;
+}
+
+/* =========================
+   EXAMPLES
+========================= */
+
+.example {
+  background:var(--cream);
+
+  border:4px dashed var(--brown);
+
+  border-radius:20px;
+
+  padding:
+    18px
+    24px;
+
+  margin:14px 0;
+
+  text-align:center;
+}
+
+.big-number {
+  font-size:
+    clamp(
+      55px,
+      8vw,
+      100px
+    );
+
+  font-weight:700;
+
+  letter-spacing:3px;
+
+  color:var(--dark);
+}
+
+.expand {
+  font-size:
+    clamp(
+      23px,
+      3vw,
+      38px
+    );
+
+  font-weight:700;
+}
+
+/* =========================
+   QUESTIONS
+========================= */
+
+.question {
+  background:white;
+
+  border:5px solid var(--dark);
+
+  border-radius:22px;
+
+  padding:
+    18px
+    22px;
+
+  margin-top:16px;
+
+  box-shadow:var(--shadow);
+}
+
+.options {
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+
+  margin-top:14px;
+}
+
+button {
+  font-family:inherit;
+
+  font-size:18px;
+
+  font-weight:700;
+
+  border:4px solid var(--dark);
+
+  border-radius:14px;
+
+  padding:
+    10px
+    18px;
+
+  background:white;
+
+  cursor:pointer;
+
+  color:var(--dark);
+
+  box-shadow:
+    0 6px 0 var(--dark);
+
+  transition:
+    transform .12s,
+    box-shadow .12s,
+    background .12s;
+}
+
+button:hover {
+  transform:translateY(-2px);
+}
+
+button:active {
+  transform:translateY(4px);
+
+  box-shadow:
+    0 2px 0 var(--dark);
+}
+
+button:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.choice.correct {
+  background:#bbf7d0;
+  border-color:#15803d;
+}
+
+.choice.wrong {
+  background:#fecaca;
+  border-color:#b91c1c;
+}
+
+.reveal {
+  display:inline-block;
+
+  background:var(--cheese);
+
+  margin-top:14px;
+
+  padding:
+    9px
+    16px;
+
+  border:4px solid var(--dark);
+
+  border-radius:14px;
+
+  font-size:17px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 5px 0 var(--dark);
+}
+
+.answer {
+  display:none;
+
+  margin-top:12px;
+
+  background:#dcfce7;
+
+  border:4px solid #16a34a;
+
+  border-radius:14px;
+
+  padding:
+    12px
+    16px;
+
+  font-size:20px;
+
+  font-weight:700;
+}
+
+.answer.show {
+  display:block;
+
+  animation:answerPop .2s ease;
+}
+
+@keyframes answerPop {
+  from {
+    opacity:0;
+    transform:scale(.95);
+  }
+
+  to {
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.answer.wrongmsg {
+  background:#fee2e2;
+  border-color:#dc2626;
+}
+
+/* =========================
+   LAYOUTS
+========================= */
+
+.columns {
+  display:grid;
+
+  grid-template-columns:
+    1.15fr
+    .85fr;
+
+  gap:20px;
+
+  align-items:center;
+}
+
+.steps {
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  margin:16px 0;
+}
+
+.step {
+  padding:
+    12px
+    17px;
+
+  border:4px solid var(--dark);
+
+  border-radius:15px;
+
+  background:white;
+
+  font-size:22px;
+
+  font-weight:700;
+}
+
+.arrow {
+  font-size:28px;
+
+  color:var(--brown);
+}
+
+.table {
+  width:100%;
+
+  border-collapse:separate;
+
+  border-spacing:7px;
+
+  margin:10px 0;
+}
+
+.table th,
+.table td {
+  padding:10px;
+
+  text-align:center;
+
+  border:3px solid var(--dark);
+
+  border-radius:10px;
+
+  font-size:18px;
+
+  font-weight:700;
+
+  background:white;
+}
+
+.table th:nth-child(1) {
+  background:#fee2e2;
+}
+
+.table th:nth-child(2) {
+  background:#ede9fe;
+}
+
+.table th:nth-child(3) {
+  background:#dcfce7;
+}
+
+.table th:nth-child(4) {
+  background:#fef3c7;
+}
+
+.quiz-grid {
+  display:grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap:16px;
+}
+
+.mini-q {
+  background:white;
+
+  border:3px solid var(--dark);
+
+  border-radius:16px;
+
+  padding:13px;
+}
+
+.mini-q strong {
+  font-size:21px;
+}
+
+.stamp {
+  display:inline-block;
+
+  transform:rotate(-3deg);
+
+  border:4px dashed var(--green);
+
+  color:#15803d;
+
+  padding:
+    8px
+    15px;
+
+  border-radius:12px;
+
+  font-size:21px;
+
+  font-weight:700;
+
+  background:#f0fdf4;
+}
+
+.ladder {
+  display:flex;
+
+  flex-direction:column-reverse;
+
+  gap:10px;
+
+  max-width:520px;
+
+  margin:16px auto;
+}
+
+.rung {
+  padding:
+    12px
+    20px;
+
+  border:4px solid var(--dark);
+
+  border-radius:16px;
+
+  text-align:center;
+
+  font-size:24px;
+
+  font-weight:700;
+}
+
+.tiny {
+  font-size:15px !important;
+}
+
+/* =========================
+   MASCOT
+========================= */
+
+.mascot {
+  position:absolute;
+
+  right:20px;
+  top:18px;
+
+  font-size:45px;
+
+  filter:
+    drop-shadow(
+      3px 4px 0 rgba(51,65,85,.15)
+    );
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.controls {
+  position:fixed;
+
+  bottom:10px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:min(1180px,96vw);
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  z-index:20;
+}
+
+.control {
+  background:var(--dark);
+
+  color:white;
+
+  border:4px solid var(--dark);
+
+  box-shadow:
+    0 5px 0 #b45309;
+
+  min-width:112px;
+}
+
+.counter {
+  font-weight:700;
+
+  background:white;
+
+  border:4px solid var(--dark);
+
+  padding:
+    9px
+    18px;
+
+  border-radius:14px;
+
+  box-shadow:
+    0 5px 0 rgba(51,65,85,.15);
+}
+
+.progress {
+  position:absolute;
+
+  left:0;
+  bottom:0;
+
+  height:7px;
+
+  background:var(--gold);
+
+  width:5%;
+
+  transition:width .25s;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:760px) {
+
+  .deck {
+    max-height:
+      calc(100vh - 78px);
+
+    border-width:4px;
+
+    border-radius:18px;
+  }
+
+  .slide {
+    padding:
+      27px
+      24px
+      55px;
+  }
+
+  .goal-grid,
+  .quiz-grid,
+  .columns {
+    grid-template-columns:1fr;
+  }
+
+  .place-grid.four {
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .mascot {
+    display:none;
+  }
+
+  p,
+  li {
+    font-size:16px;
+  }
+
+  .card {
+    padding:12px;
+  }
+
+  .controls {
+    bottom:7px;
+  }
+
+  .control {
+    min-width:82px;
+
+    padding:
+      8px
+      10px;
+
+    font-size:15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<main class="deck" id="deck">
+
+<!-- =====================================================
+     SLIDE 1
+===================================================== -->
+
+<section class="slide active">
+
+<div class="content center">
+
+<div class="mascot">🐭 🐱</div>
+
+<span class="kicker">
+🚀 TOP SECRET MISSION
+</span>
+
+<h1>
+Crack the<br>
+<span style="color:#D97706">
+Place Value Code!
+</span>
+</h1>
+
+<div class="subtitle">
+Tom & Jerry's Place Value Adventure
+</div>
+
+<p>
+From <b>10</b> all the way to <b>1,000</b> —
+become a Place Value Master!
+</p>
+
+<div class="goal-grid">
+
+<div class="card">
+<span class="badge red">🎯 01</span>
+<b>Identify</b>
+Place & value of digits
+</div>
+
+<div class="card">
+<span class="badge purple">🧩 02</span>
+<b>Build</b>
+Numbers from clues
+</div>
+
+<div class="card">
+<span class="badge green">📖 03</span>
+<b>Read</b>
+Numbers up to 1,000
+</div>
+
+<div class="card">
+<span class="badge gold">✏️ 04</span>
+<b>Expand</b>
+Numbers into parts
+</div>
+
+</div>
+
+<div class="example">
+<b>Mission Rule:</b>
+Think first… then click! 🧀
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 2
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 1 • NUMBERS TO 10
+</span>
+
+<h2>
+What is Place Value?
+</h2>
+
+<p>
+A digit's <b>place</b> tells us what the digit is worth.
+</p>
+
+<div class="example">
+
+<div class="big-number">
+7
+</div>
+
+<div class="expand">
+7 = 7 ones
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🧀 Quick Check
+</h3>
+
+<p>
+How many ones are in <b>5</b>?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+👀 Reveal Answer
+</button>
+
+<div class="answer">
+✅ <b>5 ones!</b>
+The digit 5 is in the ones place.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 3
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 1 • ONES
+</span>
+
+<h2>
+Meet the Ones Place
+</h2>
+
+<div class="columns">
+
+<div class="example">
+
+<div class="big-number">
+8
+</div>
+
+<div class="expand">
+8 ones = 8
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🐭 Your Turn!
+</h3>
+
+<p>
+Which number has <b>6 ones</b>?
+</p>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,false)">
+60
+</button>
+
+<button
+class="choice"
+onclick="choose(this,true)">
+16
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+600
+</button>
+
+</div>
+
+<div class="answer"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 4
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 2 • ENTER THE TENS!
+</span>
+
+<h2>
+What Happens After 9?
+</h2>
+
+<p>
+When we collect <b>10 ones</b>,
+we regroup them as <b>1 ten</b>.
+</p>
+
+<div class="steps">
+
+<div class="step">
+🟡🟡🟡🟡🟡
+</div>
+
+<div class="step">
++ 🟡🟡🟡🟡🟡
+</div>
+
+<div class="arrow">
+➡️
+</div>
+
+<div class="step">
+🟠 1 TEN
+</div>
+
+</div>
+
+<div class="example">
+
+<div class="expand">
+10 ones = 1 ten
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🤔 Think!
+</h3>
+
+<p>
+How many ones make 1 ten?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+🎉 <b>10 ones</b> make 1 ten.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 5
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 2 • TENS + ONES
+</span>
+
+<h2>
+The Tens & Ones Team
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+24
+</div>
+
+<div class="expand">
+
+<span style="color:#8b5cf6">
+2 tens = 20
+</span>
+
++
+
+<span style="color:#22c55e">
+4 ones = 4
+</span>
+
+</div>
+
+</div>
+
+<table class="table">
+
+<tr>
+<th>Tens</th>
+<th>Ones</th>
+<th>Expanded Form</th>
+</tr>
+
+<tr>
+<td>2</td>
+<td>4</td>
+<td>20 + 4</td>
+</tr>
+
+</table>
+
+<div class="question">
+
+<h3>
+⚡ Pop Quiz
+</h3>
+
+<p>
+In <b>37</b>,
+what is the value of <b>3</b>?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+✅ <b>30</b> —
+3 is in the tens place.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 6
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+🕵️ DIGIT DETECTIVE
+</span>
+
+<h2>
+Number 58
+</h2>
+
+<div class="place-grid">
+
+<div class="place tens">
+
+<div class="digit">
+5
+</div>
+
+<div class="name">
+TENS
+</div>
+
+<div class="value">
+value = 50
+</div>
+
+</div>
+
+<div class="place ones">
+
+<div class="digit">
+8
+</div>
+
+<div class="name">
+ONES
+</div>
+
+<div class="value">
+value = 8
+</div>
+
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🔎 Detective Question
+</h3>
+
+<p>
+What is the <b>value of 8</b> in 58?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+🟢 <b>8</b> —
+it is in the ones place.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 7
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+⚡ SPEED ROUND
+</span>
+
+<h2>
+4 Questions. No Slowing Down!
+</h2>
+
+<div class="quiz-grid">
+
+<div class="mini-q">
+
+<strong>
+1️⃣ Value of 4 in 46?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+40
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+4
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+2️⃣ Value of 9 in 29?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+9
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+90
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+3️⃣ 7 tens = ?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+70
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+7
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+4️⃣ 6 tens = ?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,false)">
+6
+</button>
+
+<button
+class="choice"
+onclick="choose(this,true)">
+60
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<p class="center tiny">
+💡 Click an answer to check it.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 8
+===================================================== -->
+
+<section class="slide">
+
+<div class="content center">
+
+<span class="kicker">
+LEVEL 3 • UNLOCKING 100
+</span>
+
+<h2>
+💯 The Hundred Appears!
+</h2>
+
+<p>
+Collect <b>10 tens</b>
+and you unlock <b>1 hundred</b>.
+</p>
+
+<div class="example">
+
+<div class="expand">
+10 tens = 100 = 1 hundred
+</div>
+
+</div>
+
+<div class="place-grid">
+
+<div class="place hundreds">
+
+<div class="digit">0</div>
+
+<div class="name">
+HUNDREDS
+</div>
+
+<div class="value">
+0 × 100
+</div>
+
+</div>
+
+<div class="place tens">
+
+<div class="digit">0</div>
+
+<div class="name">
+TENS
+</div>
+
+<div class="value">
+0 × 10
+</div>
+
+</div>
+
+<div class="place ones">
+
+<div class="digit">0</div>
+
+<div class="name">
+ONES
+</div>
+
+<div class="value">
+0 × 1
+</div>
+
+</div>
+
+</div>
+
+<div class="stamp">
+🔓 100 UNLOCKED!
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 9
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 3 • HUNDREDS
+</span>
+
+<h2>
+Meet the Hundreds Place
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+325
+</div>
+
+<div class="expand">
+300 + 20 + 5
+</div>
+
+</div>
+
+<div class="place-grid">
+
+<div class="place hundreds">
+
+<div class="digit">3</div>
+
+<div class="name">
+HUNDREDS
+</div>
+
+<div class="value">
+300
+</div>
+
+</div>
+
+<div class="place tens">
+
+<div class="digit">2</div>
+
+<div class="name">
+TENS
+</div>
+
+<div class="value">
+20
+</div>
+
+</div>
+
+<div class="place ones">
+
+<div class="digit">5</div>
+
+<div class="name">
+ONES
+</div>
+
+<div class="value">
+5
+</div>
+
+</div>
+
+</div>
+
+<p class="center">
+<b>325 = 300 + 20 + 5</b>
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 10
+===================================================== -->
+
+<section class="slide">
+
+<div class="content center">
+
+<span class="kicker">
+🎯 CHOOSE WISELY
+</span>
+
+<h2>
+Which Digit Is Worth More?
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+472
+</div>
+
+</div>
+
+<div class="question">
+
+<p>
+Which digit has the
+<b>greatest value</b>?
+</p>
+
+<div
+class="options"
+style="justify-content:center">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+4
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+7
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+2
+</button>
+
+</div>
+
+<div class="answer"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 11
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+🕵️ PLACE VALUE DETECTIVE
+</span>
+
+<h2>
+Decode 638
+</h2>
+
+<div class="place-grid">
+
+<div class="place hundreds">
+
+<div class="digit">6</div>
+
+<div class="name">
+HUNDREDS
+</div>
+
+<div class="value">
+600
+</div>
+
+</div>
+
+<div class="place tens">
+
+<div class="digit">3</div>
+
+<div class="name">
+TENS
+</div>
+
+<div class="value">
+30
+</div>
+
+</div>
+
+<div class="place ones">
+
+<div class="digit">8</div>
+
+<div class="name">
+ONES
+</div>
+
+<div class="value">
+8
+</div>
+
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🔐 Crack the code
+</h3>
+
+<p>
+What is 638 in expanded form?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+🎉 <b>638 = 600 + 30 + 8</b>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 12
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+LEVEL 4 • THE TRICKY ZERO 😈
+</span>
+
+<h2>
+Zero Has a Job!
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+405
+</div>
+
+<div class="expand">
+400 +
+<span style="color:#ef4444">0</span>
++ 5
+</div>
+
+<p>
+Zero tells us there are <b>0 tens</b>.
+</p>
+
+</div>
+
+<div class="question">
+
+<h3>
+🧠 Think!
+</h3>
+
+<p>
+7 hundreds and 3 ones —
+what number is it?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+✅ <b>703</b> —
+7 hundreds + 0 tens + 3 ones.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 13
+===================================================== -->
+
+<section class="slide">
+
+<div class="content center">
+
+<span class="kicker">
+LEVEL 5 • FINAL PLACE UNLOCK
+</span>
+
+<h2>
+🔓 Unlock 1,000!
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+1,000
+</div>
+
+<div class="expand">
+10 hundreds = 1 thousand
+</div>
+
+</div>
+
+<div class="place-grid four">
+
+<div class="place thousands">
+
+<div class="digit">1</div>
+
+<div class="name">
+THOUSANDS
+</div>
+
+<div class="value">
+1,000
+</div>
+
+</div>
+
+<div class="place hundreds">
+
+<div class="digit">0</div>
+
+<div class="name">
+HUNDREDS
+</div>
+
+<div class="value">
+0
+</div>
+
+</div>
+
+<div class="place tens">
+
+<div class="digit">0</div>
+
+<div class="name">
+TENS
+</div>
+
+<div class="value">
+0
+</div>
+
+</div>
+
+<div class="place ones">
+
+<div class="digit">0</div>
+
+<div class="name">
+ONES
+</div>
+
+<div class="value">
+0
+</div>
+
+</div>
+
+</div>
+
+<p>
+<b>10 hundreds → 1 thousand</b>
+🚀
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 14
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+BUILD-A-NUMBER LAB
+</span>
+
+<h2>
+Build a Number
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+1,246
+</div>
+
+<div class="expand">
+1,000 + 200 + 40 + 6
+</div>
+
+</div>
+
+<table class="table">
+
+<tr>
+<th>Thousands</th>
+<th>Hundreds</th>
+<th>Tens</th>
+<th>Ones</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+
+<tr>
+<td>1,000</td>
+<td>200</td>
+<td>40</td>
+<td>6</td>
+</tr>
+
+</table>
+
+<div class="question">
+
+<p>
+Why does the <b>1</b> mean 1,000 instead of 1?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Explanation
+</button>
+
+<div class="answer">
+🧀 Its place is the
+<b>thousands place</b>,
+so its value is
+1 × 1,000 = <b>1,000</b>.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 15
+===================================================== -->
+
+<section class="slide">
+
+<div class="content center">
+
+<span class="kicker">
+🚨 BOSS BATTLE
+</span>
+
+<h2>
+Value of 7 in 1,735?
+</h2>
+
+<div class="example">
+
+<div class="big-number">
+1,735
+</div>
+
+</div>
+
+<div
+class="options"
+style="justify-content:center">
+
+<button
+class="choice"
+onclick="choose(this,false)">
+7
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+70
+</button>
+
+<button
+class="choice"
+onclick="choose(this,true)">
+700
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+7,000
+</button>
+
+</div>
+
+<div class="answer"></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 16
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+🧩 MISSING DIGIT CHALLENGE
+</span>
+
+<h2>
+Can You Build the Mystery Numbers?
+</h2>
+
+<div class="quiz-grid">
+
+<div class="question">
+
+<h3>
+🔧 Build #1
+</h3>
+
+<p>
+4 hundreds + 6 tens + 2 ones = ?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+✅ <b>462</b>
+</div>
+
+</div>
+
+
+<div class="question">
+
+<h3>
+🔧 Build #2
+</h3>
+
+<p>
+8 hundreds + 0 tens + 9 ones = ?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+✅ <b>809</b>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 17
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+🏃 NUMBER BUILDER CHALLENGE
+</span>
+
+<h2>
+Build It — Then Reverse It!
+</h2>
+
+<div class="example">
+
+<div class="expand">
+1k + 3h + 5t + 7o
+</div>
+
+<div class="big-number">
+1,357
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🔄 Reverse Challenge
+</h3>
+
+<p>
+For <b>1,482</b>,
+identify each place.
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+🏆 <b>
+1 thousand,
+4 hundreds,
+8 tens,
+2 ones.
+</b>
+</div>
+
+</div>
+
+<div class="place-grid four">
+
+<div class="place thousands">
+<b>1 Th</b>
+</div>
+
+<div class="place hundreds">
+<b>4 H</b>
+</div>
+
+<div class="place tens">
+<b>8 T</b>
+</div>
+
+<div class="place ones">
+<b>2 O</b>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 18
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+👑 FINAL BOSS
+</span>
+
+<h2>
+Place Value Battle
+</h2>
+
+<div class="quiz-grid">
+
+<div class="mini-q">
+
+<strong>
+1. Value of 5 in 352?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+50
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+5
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+2. 6 hundreds = ?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+600
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+60
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+3. Expanded form of 204?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+200 + 0 + 4
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+20 + 4
+</button>
+
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+4. Which is greatest?
+</strong>
+
+<div class="options">
+
+<button
+class="choice"
+onclick="choose(this,true)">
+800
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+80
+</button>
+
+<button
+class="choice"
+onclick="choose(this,false)">
+8
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<p class="center">
+⚡ Click each answer to check your battle skills!
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 19
+===================================================== -->
+
+<section class="slide">
+
+<div class="content">
+
+<span class="kicker">
+🏆 MASTER CHALLENGE
+</span>
+
+<h2>
+One Last Mission!
+</h2>
+
+<div class="quiz-grid">
+
+<div class="mini-q">
+
+<strong>
+1️⃣ Expanded form of 2,365?
+</strong>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+2,000 + 300 + 60 + 5
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+2️⃣ Value of 9 in 1,924?
+</strong>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+900
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+3️⃣ Build: 5h + 2t + 8o
+</strong>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+528
+</div>
+
+</div>
+
+
+<div class="mini-q">
+
+<strong>
+4️⃣ Mystery:
+4h + 7t + 3o
+</strong>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal
+</button>
+
+<div class="answer">
+473
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 20
+===================================================== -->
+
+<section class="slide">
+
+<div class="content center">
+
+<span class="kicker">
+🎉 MISSION COMPLETE!
+</span>
+
+<h1>
+Place Value<br>
+<span style="color:#D97706">
+Master!
+</span>
+🏆
+</h1>
+
+<div class="ladder">
+
+<div class="rung ones">
+🟢 ONES → 1
+</div>
+
+<div class="rung tens">
+🟣 TENS → 10
+</div>
+
+<div class="rung hundreds">
+🔴 HUNDREDS → 100
+</div>
+
+<div class="rung thousands">
+🟡 THOUSANDS → 1,000
+</div>
+
+</div>
+
+<div class="question">
+
+<h3>
+🚀 FINAL QUESTION
+</h3>
+
+<p>
+In <b>3,482</b>,
+which digit has the greatest value?
+</p>
+
+<button
+class="reveal"
+onclick="reveal(this)">
+Reveal Answer
+</button>
+
+<div class="answer">
+👑 <b>
+3 → 3,000
+</b>.
+It is in the thousands place!
+</div>
+
+</div>
+
+<p class="stamp">
+🐱 + 🐭 = PLACE VALUE LEGEND
+</p>
+
+</div>
+
+</section>
+
+
+<!-- PROGRESS BAR -->
+
+<div
+class="progress"
+id="progress">
+</div>
+
+</main>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<footer class="controls">
+
+<button
+class="control"
+id="prev">
+⬅ Previous
+</button>
+
+<div
+class="counter"
+id="counter">
+Slide 1 / 20
+</div>
+
+<button
+class="control"
+id="next">
+Next ➡
+</button>
+
+</footer>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SLIDE NAVIGATION
+========================================================= */
+
+const slides =
+  [...document.querySelectorAll(".slide")];
+
+let current = 0;
+
+const counter =
+  document.getElementById("counter");
+
+const progress =
+  document.getElementById("progress");
+
+const previousButton =
+  document.getElementById("prev");
+
+const nextButton =
+  document.getElementById("next");
+
+
+function showSlide(index) {
+
+  current =
+    Math.max(
+      0,
+      Math.min(
+        slides.length - 1,
+        index
+      )
+    );
+
+  slides.forEach(
+    (slide, i) => {
+
+      slide.classList.toggle(
+        "active",
+        i === current
+      );
+
+    }
+  );
+
+  counter.textContent =
+    `Slide ${current + 1} / ${slides.length}`;
+
+  progress.style.width =
+    `${((current + 1) / slides.length) * 100}%`;
+
+  previousButton.disabled =
+    current === 0;
+
+  nextButton.disabled =
+    current === slides.length - 1;
+
+}
+
+
+/* =========================================================
+   NEXT / PREVIOUS
+========================================================= */
+
+function nextSlide() {
+  showSlide(current + 1);
+}
+
+function previousSlide() {
+  showSlide(current - 1);
+}
+
+nextButton.addEventListener(
+  "click",
+  nextSlide
+);
+
+previousButton.addEventListener(
+  "click",
+  previousSlide
+);
+
+
+/* =========================================================
+   KEYBOARD CONTROLS
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "ArrowRight" ||
+      event.key === " "
+    ) {
+      event.preventDefault();
+      nextSlide();
+    }
+
+    if (
+      event.key === "ArrowLeft"
+    ) {
+      event.preventDefault();
+      previousSlide();
+    }
+
+    if (
+      event.key === "Home"
+    ) {
+      showSlide(0);
+    }
+
+    if (
+      event.key === "End"
+    ) {
+      showSlide(slides.length - 1);
+    }
+
+  }
+);
+
+
+/* =========================================================
+   ANSWER REVEAL
+========================================================= */
+
+function reveal(button) {
+
+  const answer =
+    button.nextElementSibling;
+
+  if (!answer) return;
+
+  const visible =
+    answer.classList.contains("show");
+
+  answer.classList.toggle(
+    "show"
+  );
+
+  if (visible) {
+
+    button.textContent =
+      "👀 Reveal Answer";
+
+  } else {
+
+    button.textContent =
+      "🙈 Hide Answer";
+
+  }
+
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE
+========================================================= */
+
+function choose(button, correct) {
+
+  const group =
+    button.parentElement;
+
+  const buttons =
+    group.querySelectorAll(".choice");
+
+  buttons.forEach(
+    b => {
+
+      b.classList.remove(
+        "correct",
+        "wrong"
+      );
+
+    }
+  );
+
+  button.classList.add(
+    correct
+      ? "correct"
+      : "wrong"
+  );
+
+
+  /*
+     Find an answer area.
+
+     For mini questions there may
+     not be one, so we safely check.
+  */
+
+  const parent =
+    group.parentElement;
+
+  if (!parent) return;
+
+  const answer =
+    parent.querySelector(".answer");
+
+  if (!answer) return;
+
+
+  answer.classList.add("show");
+
+  answer.classList.toggle(
+    "wrongmsg",
+    !correct
+  );
+
+  if (correct) {
+
+    answer.innerHTML =
+      "🎉 <b>Correct!</b> Great place-value thinking!";
+
+  } else {
+
+    answer.innerHTML =
+      "❌ <b>Not quite!</b> Check the place of the digit and try again.";
+
+  }
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+showSlide(0);
+
+</script>
+
+</body>
+</html>

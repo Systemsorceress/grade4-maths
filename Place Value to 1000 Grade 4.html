@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thousands Worksheet</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+    background: linear-gradient(135deg, #eef8ff, #fff8e8);
+    color: #263238;
+}
+
+.page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    background: linear-gradient(135deg, #4f8cff, #6b5cff);
+    color: white;
+    border-radius: 24px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 18px;
+}
+
+
+/* =========================
+   WORKSHEET GRID
+========================= */
+
+.worksheet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.question {
+    background: white;
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    border: 2px solid #e7eef8;
+    position: relative;
+}
+
+.question.full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================
+   QUESTION TITLE
+========================= */
+
+.question-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.number {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #ffca3a;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+.question h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+
+/* =========================
+   QUESTION 1
+   CANDY JARS
+========================= */
+
+.jars {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+
+/* Jar itself */
+
+.jar {
+    width: 90px;
+    height: 125px;
+
+    border: 4px solid #7b61ff;
+    border-radius: 12px 12px 20px 20px;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.95),
+            rgba(233,221,255,.95)
+        );
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 10px rgba(0,0,0,.08);
+
+    display: block;
+}
+
+
+/* Jar lid */
+
+.jar::before {
+    content: "";
+
+    position: absolute;
+
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 65px;
+    height: 15px;
+
+    border-radius: 7px;
+
+    background: #7b61ff;
+
+    z-index: 20;
+}
+
+
+/* Candy */
+
+.sweet {
+    position: absolute;
+
+    font-size: 22px;
+
+    z-index: 2;
+
+    user-select: none;
+}
+
+
+/* Candy positions
+   IMPORTANT:
+   They remain above the label area.
+*/
+
+.sweet.s1 {
+    left: 12px;
+    top: 27px;
+}
+
+.sweet.s2 {
+    right: 10px;
+    top: 40px;
+}
+
+.sweet.s3 {
+    left: 32px;
+    top: 55px;
+}
+
+
+/* Dedicated 1,000 label */
+
+.jar-label {
+    position: absolute;
+
+    left: 7px;
+    right: 7px;
+
+    bottom: 6px;
+
+    height: 30px;
+
+    background: #ffca3a;
+
+    border: 2px solid #d99b18;
+
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+
+    font-size: 14px;
+
+    color: #4a3500;
+
+    z-index: 15;
+
+    box-shadow:
+        0 -3px 8px rgba(0,0,0,.15);
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.answer-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.field-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.field-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    border: 2px solid #cbd7e6;
+
+    font-size: 17px;
+
+    outline: none;
+
+    transition: .2s;
+}
+
+input:focus {
+    border-color: #5c7cfa;
+
+    box-shadow:
+        0 0 0 3px rgba(92,124,250,.15);
+}
+
+
+/* =========================
+   PENNIES
+========================= */
+
+.coins {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.coin {
+    width: 60px;
+    height: 60px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #ffd86b,
+            #d99b18
+        );
+
+    border: 3px solid #b57a00;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.7);
+}
+
+
+/* =========================
+   QUESTION 3
+   THOUSAND BLOCKS
+========================= */
+
+.part {
+    border: 2px dashed #c8d4e5;
+
+    border-radius: 16px;
+
+    padding: 15px;
+
+    margin: 12px 0;
+}
+
+.part-title {
+    font-weight: bold;
+
+    color: #52677d;
+
+    margin-bottom: 10px;
+}
+
+.blocks {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin: 20px 0;
+}
+
+.thousand-block {
+    width: 80px;
+    height: 80px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.3) 4px,
+            transparent 4px
+        ),
+        linear-gradient(
+            rgba(255,255,255,.3) 4px,
+            transparent 4px
+        ),
+        #63c7ff;
+
+    background-size: 20px 20px;
+
+    border: 3px solid #258fc5;
+
+    border-radius: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    font-weight: bold;
+
+    text-shadow:
+        1px 1px #277aa0;
+}
+
+
+/* =========================
+   QUESTION 4
+========================= */
+
+.select-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 12px;
+
+    max-width: 700px;
+
+    margin: auto;
+}
+
+.select-block {
+    height: 65px;
+
+    border: 3px solid #cbd7e6;
+
+    border-radius: 12px;
+
+    background: #f7faff;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+.select-block:hover {
+    transform: translateY(-3px);
+
+    border-color: #7b61ff;
+}
+
+.select-block.selected {
+    background: #d9f99d;
+
+    border-color: #65a30d;
+
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   QUESTION 5
+   NUMBER TRACKS
+========================= */
+
+.tracks {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+.track-label {
+    font-weight: bold;
+
+    margin-bottom: 10px;
+}
+
+.track {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.track-box {
+    width: 85px;
+    height: 52px;
+
+    border-radius: 10px;
+
+    border: 2px solid #b8c7d9;
+
+    background: #f9fbff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+.track input {
+    width: 85px;
+    height: 52px;
+
+    padding: 5px;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    font-weight: bold;
+}
+
+.arrow {
+    font-size: 22px;
+
+    color: #718096;
+}
+
+
+/* =========================
+   QUESTION 6
+   MULTIPLE CHOICE
+========================= */
+
+.choices {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+.choice {
+    padding: 13px 18px;
+
+    border: 2px solid #cbd7e6;
+
+    border-radius: 14px;
+
+    background: #f8fbff;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+.choice:hover {
+    transform: translateY(-2px);
+
+    border-color: #5c7cfa;
+}
+
+.choice.selected {
+    background: #dbeafe;
+
+    border-color: #2563eb;
+
+    color: #1d4ed8;
+
+    transform: scale(1.03);
+}
+
+
+/* =========================
+   QUESTION 7
+   COUNTERS
+========================= */
+
+.counter-groups {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 45px;
+
+    flex-wrap: wrap;
+
+    margin: 20px;
+}
+
+.counter-column {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 30px);
+
+    gap: 5px;
+
+    padding: 12px;
+
+    background: #f0fdf4;
+
+    border: 3px solid #65a30d;
+
+    border-radius: 15px;
+}
+
+.counter {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #86efac;
+
+    border: 2px solid #16a34a;
+}
+
+.column-label {
+    text-align: center;
+
+    font-weight: bold;
+
+    margin-top: 8px;
+
+    color: #166534;
+}
+
+
+/* =========================
+   FEEDBACK
+========================= */
+
+.feedback {
+    margin-top: 10px;
+
+    font-weight: bold;
+
+    min-height: 22px;
+}
+
+
+/* =========================
+   CHECK BUTTON
+========================= */
+
+.check-container {
+    text-align: center;
+
+    margin: 30px 0;
+}
+
+.check-btn {
+    border: none;
+
+    padding: 16px 35px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #22c55e,
+            #16a34a
+        );
+
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 0 #15803d;
+
+    transition: .15s;
+}
+
+.check-btn:hover {
+    transform: translateY(-2px);
+}
+
+.check-btn:active {
+    transform: translateY(4px);
+
+    box-shadow:
+        0 2px 0 #15803d;
+}
+
+#result {
+    margin-top: 18px;
+
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 800px) {
+
+    .worksheet {
+        grid-template-columns: 1fr;
+    }
+
+    .question.full {
+        grid-column: auto;
+    }
+
+    .select-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .track-box,
+    .track input {
+        width: 70px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>
+        🌟 Let's Explore Thousands!
+    </h1>
+
+    <p>
+        Count, read and write numbers up to 10,000
+    </p>
+
+</header>
+
+
+<main class="worksheet">
+
+
+<!-- =====================================================
+     QUESTION 1
+===================================================== -->
+
+<section class="question">
+
+    <div class="question-title">
+
+        <div class="number">
+            1
+        </div>
+
+        <h2>
+            How many sweets are there altogether?
+        </h2>
+
+    </div>
+
+
+    <div class="jars">
+
+
+        <!-- JAR 1 -->
+
+        <div class="jar">
+
+            <span class="sweet s1">
+                🍬
+            </span>
+
+            <span class="sweet s2">
+                🍭
+            </span>
+
+            <span class="sweet s3">
+                🍬
+            </span>
+
+            <span class="jar-label">
+                1,000
+            </span>
+
+        </div>
+
+
+        <!-- JAR 2 -->
+
+        <div class="jar">
+
+            <span class="sweet s1">
+                🍭
+            </span>
+
+            <span class="sweet s2">
+                🍬
+            </span>
+
+            <span class="sweet s3">
+                🍭
+            </span>
+
+            <span class="jar-label">
+                1,000
+            </span>
+
+        </div>
+
+
+        <!-- JAR 3 -->
+
+        <div class="jar">
+
+            <span class="sweet s1">
+                🍬
+            </span>
+
+            <span class="sweet s2">
+                🍭
+            </span>
+
+            <span class="sweet s3">
+                🍬
+            </span>
+
+            <span class="jar-label">
+                1,000
+            </span>
+
+        </div>
+
+
+        <!-- JAR 4 -->
+
+        <div class="jar">
+
+            <span class="sweet s1">
+                🍭
+            </span>
+
+            <span class="sweet s2">
+                🍬
+            </span>
+
+            <span class="sweet s3">
+                🍭
+            </span>
+
+            <span class="jar-label">
+                1,000
+            </span>
+
+        </div>
+
+
+        <!-- JAR 5 -->
+
+        <div class="jar">
+
+            <span class="sweet s1">
+                🍬
+            </span>
+
+            <span class="sweet s2">
+                🍭
+            </span>
+
+            <span class="sweet s3">
+                🍬
+            </span>
+
+            <span class="jar-label">
+                1,000
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="answer-area">
+
+        <div class="field-group">
+
+            <label>
+                Numeral
+            </label>
+
+            <input
+                id="q1num"
+                type="text"
+                placeholder="e.g. 5,000"
+            >
+
+        </div>
+
+
+        <div class="field-group">
+
+            <label>
+                In words
+            </label>
+
+            <input
+                id="q1words"
+                type="text"
+                placeholder="e.g. five thousand"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="f1"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 2
+===================================================== -->
+
+<section class="question">
+
+    <div class="question-title">
+
+        <div class="number">
+            2
+        </div>
+
+        <h2>
+            How many pennies are there in total?
+        </h2>
+
+    </div>
+
+
+    <div class="coins">
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+        <div class="coin">
+            1,000
+        </div>
+
+    </div>
+
+
+    <div class="answer-area">
+
+        <div class="field-group">
+
+            <label>
+                Numeral
+            </label>
+
+            <input
+                id="q2num"
+                type="text"
+                placeholder="Your answer"
+            >
+
+        </div>
+
+
+        <div class="field-group">
+
+            <label>
+                In words
+            </label>
+
+            <input
+                id="q2words"
+                type="text"
+                placeholder="Your answer"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="f2"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 3
+===================================================== -->
+
+<section class="question full">
+
+    <div class="question-title">
+
+        <div class="number">
+            3
+        </div>
+
+        <h2>
+            Count the thousand blocks.
+        </h2>
+
+    </div>
+
+
+    <!-- PART A -->
+
+    <div class="part">
+
+        <div class="part-title">
+
+            (a) How many thousands?
+
+        </div>
+
+
+        <div class="blocks">
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+        </div>
+
+
+        <input
+            id="q3a"
+            type="text"
+            placeholder="Write the number"
+        >
+
+    </div>
+
+
+    <!-- PART B -->
+
+    <div class="part">
+
+        <div class="part-title">
+
+            (b) How many thousands?
+
+        </div>
+
+
+        <div class="blocks">
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+            <div class="thousand-block">
+                1,000
+            </div>
+
+        </div>
+
+
+        <input
+            id="q3b"
+            type="text"
+            placeholder="Write the number"
+        >
+
+    </div>
+
+
+    <div
+        id="f3"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 4
+===================================================== -->
+
+<section class="question full">
+
+    <div class="question-title">
+
+        <div class="number">
+            4
+        </div>
+
+        <h2>
+            Select 9,000.
+        </h2>
+
+    </div>
+
+
+    <p>
+        Click the number that represents nine thousand.
+    </p>
+
+
+    <div class="select-grid">
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 1000)">
+            1,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 2000)">
+            2,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 3000)">
+            3,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 4000)">
+            4,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 5000)">
+            5,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 6000)">
+            6,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 7000)">
+            7,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 8000)">
+            8,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 9000)">
+            9,000
+        </div>
+
+        <div
+            class="select-block"
+            onclick="selectQ4(this, 10000)">
+            10,000
+        </div>
+
+    </div>
+
+
+    <div
+        id="f4"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 5
+===================================================== -->
+
+<section class="question full">
+
+    <div class="question-title">
+
+        <div class="number">
+            5
+        </div>
+
+        <h2>
+            Complete the number tracks.
+        </h2>
+
+    </div>
+
+
+    <div class="tracks">
+
+
+        <!-- TRACK A -->
+
+        <div>
+
+            <div class="track-label">
+
+                (a) Count forwards in 1,000s:
+
+            </div>
+
+
+            <div class="track">
+
+                <div class="track-box">
+                    2,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <div class="track-box">
+                    3,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5a1"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5a2"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <div class="track-box">
+                    6,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5a3"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5a4"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5a5"
+                    type="text"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TRACK B -->
+
+        <div>
+
+            <div class="track-label">
+
+                (b) Count backwards in 1,000s:
+
+            </div>
+
+
+            <div class="track">
+
+                <div class="track-box">
+                    9,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5b1"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <div class="track-box">
+                    7,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5b2"
+                    type="text"
+                >
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <div class="track-box">
+                    5,000
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <input
+                    id="q5b3"
+                    type="text"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="f5"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 6
+===================================================== -->
+
+<section class="question full">
+
+    <div class="question-title">
+
+        <div class="number">
+            6
+        </div>
+
+        <h2>
+            Which numbers can you say when counting in 1,000s from zero?
+        </h2>
+
+    </div>
+
+
+    <p>
+        Select <strong>all</strong> the correct answers.
+    </p>
+
+
+    <div class="choices">
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 5000)">
+            5,000
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 6000)">
+            6,000
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 1500)">
+            1,500
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 3999)">
+            3,999
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 1000)">
+            1,000
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 10000)">
+            10,000
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 15000)">
+            15,000
+        </div>
+
+        <div
+            class="choice"
+            onclick="toggleChoice(this, 700)">
+            700
+        </div>
+
+    </div>
+
+
+    <div
+        id="f6"
+        class="feedback">
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUESTION 7
+===================================================== -->
+
+<section class="question full">
+
+    <div class="question-title">
+
+        <div class="number">
+            7
+        </div>
+
+        <h2>
+            How many thousands are represented?
+        </h2>
+
+    </div>
+
+
+    <div class="counter-groups">
+
+
+        <!-- GROUP 1 -->
+
+        <div>
+
+            <div class="counter-column">
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+            </div>
+
+            <div class="column-label">
+                10 hundreds
+            </div>
+
+        </div>
+
+
+        <!-- GROUP 2 -->
+
+        <div>
+
+            <div class="counter-column">
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+            </div>
+
+            <div class="column-label">
+                10 hundreds
+            </div>
+
+        </div>
+
+
+        <!-- GROUP 3 -->
+
+        <div>
+
+            <div class="counter-column">
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+                <span class="counter"></span>
+
+            </div>
+
+            <div class="column-label">
+                10 hundreds
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="answer-area">
+
+        <div class="field-group">
+
+            <label>
+                Thousands
+            </label>
+
+            <input
+                id="q7"
+                type="text"
+                placeholder="How many thousands?"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="f7"
+        class="feedback">
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     CHECK BUTTON
+===================================================== -->
+
+<div class="check-container">
+
+    <button
+        class="check-btn"
+        onclick="checkAnswers()">
+
+        ✅ Check My Answers
+
+    </button>
+
+
+    <div id="result"></div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let q4Answer = null;
+
+let q6Answers = new Set();
+
+
+
+/* =====================================================
+   QUESTION 4
+===================================================== */
+
+function selectQ4(element, value) {
+
+    document
+        .querySelectorAll(".select-block")
+        .forEach(el => {
+
+            el.classList.remove("selected");
+
+        });
+
+
+    element.classList.add("selected");
+
+
+    q4Answer = value;
+
+}
+
+
+
+/* =====================================================
+   QUESTION 6
+===================================================== */
+
+function toggleChoice(element, value) {
+
+    element.classList.toggle("selected");
+
+
+    if (q6Answers.has(value)) {
+
+        q6Answers.delete(value);
+
+    } else {
+
+        q6Answers.add(value);
+
+    }
+
+}
+
+
+
+/* =====================================================
+   NORMALIZE INPUT
+===================================================== */
+
+function normalize(text) {
+
+    return text
+        .toLowerCase()
+        .replace(/,/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+
+
+
+/* =====================================================
+   FEEDBACK
+===================================================== */
+
+function setFeedback(
+    id,
+    correct,
+    good,
+    bad
+) {
+
+    const element =
+        document.getElementById(id);
+
+
+    element.textContent =
+        correct ? good : bad;
+
+
+    element.style.color =
+        correct
+            ? "#16a34a"
+            : "#dc2626";
+
+}
+
+
+
+/* =====================================================
+   CHECK ANSWERS
+===================================================== */
+
+function checkAnswers() {
+
+    let score = 0;
+
+    const total = 7;
+
+
+
+    /* =================================================
+       QUESTION 1
+    ================================================= */
+
+    let q1num =
+        normalize(
+            document.getElementById("q1num").value
+        );
+
+
+    let q1words =
+        normalize(
+            document.getElementById("q1words").value
+        );
+
+
+    let q1correct =
+        q1num === "5000" &&
+        (
+            q1words === "five thousand" ||
+            q1words === "five thousand."
+        );
+
+
+    setFeedback(
+        "f1",
+
+        q1correct,
+
+        "Correct! 🎉",
+
+        "Not quite. Think: 5 groups of 1,000."
+    );
+
+
+    if (q1correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 2
+    ================================================= */
+
+    let q2num =
+        normalize(
+            document.getElementById("q2num").value
+        );
+
+
+    let q2words =
+        normalize(
+            document.getElementById("q2words").value
+        );
+
+
+    let q2correct =
+        q2num === "7000" &&
+        (
+            q2words === "seven thousand" ||
+            q2words === "seven thousand."
+        );
+
+
+    setFeedback(
+        "f2",
+
+        q2correct,
+
+        "Excellent! 🌟",
+
+        "Count the 7 groups of 1,000."
+    );
+
+
+    if (q2correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 3
+    ================================================= */
+
+    let q3a =
+        normalize(
+            document.getElementById("q3a").value
+        );
+
+
+    let q3b =
+        normalize(
+            document.getElementById("q3b").value
+        );
+
+
+    let q3correct =
+        q3a === "3000" &&
+        q3b === "8000";
+
+
+    setFeedback(
+        "f3",
+
+        q3correct,
+
+        "Amazing counting! 🚀",
+
+        "Remember: each blue block is 1,000."
+    );
+
+
+    if (q3correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 4
+    ================================================= */
+
+    let q4correct =
+        q4Answer === 9000;
+
+
+    setFeedback(
+        "f4",
+
+        q4correct,
+
+        "You found 9,000! 🎯",
+
+        "Look for the number made from 9 groups of 1,000."
+    );
+
+
+    if (q4correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 5
+    ================================================= */
+
+    let q5answers = [
+
+        ["q5a1", "4000"],
+        ["q5a2", "5000"],
+        ["q5a3", "7000"],
+        ["q5a4", "8000"],
+        ["q5a5", "9000"],
+
+        ["q5b1", "8000"],
+        ["q5b2", "6000"],
+        ["q5b3", "4000"]
+
+    ];
+
+
+    let q5correct = true;
+
+
+    q5answers.forEach(
+        ([id, answer]) => {
+
+            let value =
+                normalize(
+                    document
+                        .getElementById(id)
+                        .value
+                );
+
+
+            if (value !== answer) {
+
+                q5correct = false;
+
+            }
+
+        }
+    );
+
+
+    setFeedback(
+        "f5",
+
+        q5correct,
+
+        "Perfect number tracks! 🛤️",
+
+        "Move one thousand at a time."
+    );
+
+
+    if (q5correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 6
+    ================================================= */
+
+    let correctQ6 =
+        new Set([
+            5000,
+            6000,
+            1000,
+            10000,
+            15000
+        ]);
+
+
+    let q6correct =
+
+        q6Answers.size ===
+        correctQ6.size &&
+
+        [...correctQ6]
+            .every(
+                x => q6Answers.has(x)
+            );
+
+
+    setFeedback(
+        "f6",
+
+        q6correct,
+
+        "Fantastic! You know your 1,000s! 🧠",
+
+        "Numbers must be exact multiples of 1,000."
+    );
+
+
+    if (q6correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       QUESTION 7
+    ================================================= */
+
+    let q7 =
+        normalize(
+            document
+                .getElementById("q7")
+                .value
+        );
+
+
+    let q7correct =
+        q7 === "3" ||
+        q7 === "3000";
+
+
+    setFeedback(
+        "f7",
+
+        q7correct,
+
+        "Great job! 10 hundreds = 1 thousand. 🎉",
+
+        "Remember: 10 hundreds make 1 thousand."
+    );
+
+
+    if (q7correct) {
+        score++;
+    }
+
+
+
+    /* =================================================
+       FINAL RESULT
+    ================================================= */
+
+    let percentage =
+        Math.round(
+            (score / total) * 100
+        );
+
+
+    let result =
+        document.getElementById("result");
+
+
+    if (score === total) {
+
+        result.innerHTML =
+            `🏆 Perfect! ${score}/${total} — You are a Thousands Superstar! 🌟`;
+
+        result.style.color = "#16a34a";
+
+    }
+
+    else if (score >= 5) {
+
+        result.innerHTML =
+            `👏 Great work! ${score}/${total} (${percentage}%). Keep going!`;
+
+        result.style.color = "#2563eb";
+
+    }
+
+    else {
+
+        result.innerHTML =
+            `💪 You scored ${score}/${total} (${percentage}%). Let's practise counting in 1,000s!`;
+
+        result.style.color = "#dc2626";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
