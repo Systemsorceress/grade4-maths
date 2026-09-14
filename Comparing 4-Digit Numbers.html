@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparing 4-Digit Numbers</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --navy: #172554;
+    --blue: #3b82f6;
+    --blue-light: #dbeafe;
+    --green: #22c55e;
+    --green-light: #dcfce7;
+    --yellow: #eab308;
+    --yellow-light: #fef9c3;
+    --red: #ef4444;
+    --red-light: #fee2e2;
+    --orange: #f97316;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f7f8fc;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= HEADER ================= */
+
+header {
+    height: 76px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--navy);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.brand h1 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 20px;
+}
+
+.brand p {
+    margin: 3px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.slide-count {
+    background: #f1f5f9;
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.progress-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 4px;
+    background: #e2e8f0;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 33.33%;
+    background: var(--orange);
+    transition: width .3s ease;
+}
+
+/* ================= MAIN ================= */
+
+main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 30px;
+}
+
+.slide {
+    display: none;
+    max-width: 1250px;
+    margin: auto;
+    animation: appear .25s ease;
+}
+
+.slide.active {
+    display: block;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-heading {
+    margin-bottom: 18px;
+}
+
+.eyebrow {
+    color: var(--orange);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 5px;
+}
+
+.slide-heading h2 {
+    margin: 0;
+    color: var(--navy);
+    font-size: clamp(25px, 3vw, 34px);
+}
+
+.slide-heading p {
+    color: var(--muted);
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+.question-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 17px;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, .04);
+}
+
+.question-heading {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 17px;
+}
+
+.question-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--navy);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.question-heading h3 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 18px;
+}
+
+.question-heading p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ================= GENERAL CARDS ================= */
+
+.choice-card {
+    background: #fbfdff;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 16px;
+}
+
+.choice-card + .choice-card {
+    margin-top: 14px;
+}
+
+.choice-label {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 12px;
+}
+
+.feedback {
+    min-height: 19px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 7px;
+}
+
+.feedback.correct {
+    color: #15803d;
+}
+
+.feedback.incorrect {
+    color: #b91c1c;
+}
+
+/* ================= Q1 DRINK ================= */
+
+.drink-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.person-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 15px;
+    text-align: center;
+}
+
+.person-name {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 9px;
+}
+
+.bottle-row {
+    min-height: 105px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.bottle {
+    width: 34px;
+    height: 68px;
+    position: relative;
+    border-radius: 9px 9px 7px 7px;
+    border: 2px solid #2563eb;
+    background: linear-gradient(
+        to bottom,
+        #bfdbfe 0 25%,
+        #60a5fa 25% 100%
+    );
+}
+
+.bottle.large {
+    width: 42px;
+    height: 78px;
+}
+
+.bottle.small {
+    width: 29px;
+    height: 57px;
+}
+
+.bottle::before {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 8px;
+    background: #2563eb;
+    border-radius: 4px 4px 2px 2px;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bottle-label {
+    position: absolute;
+    inset: auto 0 13px;
+    font-size: 8px;
+    font-weight: 900;
+    color: white;
+}
+
+.amount {
+    margin-top: 11px;
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 900;
+    font-size: 13px;
+}
+
+.person-choice {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.select-btn {
+    border: 2px solid #cbd5e1;
+    background: white;
+    color: var(--navy);
+    border-radius: 10px;
+    padding: 9px 20px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.select-btn:hover {
+    border-color: var(--orange);
+    transform: translateY(-1px);
+}
+
+.select-btn.selected {
+    border-color: var(--orange);
+    background: #fff7ed;
+    color: var(--orange);
+}
+
+.select-btn.correct {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #166534;
+}
+
+.select-btn.incorrect {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: #991b1b;
+}
+
+.explanation-area {
+    margin-top: 14px;
+}
+
+.explanation-area label {
+    display: block;
+    color: var(--navy);
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 65px;
+    resize: vertical;
+    border: 2px solid #cbd5e1;
+    border-radius: 11px;
+    padding: 10px;
+    outline: none;
+    color: var(--text);
+}
+
+textarea:focus {
+    border-color: var(--orange);
+}
+
+/* ================= BASE 10 ================= */
+
+.base-ten-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.visual-number {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    padding: 14px;
+}
+
+.visual-number h4 {
+    margin: 0 0 12px;
+    color: var(--navy);
+}
+
+.block-groups {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.block-group {
+    text-align: center;
+}
+
+.blocks {
+    min-height: 78px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.thousand-block {
+    width: 55px;
+    height: 55px;
+    border-radius: 6px;
+    background: #bfdbfe;
+    border: 3px solid #3b82f6;
+    position: relative;
+}
+
+.thousand-block::after {
+    content: "1000";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 900;
+    color: #1d4ed8;
+}
+
+.hundred-block {
+    width: 42px;
+    height: 42px;
+    border-radius: 5px;
+    background: var(--green-light);
+    border: 3px solid var(--green);
+    position: relative;
+}
+
+.hundred-block::after {
+    content: "100";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-weight: 900;
+    color: #15803d;
+}
+
+.ten-block {
+    width: 9px;
+    height: 54px;
+    border-radius: 3px;
+    background: var(--yellow-light);
+    border: 2px solid var(--yellow);
+}
+
+.one-block {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--red-light);
+    border: 2px solid var(--red);
+}
+
+.group-label {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.visual-total {
+    text-align: center;
+    margin-top: 11px;
+    color: var(--navy);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.vs {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    justify-self: center;
+}
+
+.radio-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.radio-option {
+    position: relative;
+}
+
+.radio-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.radio-option label {
+    display: block;
+    text-align: center;
+    border: 2px solid #cbd5e1;
+    border-radius: 11px;
+    padding: 11px;
+    font-weight: 900;
+    color: var(--navy);
+    cursor: pointer;
+    background: white;
+    transition: .2s;
+}
+
+.radio-option input:checked + label {
+    border-color: var(--orange);
+    background: #fff7ed;
+    color: var(--orange);
+}
+
+.radio-option.correct label {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #166534;
+}
+
+.radio-option.incorrect label {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: #991b1b;
+}
+
+/* ================= COUNTERS ================= */
+
+.counter-comparison {
+    display: grid;
+    grid-template-columns: 1fr 55px 1fr;
+    gap: 15px;
+    align-items: center;
+}
+
+.counter-chart {
+    border: 2px solid var(--border);
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+}
+
+.chart-title {
+    text-align: center;
+    background: var(--navy);
+    color: white;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.pv-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.pv-table th {
+    padding: 7px;
+    font-size: 12px;
+}
+
+.pv-table th:nth-child(1) {
+    background: var(--blue-light);
+}
+
+.pv-table th:nth-child(2) {
+    background: var(--green-light);
+}
+
+.pv-table th:nth-child(3) {
+    background: var(--yellow-light);
+}
+
+.pv-table th:nth-child(4) {
+    background: var(--red-light);
+}
+
+.pv-table td {
+    text-align: center;
+    padding: 11px 5px;
+    font-size: 17px;
+    font-weight: 900;
+    border-top: 1px solid var(--border);
+}
+
+.counter-display {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin: 9px 8px 13px;
+}
+
+.counter {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.counter.th {
+    background: var(--blue-light);
+    border: 2px solid var(--blue);
+    color: #1d4ed8;
+}
+
+.counter.h {
+    background: var(--green-light);
+    border: 2px solid var(--green);
+    color: #15803d;
+}
+
+.counter.t {
+    background: var(--yellow-light);
+    border: 2px solid var(--yellow);
+    color: #854d0e;
+}
+
+.counter.o {
+    background: var(--red-light);
+    border: 2px solid var(--red);
+    color: #b91c1c;
+}
+
+.counter-total {
+    text-align: center;
+    color: var(--navy);
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.counter-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* ================= SLIDE 2 ================= */
+
+.compare-row {
+    display: grid;
+    grid-template-columns: 1fr 95px 1fr;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.number-box {
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 13px;
+    text-align: center;
+    background: #fbfdff;
+}
+
+.number-box .number {
+    font-size: 25px;
+    font-weight: 900;
+    color: var(--navy);
+}
+
+.number-box .caption {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.symbol-select {
+    width: 70px;
+    height: 55px;
+    justify-self: center;
+    border: 3px solid #cbd5e1;
+    border-radius: 13px;
+    background: white;
+    color: var(--navy);
+    text-align: center;
+    text-align-last: center;
+    font-size: 25px;
+    font-weight: 900;
+    cursor: pointer;
+    outline: none;
+}
+
+.symbol-select:focus {
+    border-color: var(--orange);
+}
+
+.symbol-select.correct {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #166534;
+}
+
+.symbol-select.incorrect {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: #991b1b;
+}
+
+.phrase-grid {
+    display: grid;
+    gap: 11px;
+}
+
+.phrase-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--border);
+    background: #fbfdff;
+    padding: 11px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.phrase-number {
+    font-size: 19px;
+    font-weight: 900;
+    color: var(--navy);
+}
+
+.phrase-select {
+    height: 40px;
+    min-width: 155px;
+    border: 2px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    color: var(--navy);
+    font-weight: 800;
+    padding: 0 8px;
+    outline: none;
+}
+
+.phrase-select.correct {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #166534;
+}
+
+.phrase-select.incorrect {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: #991b1b;
+}
+
+/* ================= SLIDE 3 ================= */
+
+.car-scene {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.car-card {
+    border: 2px solid var(--border);
+    border-radius: 17px;
+    padding: 18px;
+    text-align: center;
+    background: white;
+}
+
+.car-title {
+    color: var(--navy);
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.car {
+    width: 220px;
+    height: 75px;
+    margin: 12px auto 10px;
+    position: relative;
+}
+
+.car-body {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 17px;
+    height: 42px;
+    border-radius: 18px 30px 9px 9px;
+}
+
+.car-blue .car-body {
+    background: #3b82f6;
+}
+
+.car-red .car-body {
+    background: #ef4444;
+}
+
+.car-roof {
+    position: absolute;
+    width: 105px;
+    height: 34px;
+    left: 57px;
+    top: 5px;
+    border-radius: 35px 35px 0 0;
+}
+
+.car-blue .car-roof {
+    background: #3b82f6;
+}
+
+.car-red .car-roof {
+    background: #ef4444;
+}
+
+.window {
+    position: absolute;
+    width: 43px;
+    height: 19px;
+    top: 9px;
+    background: #dbeafe;
+    border-radius: 8px 8px 2px 2px;
+    z-index: 2;
+}
+
+.window.one {
+    left: 66px;
+}
+
+.window.two {
+    left: 111px;
+}
+
+.wheel {
+    position: absolute;
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    background: #1e293b;
+    bottom: 1px;
+    border: 6px solid #64748b;
+    z-index: 4;
+}
+
+.wheel.one {
+    left: 38px;
+}
+
+.wheel.two {
+    right: 38px;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--navy);
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 7px 14px;
+    display: inline-block;
+}
+
+.car-choice {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.steps-text {
+    width: 100%;
+    min-height: 100px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 11px;
+    outline: none;
+}
+
+.steps-text:focus {
+    border-color: var(--orange);
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    min-height: 72px;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.nav-btn {
+    border: 0;
+    border-radius: 11px;
+    padding: 11px 20px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.nav-btn:hover {
+    transform: translateY(-1px);
+}
+
+.prev {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.next {
+    background: var(--navy);
+    color: white;
+}
+
+.check {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 4px 12px rgba(249,115,22,.22);
+}
+
+.dots {
+    display: flex;
+    gap: 7px;
+    margin: 0 7px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dot.active {
+    width: 24px;
+    border-radius: 8px;
+    background: var(--orange);
+}
+
+/* ================= TOAST ================= */
+
+.toast {
+    position: fixed;
+    bottom: 86px;
+    left: 50%;
+    transform: translate(-50%, 20px);
+    background: var(--navy);
+    color: white;
+    padding: 11px 18px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s;
+    z-index: 100;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ================= SHAKE ================= */
+
+.shake {
+    animation: shake .3s ease;
+}
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 850px) {
+
+    header {
+        padding: 0 15px;
+    }
+
+    main {
+        padding: 18px 14px;
+    }
+
+    .drink-grid,
+    .car-scene {
+        grid-template-columns: 1fr;
+    }
+
+    .base-ten-grid,
+    .counter-comparison {
+        grid-template-columns: 1fr;
+    }
+
+    .vs {
+        margin: 0 auto;
+    }
+
+    .compare-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .symbol-select {
+        width: 80px;
+    }
+
+    .phrase-row {
+        grid-template-columns: 1fr;
+    }
+
+    .phrase-select {
+        justify-self: center;
+    }
+
+    footer {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .brand p {
+        display: none;
+    }
+
+    .brand h1 {
+        font-size: 16px;
+    }
+
+    .slide-count {
+        font-size: 11px;
+    }
+
+    .question-section {
+        padding: 14px;
+    }
+
+    .radio-choice,
+    .counter-choice {
+        grid-template-columns: 1fr;
+    }
+
+    .bottle-row {
+        gap: 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="brand">
+        <div class="brand-icon">⇄</div>
+
+        <div>
+            <h1>Comparing 4-Digit Numbers</h1>
+            <p>Compare • Think • Explain</p>
+        </div>
+    </div>
+
+    <div class="slide-count" id="slideCount">
+        Slide 1 of 3
+    </div>
+
+    <div class="progress-track">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- =====================================================
+     SLIDE 1
+===================================================== -->
+
+<section class="slide active" data-slide="1">
+
+    <div class="slide-heading">
+        <div class="eyebrow">Questions 1, 2 & 3</div>
+        <h2>Compare Visual Quantities</h2>
+        <p>Look at the thousands, hundreds, tens and ones before deciding which number is greater or smaller.</p>
+    </div>
+
+
+    <!-- Q1 -->
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">1</div>
+
+            <div>
+                <h3>Who has the smaller amount of drink?</h3>
+                <p>Compare the total amount of drink.</p>
+            </div>
+
+        </div>
+
+
+        <div class="drink-grid">
+
+            <!-- Eva -->
+
+            <div class="person-card">
+
+                <div class="person-name">👧 Eva</div>
+
+                <div class="bottle-row">
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle small">
+                        <span class="bottle-label">100</span>
+                    </div>
+
+                    <div class="bottle small">
+                        <span class="bottle-label">100</span>
+                    </div>
+
+                    <div class="bottle small">
+                        <span class="bottle-label">100</span>
+                    </div>
+
+                </div>
+
+                <div class="amount">
+                    4,300 ml
+                </div>
+
+            </div>
+
+
+            <!-- Tommy -->
+
+            <div class="person-card">
+
+                <div class="person-name">👦 Tommy</div>
+
+                <div class="bottle-row">
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                    <div class="bottle large">
+                        <span class="bottle-label">1000</span>
+                    </div>
+
+                </div>
+
+                <div class="amount">
+                    6,000 ml
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="person-choice">
+
+            <button class="select-btn q1-choice" data-value="Eva">
+                Eva
+            </button>
+
+            <button class="select-btn q1-choice" data-value="Tommy">
+                Tommy
+            </button>
+
+        </div>
+
+
+        <div class="explanation-area">
+
+            <label>
+                Explain how you know:
+            </label>
+
+            <textarea
+                id="q1Explanation"
+                placeholder="For example: Eva has 4,300 ml and Tommy has 6,000 ml, so Eva has the smaller amount."
+            ></textarea>
+
+        </div>
+
+        <div class="feedback" id="q1Feedback"></div>
+
+    </div>
+
+
+    <!-- Q2 -->
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">2</div>
+
+            <div>
+                <h3>Which is the greater number?</h3>
+                <p>Use the base-ten blocks to compare the numbers.</p>
+            </div>
+
+        </div>
+
+
+        <div class="base-ten-grid">
+
+            <!-- LEFT -->
+
+            <div class="visual-number">
+
+                <h4>Left</h4>
+
+                <div class="block-groups">
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+
+                        </div>
+
+                        <div class="group-label">4 thousands</div>
+
+                    </div>
+
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="hundred-block"></div>
+                            <div class="hundred-block"></div>
+
+                        </div>
+
+                        <div class="group-label">2 hundreds</div>
+
+                    </div>
+
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+
+                        </div>
+
+                        <div class="group-label">5 tens</div>
+
+                    </div>
+
+                </div>
+
+                <div class="visual-total">
+                    4,250
+                </div>
+
+            </div>
+
+
+            <div class="vs">
+                VS
+            </div>
+
+
+            <!-- RIGHT -->
+
+            <div class="visual-number">
+
+                <h4>Right</h4>
+
+                <div class="block-groups">
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+                            <div class="thousand-block"></div>
+
+                        </div>
+
+                        <div class="group-label">4 thousands</div>
+
+                    </div>
+
+
+                    <div class="block-group">
+
+                        <div class="blocks"></div>
+
+                        <div class="group-label">0 hundreds</div>
+
+                    </div>
+
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+                            <div class="ten-block"></div>
+
+                        </div>
+
+                        <div class="group-label">6 tens</div>
+
+                    </div>
+
+
+                    <div class="block-group">
+
+                        <div class="blocks">
+
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+                            <div class="one-block"></div>
+
+                        </div>
+
+                        <div class="group-label">7 ones</div>
+
+                    </div>
+
+                </div>
+
+                <div class="visual-total">
+                    4,067
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="radio-choice">
+
+            <div class="radio-option q2-option">
+
+                <input
+                    type="radio"
+                    name="q2"
+                    id="q2left"
+                    value="left"
+                >
+
+                <label for="q2left">
+                    Left: 4,250
+                </label>
+
+            </div>
+
+
+            <div class="radio-option q2-option">
+
+                <input
+                    type="radio"
+                    name="q2"
+                    id="q2right"
+                    value="right"
+                >
+
+                <label for="q2right">
+                    Right: 4,067
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="feedback" id="q2Feedback"></div>
+
+    </div>
+
+
+    <!-- Q3 -->
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">3</div>
+
+            <div>
+                <h3>Which number is greater?</h3>
+                <p>Compare the place-value counters from left to right.</p>
+            </div>
+
+        </div>
+
+
+        <div class="counter-comparison">
+
+            <!-- CHART 1 -->
+
+            <div class="counter-chart">
+
+                <div class="chart-title">
+                    Chart 1
+                </div>
+
+                <table class="pv-table">
+
+                    <thead>
+                        <tr>
+                            <th>Th</th>
+                            <th>H</th>
+                            <th>T</th>
+                            <th>O</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>5</td>
+                            <td>3</td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="counter-display">
+
+                    <div class="counter th">Th</div>
+                    <div class="counter th">Th</div>
+                    <div class="counter th">Th</div>
+
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+
+                    <div class="counter t">T</div>
+                    <div class="counter t">T</div>
+                    <div class="counter t">T</div>
+
+                    <div class="counter o">O</div>
+
+                </div>
+
+                <div class="counter-total">
+                    3,531
+                </div>
+
+            </div>
+
+
+            <div class="vs">
+                VS
+            </div>
+
+
+            <!-- CHART 2 -->
+
+            <div class="counter-chart">
+
+                <div class="chart-title">
+                    Chart 2
+                </div>
+
+                <table class="pv-table">
+
+                    <thead>
+                        <tr>
+                            <th>Th</th>
+                            <th>H</th>
+                            <th>T</th>
+                            <th>O</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>5</td>
+                            <td>0</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="counter-display">
+
+                    <div class="counter th">Th</div>
+                    <div class="counter th">Th</div>
+                    <div class="counter th">Th</div>
+
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+                    <div class="counter h">H</div>
+
+                    <div class="counter o">O</div>
+                    <div class="counter o">O</div>
+                    <div class="counter o">O</div>
+                    <div class="counter o">O</div>
+
+                </div>
+
+                <div class="counter-total">
+                    3,504
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="counter-choice">
+
+            <div class="radio-option q3-option">
+
+                <input
+                    type="radio"
+                    name="q3"
+                    id="q3one"
+                    value="chart1"
+                >
+
+                <label for="q3one">
+                    Chart 1 — 3,531
+                </label>
+
+            </div>
+
+
+            <div class="radio-option q3-option">
+
+                <input
+                    type="radio"
+                    name="q3"
+                    id="q3two"
+                    value="chart2"
+                >
+
+                <label for="q3two">
+                    Chart 2 — 3,504
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="feedback" id="q3Feedback"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 2
+===================================================== -->
+
+<section class="slide" data-slide="2">
+
+    <div class="slide-heading">
+
+        <div class="eyebrow">Questions 5 & 6</div>
+
+        <h2>Symbols & Comparison Phrases</h2>
+
+        <p>
+            Compare the thousands first. If they are equal, compare hundreds,
+            then tens, then ones.
+        </p>
+
+    </div>
+
+
+    <!-- QUESTION 5 -->
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">5</div>
+
+            <div>
+                <h3>Write &lt;, &gt;, or = to compare the numbers.</h3>
+                <p>Start with the greatest place value.</p>
+            </div>
+
+        </div>
+
+
+        <!-- 5a -->
+
+        <div class="compare-row">
+
+            <div class="number-box">
+
+                <div class="number">
+                    1,490
+                </div>
+
+                <div class="caption">
+                    1 thousand • 4 hundreds • 9 tens
+                </div>
+
+            </div>
+
+
+            <select
+                class="symbol-select q5"
+                data-answer="<"
+                aria-label="Compare 1490 and 2075"
+            >
+                <option value="">?</option>
+                <option value="<">&lt;</option>
+                <option value=">">&gt;</option>
+                <option value="=">=</option>
+            </select>
+
+
+            <div class="number-box">
+
+                <div class="number">
+                    2,075
+                </div>
+
+                <div class="caption">
+                    2 thousands • 0 hundreds • 7 tens • 5 ones
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 5b -->
+
+        <div class="compare-row">
+
+            <div class="number-box">
+                <div class="number">6,201</div>
+            </div>
+
+            <select
+                class="symbol-select q5"
+                data-answer="<"
+                aria-label="Compare 6201 and 6235"
+            >
+                <option value="">?</option>
+                <option value="<">&lt;</option>
+                <option value=">">&gt;</option>
+                <option value="=">=</option>
+            </select>
+
+            <div class="number-box">
+                <div class="number">6,235</div>
+            </div>
+
+        </div>
+
+
+        <!-- 5c -->
+
+        <div class="compare-row">
+
+            <div class="number-box">
+                <div class="number">7,005</div>
+            </div>
+
+            <select
+                class="symbol-select q5"
+                data-answer=">"
+                aria-label="Compare 7005 and 6927"
+            >
+                <option value="">?</option>
+                <option value="<">&lt;</option>
+                <option value=">">&gt;</option>
+                <option value="=">=</option>
+            </select>
+
+            <div class="number-box">
+                <div class="number">6,927</div>
+            </div>
+
+        </div>
+
+        <div class="feedback" id="q5Feedback"></div>
+
+    </div>
+
+
+    <!-- QUESTION 6 -->
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">6</div>
+
+            <div>
+                <h3>Write the missing phrase.</h3>
+                <p>Choose “is less than” or “is greater than”.</p>
+            </div>
+
+        </div>
+
+
+        <div class="phrase-grid">
+
+            <!-- 6a -->
+
+            <div class="phrase-row">
+
+                <div class="phrase-number">
+                    4,720
+                </div>
+
+                <select
+                    class="phrase-select q6"
+                    data-answer="greater"
+                >
+                    <option value="">Choose...</option>
+                    <option value="less">is less than</option>
+                    <option value="greater">is greater than</option>
+                </select>
+
+                <div class="phrase-number">
+                    4,635
+                </div>
+
+            </div>
+
+
+            <!-- 6b -->
+
+            <div class="phrase-row">
+
+                <div class="phrase-number">
+                    5,100
+                </div>
+
+                <select
+                    class="phrase-select q6"
+                    data-answer="greater"
+                >
+                    <option value="">Choose...</option>
+                    <option value="less">is less than</option>
+                    <option value="greater">is greater than</option>
+                </select>
+
+                <div class="phrase-number">
+                    800
+                </div>
+
+            </div>
+
+
+            <!-- 6c -->
+
+            <div class="phrase-row">
+
+                <div class="phrase-number">
+                    3,195
+                </div>
+
+                <select
+                    class="phrase-select q6"
+                    data-answer="less"
+                >
+                    <option value="">Choose...</option>
+                    <option value="less">is less than</option>
+                    <option value="greater">is greater than</option>
+                </select>
+
+                <div class="phrase-number">
+                    3,591
+                </div>
+
+            </div>
+
+
+            <!-- 6d -->
+
+            <div class="phrase-row">
+
+                <div class="phrase-number">
+                    2,000
+                </div>
+
+                <select
+                    class="phrase-select q6"
+                    data-answer="less"
+                >
+                    <option value="">Choose...</option>
+                    <option value="less">is less than</option>
+                    <option value="greater">is greater than</option>
+                </select>
+
+                <div class="phrase-number">
+                    7,999
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="feedback" id="q6Feedback"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 3
+===================================================== -->
+
+<section class="slide" data-slide="3">
+
+    <div class="slide-heading">
+
+        <div class="eyebrow">Question 7</div>
+
+        <h2>Real-World Application</h2>
+
+        <p>Compare the car prices carefully.</p>
+
+    </div>
+
+
+    <div class="question-section">
+
+        <div class="question-heading">
+
+            <div class="question-number">7</div>
+
+            <div>
+                <h3>Which is the more expensive car?</h3>
+                <p>Compare £4,789 and £4,795.</p>
+            </div>
+
+        </div>
+
+
+        <div class="car-scene">
+
+            <!-- CAR A -->
+
+            <div class="car-card">
+
+                <div class="car-title">
+                    Car A
+                </div>
+
+                <div class="car car-blue">
+
+                    <div class="car-roof"></div>
+
+                    <div class="window one"></div>
+                    <div class="window two"></div>
+
+                    <div class="car-body"></div>
+
+                    <div class="wheel one"></div>
+                    <div class="wheel two"></div>
+
+                </div>
+
+                <div class="price">
+                    £4,789
+                </div>
+
+            </div>
+
+
+            <!-- CAR B -->
+
+            <div class="car-card">
+
+                <div class="car-title">
+                    Car B
+                </div>
+
+                <div class="car car-red">
+
+                    <div class="car-roof"></div>
+
+                    <div class="window one"></div>
+                    <div class="window two"></div>
+
+                    <div class="car-body"></div>
+
+                    <div class="wheel one"></div>
+                    <div class="wheel two"></div>
+
+                </div>
+
+                <div class="price">
+                    £4,795
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="person-choice">
+
+            <button
+                class="select-btn q7-choice"
+                data-value="A"
+            >
+                Car A — £4,789
+            </button>
+
+            <button
+                class="select-btn q7-choice"
+                data-value="B"
+            >
+                Car B — £4,795
+            </button>
+
+        </div>
+
+
+        <div class="feedback" id="q7Feedback"></div>
+
+
+        <div class="explanation-area">
+
+            <label>
+                Describe the steps you used to compare the car prices:
+            </label>
+
+            <textarea
+                class="steps-text"
+                id="q7Explanation"
+                placeholder="Example: The thousands and hundreds are the same, so I compare the tens. Then I compare the ones..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <button class="nav-btn prev" id="prevBtn">
+        ← Previous
+    </button>
+
+    <div class="dots">
+
+        <div class="dot active" data-slide-go="1"></div>
+        <div class="dot" data-slide-go="2"></div>
+        <div class="dot" data-slide-go="3"></div>
+
+    </div>
+
+    <button class="nav-btn check" id="checkBtn">
+        ✓ Check Answers
+    </button>
+
+    <button class="nav-btn next" id="nextBtn">
+        Next →
+    </button>
+
+</footer>
+
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SLIDE NAVIGATION
+========================================================= */
+
+let currentSlide = 1;
+const totalSlides = 3;
+
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+
+function showSlide(number) {
+
+    if (number < 1) number = 1;
+    if (number > totalSlides) number = totalSlides;
+
+    currentSlide = number;
+
+    slides.forEach(slide => {
+
+        slide.classList.toggle(
+            "active",
+            Number(slide.dataset.slide) === number
+        );
+
+    });
+
+    dots.forEach(dot => {
+
+        dot.classList.toggle(
+            "active",
+            Number(dot.dataset.slideGo) === number
+        );
+
+    });
+
+    document.getElementById("slideCount").textContent =
+        `Slide ${number} of ${totalSlides}`;
+
+    document.getElementById("progressBar").style.width =
+        `${(number / totalSlides) * 100}%`;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+document.getElementById("prevBtn").addEventListener(
+    "click",
+    () => showSlide(currentSlide - 1)
+);
+
+
+document.getElementById("nextBtn").addEventListener(
+    "click",
+    () => showSlide(currentSlide + 1)
+);
+
+
+dots.forEach(dot => {
+
+    dot.addEventListener("click", () => {
+
+        showSlide(
+            Number(dot.dataset.slideGo)
+        );
+
+    });
+
+});
+
+
+/* =========================================================
+   Q1 — BUTTON CHOICE
+========================================================= */
+
+let q1Selected = "";
+
+document.querySelectorAll(".q1-choice").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        q1Selected = button.dataset.value;
+
+        document.querySelectorAll(".q1-choice")
+            .forEach(btn => {
+
+                btn.classList.remove(
+                    "selected",
+                    "correct",
+                    "incorrect"
+                );
+
+            });
+
+        button.classList.add("selected");
+
+    });
+
+});
+
+
+/* =========================================================
+   Q7 — BUTTON CHOICE
+========================================================= */
+
+let q7Selected = "";
+
+document.querySelectorAll(".q7-choice").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        q7Selected = button.dataset.value;
+
+        document.querySelectorAll(".q7-choice")
+            .forEach(btn => {
+
+                btn.classList.remove(
+                    "selected",
+                    "correct",
+                    "incorrect"
+                );
+
+            });
+
+        button.classList.add("selected");
+
+    });
+
+});
+
+
+/* =========================================================
+   MARK CORRECT / INCORRECT
+========================================================= */
+
+function markCorrect(element) {
+
+    element.classList.remove("incorrect");
+    element.classList.add("correct");
+
+}
+
+
+function markIncorrect(element) {
+
+    element.classList.remove("correct");
+    element.classList.add("incorrect");
+
+    element.classList.remove("shake");
+
+    void element.offsetWidth;
+
+    element.classList.add("shake");
+
+}
+
+
+/* =========================================================
+   Q1 CHECK
+========================================================= */
+
+function checkQ1() {
+
+    let correct = 0;
+
+    const buttons =
+        document.querySelectorAll(".q1-choice");
+
+    buttons.forEach(button => {
+
+        button.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+    });
+
+
+    if (q1Selected === "Eva") {
+
+        document
+            .querySelector('.q1-choice[data-value="Eva"]')
+            .classList.add("correct");
+
+        document
+            .querySelector('.q1-choice[data-value="Tommy"]')
+            .classList.add("incorrect");
+
+        correct = 1;
+
+    } else {
+
+        buttons.forEach(button => {
+
+            markIncorrect(button);
+
+        });
+
+    }
+
+
+    const feedback =
+        document.getElementById("q1Feedback");
+
+    if (correct) {
+
+        feedback.textContent =
+            "✓ Correct! 4,300 ml is less than 6,000 ml.";
+
+        feedback.className =
+            "feedback correct";
+
+    } else {
+
+        feedback.textContent =
+            "Try again. Compare 4,300 ml with 6,000 ml.";
+
+        feedback.className =
+            "feedback incorrect";
+
+    }
+
+    return correct;
+
+}
+
+
+/* =========================================================
+   Q2 CHECK
+========================================================= */
+
+function checkQ2() {
+
+    const selected =
+        document.querySelector(
+            'input[name="q2"]:checked'
+        );
+
+    const options =
+        document.querySelectorAll(".q2-option");
+
+    options.forEach(option => {
+
+        option.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+    });
+
+
+    if (!selected) {
+
+        document.getElementById("q2Feedback").textContent =
+            "Choose one of the two numbers.";
+
+        document.getElementById("q2Feedback").className =
+            "feedback incorrect";
+
+        return 0;
+    }
+
+
+    const chosenOption =
+        selected.closest(".q2-option");
+
+    if (selected.value === "left") {
+
+        chosenOption.classList.add("correct");
+
+        document
+            .querySelectorAll(".q2-option")
+            .forEach(option => {
+
+                if (option !== chosenOption) {
+                    option.classList.add("incorrect");
+                }
+
+            });
+
+        document.getElementById("q2Feedback").textContent =
+            "✓ Correct! 4,250 is greater than 4,067.";
+
+        document.getElementById("q2Feedback").className =
+            "feedback correct";
+
+        return 1;
+
+    } else {
+
+        chosenOption.classList.add("incorrect");
+
+        document
+            .querySelector('#q2left')
+            .closest(".q2-option")
+            .classList.add("correct");
+
+        document.getElementById("q2Feedback").textContent =
+            "Not quite. Compare the hundreds first.";
+
+        document.getElementById("q2Feedback").className =
+            "feedback incorrect";
+
+        return 0;
+    }
+
+}
+
+
+/* =========================================================
+   Q3 CHECK
+========================================================= */
+
+function checkQ3() {
+
+    const selected =
+        document.querySelector(
+            'input[name="q3"]:checked'
+        );
+
+    const options =
+        document.querySelectorAll(".q3-option");
+
+
+    options.forEach(option => {
+
+        option.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+    });
+
+
+    if (!selected) {
+
+        document.getElementById("q3Feedback").textContent =
+            "Choose Chart 1 or Chart 2.";
+
+        document.getElementById("q3Feedback").className =
+            "feedback incorrect";
+
+        return 0;
+    }
+
+
+    if (selected.value === "chart1") {
+
+        selected
+            .closest(".q3-option")
+            .classList.add("correct");
+
+        document
+            .querySelectorAll(".q3-option")
+            .forEach(option => {
+
+                if (
+                    option !==
+                    selected.closest(".q3-option")
+                ) {
+                    option.classList.add("incorrect");
+                }
+
+            });
+
+        document.getElementById("q3Feedback").textContent =
+            "✓ Correct! 3,531 is greater than 3,504.";
+
+        document.getElementById("q3Feedback").className =
+            "feedback correct";
+
+        return 1;
+
+    } else {
+
+        selected
+            .closest(".q3-option")
+            .classList.add("incorrect");
+
+        document
+            .querySelector('#q3one')
+            .closest(".q3-option")
+            .classList.add("correct");
+
+        document.getElementById("q3Feedback").textContent =
+            "Not quite. The thousands and hundreds are equal, so compare the tens.";
+
+        document.getElementById("q3Feedback").className =
+            "feedback incorrect";
+
+        return 0;
+
+    }
+
+}
+
+
+/* =========================================================
+   Q5 CHECK
+========================================================= */
+
+function checkQ5() {
+
+    const selects =
+        document.querySelectorAll(".q5");
+
+    let correct = 0;
+
+    selects.forEach(select => {
+
+        select.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if (
+            select.value ===
+            select.dataset.answer
+        ) {
+
+            markCorrect(select);
+            correct++;
+
+        } else {
+
+            markIncorrect(select);
+
+        }
+
+    });
+
+
+    const feedback =
+        document.getElementById("q5Feedback");
+
+    if (correct === selects.length) {
+
+        feedback.textContent =
+            "✓ Excellent! All three comparison symbols are correct.";
+
+        feedback.className =
+            "feedback correct";
+
+    } else {
+
+        feedback.textContent =
+            `${correct} of ${selects.length} correct. Compare the highest place value first.`;
+
+        feedback.className =
+            "feedback incorrect";
+
+    }
+
+    return correct;
+
+}
+
+
+/* =========================================================
+   Q6 CHECK
+========================================================= */
+
+function checkQ6() {
+
+    const selects =
+        document.querySelectorAll(".q6");
+
+    let correct = 0;
+
+    selects.forEach(select => {
+
+        select.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if (
+            select.value ===
+            select.dataset.answer
+        ) {
+
+            markCorrect(select);
+            correct++;
+
+        } else {
+
+            markIncorrect(select);
+
+        }
+
+    });
+
+
+    const feedback =
+        document.getElementById("q6Feedback");
+
+    if (correct === selects.length) {
+
+        feedback.textContent =
+            "✓ Perfect! Every comparison phrase is correct.";
+
+        feedback.className =
+            "feedback correct";
+
+    } else {
+
+        feedback.textContent =
+            `${correct} of ${selects.length} correct. Look at the place values carefully.`;
+
+        feedback.className =
+            "feedback incorrect";
+
+    }
+
+    return correct;
+
+}
+
+
+/* =========================================================
+   Q7 CHECK
+========================================================= */
+
+function checkQ7() {
+
+    const buttons =
+        document.querySelectorAll(".q7-choice");
+
+    buttons.forEach(button => {
+
+        button.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+    });
+
+
+    if (q7Selected === "B") {
+
+        document
+            .querySelector('.q7-choice[data-value="B"]')
+            .classList.add("correct");
+
+        document
+            .querySelector('.q7-choice[data-value="A"]')
+            .classList.add("incorrect");
+
+        document.getElementById("q7Feedback").textContent =
+            "✓ Correct! £4,795 is greater than £4,789.";
+
+        document.getElementById("q7Feedback").className =
+            "feedback correct";
+
+        return 1;
+
+    } else {
+
+        document
+            .querySelector('.q7-choice[data-value="A"]')
+            .classList.add("incorrect");
+
+        document
+            .querySelector('.q7-choice[data-value="B"]')
+            .classList.add("correct");
+
+        document.getElementById("q7Feedback").textContent =
+            "Not quite. The thousands, hundreds and tens are the same. Compare the ones.";
+
+        document.getElementById("q7Feedback").className =
+            "feedback incorrect";
+
+        return 0;
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK CURRENT SLIDE
+========================================================= */
+
+document.getElementById("checkBtn")
+    .addEventListener("click", () => {
+
+        let score = 0;
+        let total = 0;
+
+        if (currentSlide === 1) {
+
+            score += checkQ1();
+            score += checkQ2();
+            score += checkQ3();
+
+            total = 3;
+
+        }
+
+
+        if (currentSlide === 2) {
+
+            score += checkQ5();
+            score += checkQ6();
+
+            total = 7;
+
+        }
+
+
+        if (currentSlide === 3) {
+
+            score += checkQ7();
+
+            total = 1;
+
+        }
+
+
+        if (score === total) {
+
+            showToast(
+                `🎉 Excellent! ${score}/${total} correct!`
+            );
+
+        } else {
+
+            showToast(
+                `${score}/${total} correct — keep thinking!`
+            );
+
+        }
+
+    });
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2200);
+
+}
+
+
+/* =========================================================
+   KEYBOARD NAVIGATION
+========================================================= */
+
+document.addEventListener("keydown", event => {
+
+    const active =
+        document.activeElement;
+
+    if (
+        active &&
+        (
+            active.tagName === "INPUT" ||
+            active.tagName === "TEXTAREA" ||
+            active.tagName === "SELECT"
+        )
+    ) {
+        return;
+    }
+
+    if (event.key === "ArrowRight") {
+        showSlide(currentSlide + 1);
+    }
+
+    if (event.key === "ArrowLeft") {
+        showSlide(currentSlide - 1);
+    }
+
+});
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+showSlide(1);
+
+</script>
+
+</body>
+</html>

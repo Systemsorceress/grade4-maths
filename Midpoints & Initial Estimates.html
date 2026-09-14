@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Midpoints & Estimating Number Lines</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --navy: #172554;
+        --blue: #3b82f6;
+        --blue-light: #eff6ff;
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --green: #16a34a;
+        --green-bg: #dcfce7;
+        --red: #dc2626;
+        --red-bg: #fee2e2;
+        --purple: #7c3aed;
+        --purple-light: #f5f3ff;
+        --text: #1e293b;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f7f8fc;
+        --white: #ffffff;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+        font: inherit;
+    }
+
+    .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ================= HEADER ================= */
+
+    header {
+        height: 76px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        flex-shrink: 0;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--orange);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: 20px;
+        color: var(--navy);
+    }
+
+    .brand p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .slide-counter {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--muted);
+        background: #f8fafc;
+        padding: 9px 14px;
+        border-radius: 20px;
+    }
+
+    .progress-track {
+        position: absolute;
+        top: 75px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: #e2e8f0;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 33.33%;
+        background: var(--orange);
+        transition: width .35s ease;
+    }
+
+    /* ================= MAIN ================= */
+
+    main {
+        flex: 1;
+        padding: 24px 30px 20px;
+        overflow: auto;
+    }
+
+    .slide {
+        display: none;
+        max-width: 1250px;
+        margin: 0 auto;
+        animation: slideIn .25s ease;
+    }
+
+    .slide.active {
+        display: block;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide-heading {
+        margin-bottom: 20px;
+    }
+
+    .slide-heading .eyebrow {
+        color: var(--orange-dark);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .slide-heading h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(24px, 3vw, 34px);
+        line-height: 1.15;
+    }
+
+    .slide-heading p {
+        color: var(--muted);
+        margin: 7px 0 0;
+        font-size: 15px;
+    }
+
+    .question-section {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, .04);
+    }
+
+    .question-title {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 17px;
+    }
+
+    .question-number {
+        min-width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--navy);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+    }
+
+    .question-title h3 {
+        margin: 0;
+        font-size: 18px;
+        color: var(--navy);
+    }
+
+    .question-title p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    /* ================= NUMBER LINE ================= */
+
+    .number-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .number-card {
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 15px 12px;
+        background: #fbfdff;
+    }
+
+    .number-card-title {
+        font-weight: 800;
+        color: var(--navy);
+        margin-bottom: 7px;
+    }
+
+    .range-label {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--muted);
+        background: #f1f5f9;
+        padding: 4px 8px;
+        border-radius: 7px;
+        margin-bottom: 5px;
+    }
+
+    .number-line-wrap {
+        position: relative;
+        width: 100%;
+        margin: 5px auto 0;
+    }
+
+    svg.number-line {
+        display: block;
+        width: 100%;
+        height: 105px;
+        overflow: visible;
+    }
+
+    .axis {
+        stroke: #334155;
+        stroke-width: 3;
+        stroke-linecap: round;
+    }
+
+    .tick {
+        stroke: #334155;
+        stroke-width: 2;
+    }
+
+    .tick-label {
+        font-size: 11px;
+        fill: #475569;
+        font-weight: 600;
+    }
+
+    .endpoint-label {
+        font-size: 12px;
+        fill: #172554;
+        font-weight: 800;
+    }
+
+    .midpoint-label {
+        font-size: 11px;
+        fill: #ea580c;
+        font-weight: 800;
+    }
+
+    .arrow-line {
+        stroke: var(--orange);
+        stroke-width: 3;
+    }
+
+    .arrow-head {
+        fill: var(--orange);
+    }
+
+    .pointer-answer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin-top: -3px;
+    }
+
+    .pointer-answer span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    input.answer,
+    select.answer {
+        width: 105px;
+        height: 38px;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        background: white;
+        padding: 0 10px;
+        text-align: center;
+        font-weight: 800;
+        color: var(--navy);
+        outline: none;
+        transition: .2s;
+    }
+
+    input.answer:focus,
+    select.answer:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+    }
+
+    input.answer.correct,
+    select.answer.correct {
+        border-color: var(--green);
+        background: var(--green-bg);
+        color: #166534;
+    }
+
+    input.answer.incorrect,
+    select.answer.incorrect {
+        border-color: var(--red);
+        background: var(--red-bg);
+        color: #991b1b;
+    }
+
+    .feedback {
+        min-height: 19px;
+        text-align: center;
+        margin-top: 6px;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .feedback.correct {
+        color: var(--green);
+    }
+
+    .feedback.incorrect {
+        color: var(--red);
+    }
+
+    /* ================= SLIDE 2 ================= */
+
+    .estimate-card {
+        border: 1px solid var(--border);
+        background: #fbfdff;
+        border-radius: 16px;
+        padding: 15px;
+    }
+
+    .estimate-card + .estimate-card {
+        margin-top: 14px;
+    }
+
+    .estimate-heading {
+        font-weight: 800;
+        color: var(--navy);
+        margin-bottom: 3px;
+    }
+
+    .estimate-sub {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .estimate-line {
+        width: 100%;
+    }
+
+    .answers-row {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: -2px;
+    }
+
+    .mini-answer {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .mini-answer input {
+        width: 92px;
+        height: 36px;
+        border: 2px solid #cbd5e1;
+        border-radius: 9px;
+        text-align: center;
+        font-weight: 800;
+        color: var(--navy);
+        outline: none;
+    }
+
+    .mini-answer input.correct {
+        border-color: var(--green);
+        background: var(--green-bg);
+    }
+
+    .mini-answer input.incorrect {
+        border-color: var(--red);
+        background: var(--red-bg);
+    }
+
+    /* ================= SLIDE 3 ================= */
+
+    .reasoning-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        max-width: 1050px;
+        margin: 0 auto;
+    }
+
+    .reasoning-line {
+        margin-bottom: 24px;
+    }
+
+    .reasoning-line svg {
+        width: 100%;
+        height: 145px;
+    }
+
+    .reasoning-instructions {
+        background: var(--purple-light);
+        border: 1px solid #ddd6fe;
+        border-radius: 13px;
+        padding: 13px 16px;
+        margin-bottom: 17px;
+        color: #5b21b6;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .statement-list {
+        display: grid;
+        gap: 11px;
+    }
+
+    .statement {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 15px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fbfdff;
+        font-size: 15px;
+        font-weight: 650;
+    }
+
+    .statement-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--blue-light);
+        color: #1d4ed8;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        flex-shrink: 0;
+    }
+
+    select.reason-select {
+        min-width: 105px;
+        height: 38px;
+        border: 2px solid #cbd5e1;
+        border-radius: 9px;
+        padding: 0 9px;
+        color: var(--navy);
+        font-weight: 800;
+        background: white;
+        cursor: pointer;
+        outline: none;
+    }
+
+    select.reason-select.correct {
+        border-color: var(--green);
+        background: var(--green-bg);
+    }
+
+    select.reason-select.incorrect {
+        border-color: var(--red);
+        background: var(--red-bg);
+    }
+
+    /* ================= NAVIGATION ================= */
+
+    footer {
+        height: 72px;
+        background: white;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    .nav-btn {
+        border: 0;
+        border-radius: 11px;
+        padding: 11px 21px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .prev-btn {
+        background: #e2e8f0;
+        color: #334155;
+    }
+
+    .next-btn {
+        background: var(--navy);
+        color: white;
+    }
+
+    .check-btn {
+        background: var(--orange);
+        color: white;
+        box-shadow: 0 4px 10px rgba(249, 115, 22, .22);
+    }
+
+    .check-btn:hover {
+        background: var(--orange-dark);
+    }
+
+    .dots {
+        display: flex;
+        gap: 7px;
+        margin: 0 9px;
+    }
+
+    .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #cbd5e1;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .dot.active {
+        width: 24px;
+        border-radius: 8px;
+        background: var(--orange);
+    }
+
+    /* ================= TOAST ================= */
+
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 87px;
+        transform: translate(-50%, 20px);
+        background: var(--navy);
+        color: white;
+        padding: 11px 17px;
+        border-radius: 11px;
+        font-size: 13px;
+        font-weight: 700;
+        opacity: 0;
+        pointer-events: none;
+        transition: .25s;
+        z-index: 50;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, .2);
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 850px) {
+        header {
+            padding: 0 16px;
+        }
+
+        main {
+            padding: 18px 15px;
+        }
+
+        .number-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .number-card {
+            padding: 12px;
+        }
+
+        footer {
+            height: auto;
+            min-height: 70px;
+            padding: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 9px 14px;
+        }
+
+        .statement {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .reason-select {
+            margin-left: 38px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .brand p {
+            display: none;
+        }
+
+        .brand h1 {
+            font-size: 16px;
+        }
+
+        .slide-counter {
+            font-size: 12px;
+        }
+
+        .question-section {
+            padding: 14px;
+        }
+
+        .reasoning-card {
+            padding: 14px;
+        }
+    }
+
+    .shake {
+        animation: shake .3s ease;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <div class="brand">
+        <div class="brand-icon">↔</div>
+        <div>
+            <h1>Midpoints & Number Lines</h1>
+            <p>Estimate • Locate • Reason</p>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter">
+        Slide 1 of 3
+    </div>
+
+    <div class="progress-track">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</header>
+
+<main>
+
+<!-- =========================================================
+     SLIDE 1
+========================================================= -->
+
+<section class="slide active" data-slide="1">
+
+    <div class="slide-heading">
+        <div class="eyebrow">Questions 1 & 2</div>
+        <h2>Midpoints & Initial Estimates</h2>
+        <p>Use the middle of the number line to find or estimate the value.</p>
+    </div>
+
+    <!-- QUESTION 1 -->
+
+    <div class="question-section">
+        <div class="question-title">
+            <div class="question-number">1</div>
+            <div>
+                <h3>What is the value of the midpoint of each number line?</h3>
+                <p>The midpoint is exactly halfway between the two endpoints.</p>
+            </div>
+        </div>
+
+        <div class="number-grid">
+
+            <!-- 1a -->
+
+            <div class="number-card">
+                <div class="number-card-title">1a</div>
+                <div class="range-label">0 → 100</div>
+
+                <div class="number-line-wrap">
+
+                    <svg class="number-line" viewBox="0 0 600 120">
+                        <line class="axis" x1="55" y1="62" x2="545" y2="62"/>
+
+                        <line class="tick" x1="55" y1="51" x2="55" y2="73"/>
+                        <line class="tick" x1="300" y1="47" x2="300" y2="77"/>
+                        <line class="tick" x1="545" y1="51" x2="545" y2="73"/>
+
+                        <text class="endpoint-label" x="55" y="95" text-anchor="middle">0</text>
+                        <text class="midpoint-label" x="300" y="95" text-anchor="middle">?</text>
+                        <text class="endpoint-label" x="545" y="95" text-anchor="middle">100</text>
+
+                        <!-- Arrow -->
+                        <line class="arrow-line" x1="300" y1="19" x2="300" y2="48"/>
+                        <polygon class="arrow-head"
+                            points="300,54 293,42 307,42"/>
+                    </svg>
+
+                </div>
+
+                <div class="pointer-answer">
+                    <span>Answer:</span>
+                    <input class="answer" data-answer="50" aria-label="1a answer">
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- 1b -->
+
+            <div class="number-card">
+                <div class="number-card-title">1b</div>
+                <div class="range-label">0 → 1,000</div>
+
+                <div class="number-line-wrap">
+
+                    <svg class="number-line" viewBox="0 0 600 120">
+                        <line class="axis" x1="55" y1="62" x2="545" y2="62"/>
+
+                        <line class="tick" x1="55" y1="51" x2="55" y2="73"/>
+                        <line class="tick" x1="300" y1="47" x2="300" y2="77"/>
+                        <line class="tick" x1="545" y1="51" x2="545" y2="73"/>
+
+                        <text class="endpoint-label" x="55" y="95" text-anchor="middle">0</text>
+                        <text class="midpoint-label" x="300" y="95" text-anchor="middle">?</text>
+                        <text class="endpoint-label" x="545" y="95" text-anchor="middle">1,000</text>
+
+                        <line class="arrow-line" x1="300" y1="19" x2="300" y2="48"/>
+                        <polygon class="arrow-head"
+                            points="300,54 293,42 307,42"/>
+                    </svg>
+
+                </div>
+
+                <div class="pointer-answer">
+                    <span>Answer:</span>
+                    <input class="answer" data-answer="500" aria-label="1b answer">
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+            <!-- 1c -->
+
+            <div class="number-card">
+                <div class="number-card-title">1c</div>
+                <div class="range-label">0 → 10,000</div>
+
+                <div class="number-line-wrap">
+
+                    <svg class="number-line" viewBox="0 0 600 120">
+                        <line class="axis" x1="55" y1="62" x2="545" y2="62"/>
+
+                        <line class="tick" x1="55" y1="51" x2="55" y2="73"/>
+                        <line class="tick" x1="300" y1="47" x2="300" y2="77"/>
+                        <line class="tick" x1="545" y1="51" x2="545" y2="73"/>
+
+                        <text class="endpoint-label" x="55" y="95" text-anchor="middle">0</text>
+                        <text class="midpoint-label" x="300" y="95" text-anchor="middle">?</text>
+                        <text class="endpoint-label" x="545" y="95" text-anchor="middle">10,000</text>
+
+                        <line class="arrow-line" x1="300" y1="19" x2="300" y2="48"/>
+                        <polygon class="arrow-head"
+                            points="300,54 293,42 307,42"/>
+                    </svg>
+
+                </div>
+
+                <div class="pointer-answer">
+                    <span>Answer:</span>
+                    <input class="answer" data-answer="5000" aria-label="1c answer">
+                </div>
+                <div class="feedback"></div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- QUESTION 2 -->
+
+    <div class="question-section">
+
+        <div class="question-title">
+            <div class="question-number">2</div>
+            <div>
+                <h3>Estimate the numbers the arrows are pointing to.</h3>
+                <p>Look carefully at where the arrow sits between the ticks.</p>
+            </div>
+        </div>
+
+        <div class="number-grid">
+
+            <!-- 2a -->
+
+            <div class="number-card">
+
+                <div class="number-card-title">2a</div>
+                <div class="range-label">Each interval = 100</div>
+
+                <svg class="number-line" viewBox="0 0 700 125">
+
+                    <line class="axis" x1="45" y1="65" x2="655" y2="65"/>
+
+                    <!-- 0 to 1000, 10 intervals -->
+                    <g>
+                        <line class="tick" x1="45" y1="53" x2="45" y2="77"/>
+                        <line class="tick" x1="106" y1="53" x2="106" y2="77"/>
+                        <line class="tick" x1="167" y1="53" x2="167" y2="77"/>
+                        <line class="tick" x1="228" y1="53" x2="228" y2="77"/>
+                        <line class="tick" x1="289" y1="53" x2="289" y2="77"/>
+                        <line class="tick" x1="350" y1="53" x2="350" y2="77"/>
+                        <line class="tick" x1="411" y1="53" x2="411" y2="77"/>
+                        <line class="tick" x1="472" y1="53" x2="472" y2="77"/>
+                        <line class="tick" x1="533" y1="53" x2="533" y2="77"/>
+                        <line class="tick" x1="594" y1="53" x2="594" y2="77"/>
+                        <line class="tick" x1="655" y1="53" x2="655" y2="77"/>
+                    </g>
+
+                    <g class="tick-label">
+                        <text x="45" y="97" text-anchor="middle">0</text>
+                        <text x="106" y="97" text-anchor="middle">100</text>
+                        <text x="167" y="97" text-anchor="middle">200</text>
+                        <text x="228" y="97" text-anchor="middle">300</text>
+                        <text x="289" y="97" text-anchor="middle">400</text>
+                        <text x="350" y="97" text-anchor="middle">500</text>
+                        <text x="411" y="97" text-anchor="middle">600</text>
+                        <text x="472" y="97" text-anchor="middle">700</text>
+                        <text x="533" y="97" text-anchor="middle">800</text>
+                        <text x="594" y="97" text-anchor="middle">900</text>
+                        <text x="655" y="97" text-anchor="middle">1,000</text>
+                    </g>
+
+                    <!-- Halfway arrow -->
+                    <line class="arrow-line" x1="75.5" y1="14" x2="75.5" y2="50"/>
+                    <polygon class="arrow-head"
+                        points="75.5,56 68.5,44 82.5,44"/>
+                </svg>
+
+                <div class="pointer-answer">
+                    <span>Estimate:</span>
+                    <input class="answer" data-answer="50" aria-label="2a answer">
+                </div>
+
+                <div class="feedback"></div>
+
+            </div>
+
+
+            <!-- 2b -->
+
+            <div class="number-card">
+
+                <div class="number-card-title">2b</div>
+                <div class="range-label">0 → 10,000 • Each interval = 1,000</div>
+
+                <svg class="number-line" viewBox="0 0 700 125">
+
+                    <line class="axis" x1="45" y1="65" x2="655" y2="65"/>
+
+                    <!-- 11 tick positions -->
+                    <g>
+                        <line class="tick" x1="45" y1="53" x2="45" y2="77"/>
+                        <line class="tick" x1="106" y1="53" x2="106" y2="77"/>
+                        <line class="tick" x1="167" y1="53" x2="167" y2="77"/>
+                        <line class="tick" x1="228" y1="53" x2="228" y2="77"/>
+                        <line class="tick" x1="289" y1="53" x2="289" y2="77"/>
+                        <line class="tick" x1="350" y1="53" x2="350" y2="77"/>
+                        <line class="tick" x1="411" y1="53" x2="411" y2="77"/>
+                        <line class="tick" x1="472" y1="53" x2="472" y2="77"/>
+                        <line class="tick" x1="533" y1="53" x2="533" y2="77"/>
+                        <line class="tick" x1="594" y1="53" x2="594" y2="77"/>
+                        <line class="tick" x1="655" y1="53" x2="655" y2="77"/>
+                    </g>
+
+                    <text class="endpoint-label" x="45" y="98" text-anchor="middle">0</text>
+                    <text class="endpoint-label" x="655" y="98" text-anchor="middle">10,000</text>
+
+                    <!-- 500 -->
+                    <line class="arrow-line" x1="75.5" y1="14" x2="75.5" y2="50"/>
+                    <polygon class="arrow-head"
+                        points="75.5,56 68.5,44 82.5,44"/>
+                </svg>
+
+                <div class="pointer-answer">
+                    <span>Estimate:</span>
+                    <input class="answer" data-answer="500" aria-label="2b answer">
+                </div>
+
+                <div class="feedback"></div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SLIDE 2
+========================================================= -->
+
+<section class="slide" data-slide="2">
+
+    <div class="slide-heading">
+        <div class="eyebrow">Question 3</div>
+        <h2>Estimating Midpoints Between Ticks</h2>
+        <p>When an arrow is halfway between two ticks, find the midpoint between their values.</p>
+    </div>
+
+
+    <div class="question-section">
+
+        <div class="question-title">
+            <div class="question-number">3</div>
+            <div>
+                <h3>Estimate the numbers the arrows are pointing to.</h3>
+                <p>Find the value halfway between the two nearby tick values.</p>
+            </div>
+        </div>
+
+
+        <!-- 3a -->
+
+        <div class="estimate-card">
+
+            <div class="estimate-heading">3a</div>
+            <div class="estimate-sub">
+                0 → 10,000 &nbsp;•&nbsp; Each interval = 1,000
+            </div>
+
+            <svg class="estimate-line" viewBox="0 0 1000 145">
+
+                <line class="axis" x1="55" y1="73" x2="945" y2="73"/>
+
+                <!-- ticks -->
+                <g>
+                    <line class="tick" x1="55" y1="59" x2="55" y2="87"/>
+                    <line class="tick" x1="144" y1="59" x2="144" y2="87"/>
+                    <line class="tick" x1="233" y1="59" x2="233" y2="87"/>
+                    <line class="tick" x1="322" y1="59" x2="322" y2="87"/>
+                    <line class="tick" x1="411" y1="59" x2="411" y2="87"/>
+                    <line class="tick" x1="500" y1="59" x2="500" y2="87"/>
+                    <line class="tick" x1="589" y1="59" x2="589" y2="87"/>
+                    <line class="tick" x1="678" y1="59" x2="678" y2="87"/>
+                    <line class="tick" x1="767" y1="59" x2="767" y2="87"/>
+                    <line class="tick" x1="856" y1="59" x2="856" y2="87"/>
+                    <line class="tick" x1="945" y1="59" x2="945" y2="87"/>
+                </g>
+
+                <g class="tick-label">
+                    <text x="55" y="111" text-anchor="middle">0</text>
+                    <text x="144" y="111" text-anchor="middle">1,000</text>
+                    <text x="233" y="111" text-anchor="middle">2,000</text>
+                    <text x="322" y="111" text-anchor="middle">3,000</text>
+                    <text x="411" y="111" text-anchor="middle">4,000</text>
+                    <text x="500" y="111" text-anchor="middle">5,000</text>
+                    <text x="589" y="111" text-anchor="middle">6,000</text>
+                    <text x="678" y="111" text-anchor="middle">7,000</text>
+                    <text x="767" y="111" text-anchor="middle">8,000</text>
+                    <text x="856" y="111" text-anchor="middle">9,000</text>
+                    <text x="945" y="111" text-anchor="middle">10,000</text>
+                </g>
+
+                <!-- 2500 -->
+                <line class="arrow-line" x1="277.5" y1="13" x2="277.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="277.5,63 270.5,51 284.5,51"/>
+
+                <!-- 4500 -->
+                <line class="arrow-line" x1="455.5" y1="13" x2="455.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="455.5,63 448.5,51 462.5,51"/>
+
+                <!-- 7500 -->
+                <line class="arrow-line" x1="722.5" y1="13" x2="722.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="722.5,63 715.5,51 729.5,51"/>
+            </svg>
+
+            <div class="answers-row">
+
+                <div class="mini-answer">
+                    Arrow 1
+                    <input data-answer="2500">
+                </div>
+
+                <div class="mini-answer">
+                    Arrow 2
+                    <input data-answer="4500">
+                </div>
+
+                <div class="mini-answer">
+                    Arrow 3
+                    <input data-answer="7500">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 3b -->
+
+        <div class="estimate-card">
+
+            <div class="estimate-heading">3b</div>
+            <div class="estimate-sub">
+                6,000 → 7,000 &nbsp;•&nbsp; Each interval = 100
+            </div>
+
+            <svg class="estimate-line" viewBox="0 0 1000 145">
+
+                <line class="axis" x1="55" y1="73" x2="945" y2="73"/>
+
+                <g>
+                    <line class="tick" x1="55" y1="59" x2="55" y2="87"/>
+                    <line class="tick" x1="144" y1="59" x2="144" y2="87"/>
+                    <line class="tick" x1="233" y1="59" x2="233" y2="87"/>
+                    <line class="tick" x1="322" y1="59" x2="322" y2="87"/>
+                    <line class="tick" x1="411" y1="59" x2="411" y2="87"/>
+                    <line class="tick" x1="500" y1="59" x2="500" y2="87"/>
+                    <line class="tick" x1="589" y1="59" x2="589" y2="87"/>
+                    <line class="tick" x1="678" y1="59" x2="678" y2="87"/>
+                    <line class="tick" x1="767" y1="59" x2="767" y2="87"/>
+                    <line class="tick" x1="856" y1="59" x2="856" y2="87"/>
+                    <line class="tick" x1="945" y1="59" x2="945" y2="87"/>
+                </g>
+
+                <text class="endpoint-label" x="55" y="111" text-anchor="middle">6,000</text>
+                <text class="endpoint-label" x="945" y="111" text-anchor="middle">7,000</text>
+
+                <!-- 6150 -->
+                <line class="arrow-line" x1="188.5" y1="13" x2="188.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="188.5,63 181.5,51 195.5,51"/>
+
+                <!-- 6550 -->
+                <line class="arrow-line" x1="544.5" y1="13" x2="544.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="544.5,63 537.5,51 551.5,51"/>
+
+                <!-- 6850 -->
+                <line class="arrow-line" x1="811.5" y1="13" x2="811.5" y2="56"/>
+                <polygon class="arrow-head"
+                    points="811.5,63 804.5,51 818.5,51"/>
+            </svg>
+
+            <div class="answers-row">
+
+                <div class="mini-answer">
+                    Arrow 1
+                    <input data-answer="6150">
+                </div>
+
+                <div class="mini-answer">
+                    Arrow 2
+                    <input data-answer="6550">
+                </div>
+
+                <div class="mini-answer">
+                    Arrow 3
+                    <input data-answer="6850">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 3c -->
+
+        <div class="estimate-card">
+
+            <div class="estimate-heading">3c</div>
+            <div class="estimate-sub">
+                6,000 → 7,000 &nbsp;•&nbsp; 5 intervals &nbsp;•&nbsp; Each interval = 200
+            </div>
+
+            <svg class="estimate-line" viewBox="0 0 1000 145">
+
+                <line class="axis" x1="55" y1="73" x2="945" y2="73"/>
+
+                <g>
+                    <line class="tick" x1="55" y1="59" x2="55" y2="87"/>
+                    <line class="tick" x1="233" y1="59" x2="233" y2="87"/>
+                    <line class="tick" x1="411" y1="59" x2="411" y2="87"/>
+                    <line class="tick" x1="589" y1="59" x2="589" y2="87"/>
+                    <line class="tick" x1="767" y1="59" x2="767" y2="87"/>
+                    <line class="tick" x1="945" y1="59" x2="945" y2="87"/>
+                </g>
+
+                <g class="tick-label">
+                    <text x="55" y="111" text-anchor="middle">6,000</text>
+                    <text x="233" y="111" text-anchor="middle">6,200</text>
+                    <text x="411" y="111" text-anchor="middle">6,400</text>
+                    <text x="589" y="111" text-anchor="middle">6,600</text>
+                    <text x="767" y="111" text-anchor="middle">6,800</text>
+                    <text x="945" y="111" text-anchor="middle">7,000</text>
+                </g>
+
+                <!-- 6300 -->
+                <line class="arrow-line" x1="322" y1="13" x2="322" y2="56"/>
+                <polygon class="arrow-head"
+                    points="322,63 315,51 329,51"/>
+
+                <!-- 6900 -->
+                <line class="arrow-line" x1="856" y1="13" x2="856" y2="56"/>
+                <polygon class="arrow-head"
+                    points="856,63 849,51 863,51"/>
+            </svg>
+
+            <div class="answers-row">
+
+                <div class="mini-answer">
+                    Arrow 1
+                    <input data-answer="6300">
+                </div>
+
+                <div class="mini-answer">
+                    Arrow 2
+                    <input data-answer="6900">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SLIDE 3
+========================================================= -->
+
+<section class="slide" data-slide="3">
+
+    <div class="slide-heading">
+        <div class="eyebrow">Question 4</div>
+        <h2>Which Side of the Midpoint?</h2>
+        <p>Use the midpoint to decide whether each number belongs on the left or right.</p>
+    </div>
+
+
+    <div class="reasoning-card">
+
+        <div class="question-title">
+            <div class="question-number">4</div>
+            <div>
+                <h3>Rosie is estimating the positions of some numbers on the number line.</h3>
+                <p>Choose <strong>left</strong> or <strong>right</strong>.</p>
+            </div>
+        </div>
+
+
+        <!-- Number line -->
+
+        <div class="reasoning-line">
+
+            <svg viewBox="0 0 1000 150">
+
+                <line class="axis"
+                      x1="90"
+                      y1="75"
+                      x2="910"
+                      y2="75"/>
+
+                <line class="tick"
+                      x1="90"
+                      y1="59"
+                      x2="90"
+                      y2="91"/>
+
+                <line class="tick"
+                      x1="500"
+                      y1="50"
+                      x2="500"
+                      y2="100"/>
+
+                <line class="tick"
+                      x1="910"
+                      y1="59"
+                      x2="910"
+                      y2="91"/>
+
+                <!-- midpoint marker -->
+
+                <circle cx="500" cy="75" r="7" fill="#f97316"/>
+
+                <text class="endpoint-label"
+                      x="90"
+                      y="120"
+                      text-anchor="middle">
+                    0
+                </text>
+
+                <text class="midpoint-label"
+                      x="500"
+                      y="120"
+                      text-anchor="middle">
+                    5,000
+                </text>
+
+                <text class="endpoint-label"
+                      x="910"
+                      y="120"
+                      text-anchor="middle">
+                    10,000
+                </text>
+
+                <text x="500"
+                      y="30"
+                      text-anchor="middle"
+                      fill="#ea580c"
+                      font-size="13"
+                      font-weight="800">
+                    MIDPOINT
+                </text>
+
+            </svg>
+
+        </div>
+
+
+        <div class="reasoning-instructions">
+            💡 Think: Is the number smaller or larger than 5,000?
+        </div>
+
+
+        <div class="statement-list">
+
+            <div class="statement">
+
+                <div class="statement-letter">a</div>
+
+                <span>
+                    3,000 will be to the
+                </span>
+
+                <select class="reason-select" data-answer="left">
+                    <option value="">Choose</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                </select>
+
+                <span>
+                    of the midpoint.
+                </span>
+
+            </div>
+
+
+            <div class="statement">
+
+                <div class="statement-letter">b</div>
+
+                <span>
+                    9,000 will be to the
+                </span>
+
+                <select class="reason-select" data-answer="right">
+                    <option value="">Choose</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                </select>
+
+                <span>
+                    of the midpoint.
+                </span>
+
+            </div>
+
+
+            <div class="statement">
+
+                <div class="statement-letter">c</div>
+
+                <span>
+                    999 will be to the
+                </span>
+
+                <select class="reason-select" data-answer="left">
+                    <option value="">Choose</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                </select>
+
+                <span>
+                    of the midpoint.
+                </span>
+
+            </div>
+
+
+            <div class="statement">
+
+                <div class="statement-letter">d</div>
+
+                <span>
+                    5,001 will be to the
+                </span>
+
+                <select class="reason-select" data-answer="right">
+                    <option value="">Choose</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                </select>
+
+                <span>
+                    of the midpoint.
+                </span>
+
+            </div>
+
+        </div>
+
+        <div id="slide3Feedback" class="feedback" style="margin-top:15px;"></div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <button class="nav-btn prev-btn" id="prevBtn">
+        ← Previous
+    </button>
+
+    <div class="dots">
+        <div class="dot active" data-go="1"></div>
+        <div class="dot" data-go="2"></div>
+        <div class="dot" data-go="3"></div>
+    </div>
+
+    <button class="nav-btn check-btn" id="checkBtn">
+        ✓ Check Answers
+    </button>
+
+    <button class="nav-btn next-btn" id="nextBtn">
+        Next →
+    </button>
+
+</footer>
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+
+<script>
+/* =========================================================
+   SLIDE NAVIGATION
+========================================================= */
+
+let currentSlide = 1;
+const totalSlides = 3;
+
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+const slideCounter = document.getElementById("slideCounter");
+const progressBar = document.getElementById("progressBar");
+
+function showSlide(number) {
+
+    if (number < 1) number = 1;
+    if (number > totalSlides) number = totalSlides;
+
+    currentSlide = number;
+
+    slides.forEach(slide => {
+        slide.classList.toggle(
+            "active",
+            Number(slide.dataset.slide) === currentSlide
+        );
+    });
+
+    dots.forEach(dot => {
+        dot.classList.toggle(
+            "active",
+            Number(dot.dataset.go) === currentSlide
+        );
+    });
+
+    slideCounter.textContent =
+        `Slide ${currentSlide} of ${totalSlides}`;
+
+    progressBar.style.width =
+        `${(currentSlide / totalSlides) * 100}%`;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+    showSlide(currentSlide - 1);
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+    showSlide(currentSlide + 1);
+});
+
+dots.forEach(dot => {
+    dot.addEventListener("click", () => {
+        showSlide(Number(dot.dataset.go));
+    });
+});
+
+
+/* =========================================================
+   NORMALISE NUMBERS
+   Accepts:
+   5000
+   5,000
+    5,000
+========================================================= */
+
+function normaliseNumber(value) {
+
+    return String(value)
+        .trim()
+        .replace(/,/g, "")
+        .replace(/\s/g, "");
+}
+
+
+/* =========================================================
+   FEEDBACK HELPERS
+========================================================= */
+
+function markCorrect(element) {
+
+    element.classList.remove("incorrect");
+    element.classList.add("correct");
+
+}
+
+function markIncorrect(element) {
+
+    element.classList.remove("correct");
+    element.classList.add("incorrect");
+
+    element.classList.remove("shake");
+
+    // Restart animation
+    void element.offsetWidth;
+
+    element.classList.add("shake");
+}
+
+
+/* =========================================================
+   SLIDE 1 CHECK
+========================================================= */
+
+function checkSlide1() {
+
+    const slide = document.querySelector(
+        '.slide[data-slide="1"]'
+    );
+
+    const inputs = slide.querySelectorAll("input[data-answer]");
+
+    let correct = 0;
+
+    inputs.forEach(input => {
+
+        const expected =
+            normaliseNumber(input.dataset.answer);
+
+        const actual =
+            normaliseNumber(input.value);
+
+        const feedback =
+            input.closest(".number-card")
+                ?.querySelector(".feedback");
+
+        if (actual !== "" && actual === expected) {
+
+            markCorrect(input);
+            correct++;
+
+            if (feedback) {
+                feedback.textContent = "✓ Correct!";
+                feedback.className = "feedback correct";
+            }
+
+        } else {
+
+            markIncorrect(input);
+
+            if (feedback) {
+                feedback.textContent = "Try again — look at the midpoint.";
+                feedback.className = "feedback incorrect";
+            }
+
+        }
+
+    });
+
+    return {
+        correct,
+        total: inputs.length
+    };
+}
+
+
+/* =========================================================
+   SLIDE 2 CHECK
+========================================================= */
+
+function checkSlide2() {
+
+    const slide = document.querySelector(
+        '.slide[data-slide="2"]'
+    );
+
+    const inputs = slide.querySelectorAll("input[data-answer]");
+
+    let correct = 0;
+
+    inputs.forEach(input => {
+
+        const expected =
+            normaliseNumber(input.dataset.answer);
+
+        const actual =
+            normaliseNumber(input.value);
+
+        if (actual !== "" && actual === expected) {
+
+            markCorrect(input);
+            correct++;
+
+        } else {
+
+            markIncorrect(input);
+
+        }
+
+    });
+
+    return {
+        correct,
+        total: inputs.length
+    };
+}
+
+
+/* =========================================================
+   SLIDE 3 CHECK
+========================================================= */
+
+function checkSlide3() {
+
+    const slide = document.querySelector(
+        '.slide[data-slide="3"]'
+    );
+
+    const selects =
+        slide.querySelectorAll("select[data-answer]");
+
+    let correct = 0;
+
+    selects.forEach(select => {
+
+        const expected = select.dataset.answer;
+        const actual = select.value;
+
+        if (actual === expected) {
+
+            markCorrect(select);
+            correct++;
+
+        } else {
+
+            markIncorrect(select);
+
+        }
+
+    });
+
+    const feedback =
+        document.getElementById("slide3Feedback");
+
+    if (correct === selects.length) {
+
+        feedback.textContent =
+            "🎉 Excellent! All four positions are correct.";
+
+        feedback.className =
+            "feedback correct";
+
+    } else {
+
+        feedback.textContent =
+            `${correct} of ${selects.length} correct. Think about whether each number is smaller or larger than 5,000.`;
+
+        feedback.className =
+            "feedback incorrect";
+
+    }
+
+    return {
+        correct,
+        total: selects.length
+    };
+}
+
+
+/* =========================================================
+   CHECK CURRENT SLIDE
+========================================================= */
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+
+    let result;
+
+    if (currentSlide === 1) {
+        result = checkSlide1();
+    }
+
+    if (currentSlide === 2) {
+        result = checkSlide2();
+    }
+
+    if (currentSlide === 3) {
+        result = checkSlide3();
+    }
+
+    if (!result) return;
+
+    if (result.correct === result.total) {
+
+        showToast(
+            `🎉 Perfect! ${result.correct}/${result.total} correct.`
+        );
+
+    } else {
+
+        showToast(
+            `${result.correct}/${result.total} correct — keep thinking!`
+        );
+
+    }
+
+});
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2200);
+}
+
+
+/* =========================================================
+   KEYBOARD NAVIGATION
+========================================================= */
+
+document.addEventListener("keydown", event => {
+
+    // Don't navigate while typing into an input/select.
+    const tag = document.activeElement.tagName;
+
+    if (
+        tag === "INPUT" ||
+        tag === "SELECT" ||
+        tag === "TEXTAREA"
+    ) {
+        return;
+    }
+
+    if (event.key === "ArrowRight") {
+        showSlide(currentSlide + 1);
+    }
+
+    if (event.key === "ArrowLeft") {
+        showSlide(currentSlide - 1);
+    }
+
+});
+
+
+/* =========================================================
+   ENTER KEY IN INPUTS
+========================================================= */
+
+document.querySelectorAll("input.answer, .mini-answer input")
+    .forEach(input => {
+
+        input.addEventListener("keydown", event => {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                document.getElementById("checkBtn").click();
+
+            }
+
+        });
+
+    });
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+showSlide(1);
+
+</script>
+
+</body>
+</html>

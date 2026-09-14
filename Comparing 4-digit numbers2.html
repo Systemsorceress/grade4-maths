@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparing 4-Digit Numbers</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --navy: #172554;
+        --blue: #3B82F6;
+        --blue-light: #DBEAFE;
+        --green: #22C55E;
+        --green-light: #DCFCE7;
+        --yellow: #EAB308;
+        --yellow-light: #FEF9C3;
+        --red: #EF4444;
+        --red-light: #FEE2E2;
+        --purple: #7C3AED;
+        --purple-light: #EDE9FE;
+        --orange: #F97316;
+        --orange-light: #FFEDD5;
+        --text: #1E293B;
+        --muted: #64748B;
+        --border: #CBD5E1;
+        --bg: #F8FAFC;
+        --white: #FFFFFF;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    .app {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+        height: 76px;
+        background: var(--navy);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        flex-shrink: 0;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: white;
+        color: var(--navy);
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        font-weight: 900;
+    }
+
+    .brand-title {
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .brand-subtitle {
+        font-size: 12px;
+        opacity: .7;
+        margin-top: 2px;
+    }
+
+    .slide-counter {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .progress {
+        position: absolute;
+        top: 74px;
+        left: 0;
+        height: 4px;
+        background: var(--orange);
+        transition: width .3s ease;
+    }
+
+    /* MAIN */
+    main {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .slide {
+        display: none;
+        height: 100%;
+        overflow-y: auto;
+        padding: 24px 34px 95px;
+    }
+
+    .slide.active {
+        display: block;
+        animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .slide-title {
+        max-width: 1200px;
+        margin: 0 auto 18px;
+    }
+
+    .slide-title h1 {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(25px, 3vw, 36px);
+    }
+
+    .slide-title p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+    }
+
+    .content {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    /* CARDS */
+    .question {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 12px rgba(15,23,42,.05);
+    }
+
+    .question-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .q-number {
+        min-width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--purple-light);
+        color: var(--purple);
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+    }
+
+    .question-heading h2 {
+        margin: 0;
+        font-size: 18px;
+        color: var(--navy);
+    }
+
+    .question-heading p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    /* PLACE VALUE GRID */
+    .pv-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 470px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 10px 0 15px;
+    }
+
+    .pv-cell {
+        text-align: center;
+        border-right: 1px solid white;
+    }
+
+    .pv-cell:last-child {
+        border-right: 0;
+    }
+
+    .pv-head {
+        font-size: 12px;
+        font-weight: 900;
+        padding: 6px;
+    }
+
+    .pv-body {
+        padding: 10px 4px;
+        font-size: 20px;
+        font-weight: 900;
+        background: white;
+    }
+
+    .th .pv-head { background: var(--blue); color: white; }
+    .h .pv-head { background: var(--green); color: white; }
+    .t .pv-head { background: var(--yellow); color: #422006; }
+    .o .pv-head { background: var(--red); color: white; }
+
+    /* COMPARISON ROWS */
+    .comparison-list {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .comparison-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .small-label {
+        width: 30px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .number {
+        min-width: 95px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .symbol-select,
+    .phrase-select,
+    .digit-input {
+        border: 2px solid var(--border);
+        background: white;
+        border-radius: 10px;
+        outline: none;
+        transition: .2s;
+    }
+
+    .symbol-select {
+        width: 64px;
+        height: 42px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .phrase-select {
+        height: 38px;
+        padding: 0 10px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .digit-input {
+        width: 52px;
+        height: 42px;
+        text-align: center;
+        font-size: 21px;
+        font-weight: 900;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px var(--blue-light);
+    }
+
+    .correct {
+        border-color: var(--green) !important;
+        background: var(--green-light) !important;
+    }
+
+    .incorrect {
+        border-color: var(--red) !important;
+        background: var(--red-light) !important;
+        animation: shake .25s;
+    }
+
+    @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+
+    /* CAR */
+    .cars {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .car-card {
+        flex: 1;
+        min-width: 230px;
+        border: 2px solid var(--border);
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        background: #fff;
+    }
+
+    .car-icon {
+        width: 130px;
+        height: 55px;
+        margin: 10px auto;
+        position: relative;
+        border-radius: 22px 30px 10px 10px;
+    }
+
+    .car-icon::before {
+        content: "";
+        position: absolute;
+        width: 70px;
+        height: 28px;
+        top: -17px;
+        left: 30px;
+        border-radius: 25px 25px 0 0;
+    }
+
+    .car-icon::after {
+        content: "●       ●";
+        white-space: pre;
+        position: absolute;
+        bottom: -16px;
+        left: 26px;
+        font-size: 25px;
+        color: #1E293B;
+    }
+
+    .car-a {
+        background: #3B82F6;
+    }
+
+    .car-a::before {
+        background: #93C5FD;
+    }
+
+    .car-b {
+        background: #EF4444;
+    }
+
+    .car-b::before {
+        background: #FCA5A5;
+    }
+
+    .price {
+        font-size: 23px;
+        font-weight: 900;
+    }
+
+    /* CHOICE BUTTONS */
+    .choices {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .choice {
+        padding: 10px 17px;
+        border: 2px solid var(--border);
+        background: white;
+        border-radius: 11px;
+        cursor: pointer;
+        font-weight: 800;
+        transition: .2s;
+    }
+
+    .choice:hover {
+        transform: translateY(-2px);
+        border-color: var(--blue);
+    }
+
+    .choice.selected {
+        background: var(--blue-light);
+        border-color: var(--blue);
+        color: #1D4ED8;
+    }
+
+    .choice.correct-choice {
+        background: var(--green-light);
+        border-color: var(--green);
+        color: #166534;
+    }
+
+    .choice.wrong-choice {
+        background: var(--red-light);
+        border-color: var(--red);
+        color: #991B1B;
+    }
+
+    /* DIGIT CARDS */
+    .digit-cards {
+        display: flex;
+        gap: 12px;
+        margin: 12px 0 18px;
+        flex-wrap: wrap;
+    }
+
+    .digit-card {
+        width: 62px;
+        height: 72px;
+        border: 3px solid var(--navy);
+        border-radius: 12px;
+        background: white;
+        display: grid;
+        place-items: center;
+        font-size: 32px;
+        font-weight: 900;
+        box-shadow: 0 4px 0 var(--navy);
+    }
+
+    .teddy-number {
+        display: inline-block;
+        background: var(--yellow-light);
+        border: 2px solid var(--yellow);
+        padding: 7px 13px;
+        border-radius: 10px;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    /* TEXTAREA */
+    textarea {
+        width: 100%;
+        min-height: 70px;
+        resize: vertical;
+        border: 2px solid var(--border);
+        border-radius: 11px;
+        padding: 10px;
+        margin-top: 10px;
+        outline: none;
+    }
+
+    /* MISSING DIGITS */
+    .missing-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
+        gap: 12px;
+    }
+
+    .missing-row {
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 13px;
+        background: #FAFAFA;
+    }
+
+    .missing-expression {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 19px;
+        font-weight: 900;
+        flex-wrap: wrap;
+    }
+
+    .blank {
+        display: inline-flex;
+        width: 45px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 3px solid var(--navy);
+    }
+
+    .hint {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .valid-note {
+        margin-top: 7px;
+        font-size: 12px;
+        color: var(--green);
+        font-weight: 700;
+        display: none;
+    }
+
+    .valid-note.show {
+        display: block;
+    }
+
+    /* MULTIPLE ANSWERS */
+    .digit-options {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .digit-option {
+        width: 38px;
+        height: 38px;
+        border: 2px solid var(--border);
+        border-radius: 9px;
+        background: white;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .digit-option.selected {
+        background: var(--purple-light);
+        border-color: var(--purple);
+        color: var(--purple);
+    }
+
+    .digit-option.correct-digit {
+        background: var(--green-light);
+        border-color: var(--green);
+        color: #166534;
+    }
+
+    .digit-option.wrong-digit {
+        background: var(--red-light);
+        border-color: var(--red);
+        color: #991B1B;
+    }
+
+    /* FOOTER */
+    .controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: white;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        z-index: 20;
+    }
+
+    .nav-btn,
+    .check-btn {
+        border: 0;
+        border-radius: 11px;
+        padding: 11px 20px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .nav-btn {
+        background: #E2E8F0;
+        color: var(--navy);
+    }
+
+    .nav-btn:hover {
+        background: #CBD5E1;
+    }
+
+    .check-btn {
+        background: var(--navy);
+        color: white;
+        min-width: 150px;
+    }
+
+    .check-btn:hover {
+        background: #1E3A8A;
+        transform: translateY(-1px);
+    }
+
+    .dots {
+        display: flex;
+        gap: 7px;
+        margin: 0 8px;
+    }
+
+    .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #CBD5E1;
+        cursor: pointer;
+    }
+
+    .dot.active {
+        background: var(--orange);
+        transform: scale(1.25);
+    }
+
+    /* SCORE */
+    .score-box {
+        display: none;
+        max-width: 600px;
+        margin: 20px auto;
+        text-align: center;
+        background: white;
+        border: 2px solid var(--green);
+        border-radius: 18px;
+        padding: 20px;
+    }
+
+    .score-box.show {
+        display: block;
+    }
+
+    .score-number {
+        font-size: 42px;
+        font-weight: 900;
+        color: var(--green);
+    }
+
+    .feedback {
+        margin-top: 12px;
+        padding: 9px 12px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 700;
+        display: none;
+    }
+
+    .feedback.show {
+        display: block;
+    }
+
+    .feedback.success {
+        background: var(--green-light);
+        color: #166534;
+    }
+
+    .feedback.error {
+        background: var(--red-light);
+        color: #991B1B;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 760px) {
+        header {
+            padding: 0 15px;
+        }
+
+        .brand-subtitle {
+            display: none;
+        }
+
+        .slide {
+            padding: 18px 14px 90px;
+        }
+
+        .missing-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pv-grid {
+            max-width: 100%;
+        }
+
+        .question {
+            padding: 14px;
+        }
+
+        .controls {
+            height: 65px;
+        }
+
+        .nav-btn,
+        .check-btn {
+            padding: 9px 13px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <div class="brand">
+        <div class="brand-icon">≷</div>
+        <div>
+            <div class="brand-title">Number Detective</div>
+            <div class="brand-subtitle">Comparing 4-digit numbers</div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter">
+        Slide 1 of 3
+    </div>
+</header>
+
+<div class="progress" id="progress"></div>
+
+<main>
+
+<!-- =====================================================
+     SLIDE 1
+===================================================== -->
+<section class="slide active" id="slide1">
+
+    <div class="slide-title">
+        <h1>Compare the Numbers</h1>
+        <p>Look carefully at the place values before choosing a symbol or phrase.</p>
+    </div>
+
+    <div class="content">
+
+        <!-- Q5 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">5</div>
+                <div>
+                    <h2>Write &lt;, &gt;, or =</h2>
+                    <p>Compare the numbers using their place values.</p>
+                </div>
+            </div>
+
+            <div class="comparison-list">
+
+                <div class="comparison-row">
+                    <span class="small-label">a)</span>
+                    <span class="number">1,490</span>
+                    <select class="symbol-select q5">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">2,075</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">b)</span>
+                    <span class="number">6,201</span>
+                    <select class="symbol-select q5">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">6,235</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">c)</span>
+                    <span class="number">7,005</span>
+                    <select class="symbol-select q5">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">6,927</span>
+                </div>
+
+            </div>
+
+            <div class="feedback" id="feedbackQ5"></div>
+        </div>
+
+
+        <!-- Q6 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">6</div>
+                <div>
+                    <h2>Complete the comparison</h2>
+                    <p>Choose “is less than” or “is greater than”.</p>
+                </div>
+            </div>
+
+            <div class="comparison-list">
+
+                <div class="comparison-row">
+                    <span class="small-label">a)</span>
+                    <span class="number">4,720</span>
+                    <select class="phrase-select q6">
+                        <option value="">Choose...</option>
+                        <option value="less">is less than</option>
+                        <option value="greater">is greater than</option>
+                    </select>
+                    <span class="number">4,635</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">b)</span>
+                    <span class="number">5,100</span>
+                    <select class="phrase-select q6">
+                        <option value="">Choose...</option>
+                        <option value="less">is less than</option>
+                        <option value="greater">is greater than</option>
+                    </select>
+                    <span class="number">800</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">c)</span>
+                    <span class="number">3,195</span>
+                    <select class="phrase-select q6">
+                        <option value="">Choose...</option>
+                        <option value="less">is less than</option>
+                        <option value="greater">is greater than</option>
+                    </select>
+                    <span class="number">3,591</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">d)</span>
+                    <span class="number">2,000</span>
+                    <select class="phrase-select q6">
+                        <option value="">Choose...</option>
+                        <option value="less">is less than</option>
+                        <option value="greater">is greater than</option>
+                    </select>
+                    <span class="number">7,999</span>
+                </div>
+
+            </div>
+
+            <div class="feedback" id="feedbackQ6"></div>
+        </div>
+
+
+        <!-- Q7 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">7</div>
+                <div>
+                    <h2>Which car is more expensive?</h2>
+                    <p>Compare the prices carefully.</p>
+                </div>
+            </div>
+
+            <div class="cars">
+
+                <div class="car-card">
+                    <strong>Car A</strong>
+                    <div class="car-icon car-a"></div>
+                    <div class="price">£4,789</div>
+                </div>
+
+                <div class="car-card">
+                    <strong>Car B</strong>
+                    <div class="car-icon car-b"></div>
+                    <div class="price">£4,795</div>
+                </div>
+
+            </div>
+
+            <div class="choices" id="q7Choices">
+                <button class="choice" onclick="selectChoice('q7','A',this)">Car A</button>
+                <button class="choice" onclick="selectChoice('q7','B',this)">Car B</button>
+            </div>
+
+            <div class="feedback" id="feedbackQ7"></div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 2
+===================================================== -->
+<section class="slide" id="slide2">
+
+    <div class="slide-title">
+        <h1>Compare Directly & Think Like a Digit Detective</h1>
+        <p>Start with the thousands, then hundreds, tens and ones.</p>
+    </div>
+
+    <div class="content">
+
+        <!-- Q8 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">8</div>
+                <div>
+                    <h2>Write &lt;, &gt;, or =</h2>
+                    <p>Compare each pair of numbers.</p>
+                </div>
+            </div>
+
+            <div class="comparison-list">
+
+                <div class="comparison-row">
+                    <span class="small-label">a)</span>
+                    <span class="number">6,000</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">3,981</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">b)</span>
+                    <span class="number">4,512</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">4,521</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">c)</span>
+                    <span class="number">900</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">1,200</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">d)</span>
+                    <span class="number">32</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">2,000</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">e)</span>
+                    <span class="number">£6,418</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">£6,419</span>
+                </div>
+
+                <div class="comparison-row">
+                    <span class="small-label">f)</span>
+                    <span class="number">2,500 mm</span>
+                    <select class="symbol-select q8">
+                        <option value="">○</option>
+                        <option value="<">&lt;</option>
+                        <option value=">">&gt;</option>
+                        <option value="=">=</option>
+                    </select>
+                    <span class="number">2,060 mm</span>
+                </div>
+
+            </div>
+
+            <div class="feedback" id="feedbackQ8"></div>
+        </div>
+
+
+        <!-- Q9 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">9</div>
+                <div>
+                    <h2>Digit Card Problem</h2>
+                    <p>Can Scott make a larger number without starting with 5?</p>
+                </div>
+            </div>
+
+            <div class="digit-cards">
+                <div class="digit-card">1</div>
+                <div class="digit-card">4</div>
+                <div class="digit-card">5</div>
+                <div class="digit-card">7</div>
+            </div>
+
+            <p>
+                Teddy makes
+                <span class="teddy-number">4,571</span>.
+            </p>
+
+            <p>
+                Scott's number is greater than Teddy's.
+                Teddy says Scott's number <strong>must start with a 5.</strong>
+            </p>
+
+            <strong>Is Teddy correct?</strong>
+
+            <div style="margin-top:12px;">
+                <select class="phrase-select" id="q9">
+                    <option value="">Choose...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <textarea id="q9Explain"
+                placeholder="Explain how you know. For example, could Scott make a bigger number that starts with 4?"></textarea>
+
+            <div class="feedback" id="feedbackQ9"></div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================================
+     SLIDE 3
+===================================================== -->
+<section class="slide" id="slide3">
+
+    <div class="slide-title">
+        <h1>Missing Digits</h1>
+        <p>Find a digit that makes the inequality true. Some questions have more than one answer.</p>
+    </div>
+
+    <div class="content">
+
+        <!-- Q10 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">10</div>
+                <div>
+                    <h2>What could the missing digit be?</h2>
+                    <p>Find a digit that makes each comparison TRUE.</p>
+                </div>
+            </div>
+
+            <div class="missing-grid">
+
+                <!-- 10a -->
+                <div class="missing-row">
+                    <div class="missing-expression">
+                        <span>a)</span>
+                        <span>4,523</span>
+                        <span>&gt;</span>
+                        <span>4,5</span>
+                        <input class="digit-input q10" id="q10a" maxlength="1" inputmode="numeric">
+                        <span>7</span>
+                    </div>
+
+                    <div class="hint">Hint: Try 0 or 1.</div>
+                    <div class="valid-note" id="note10a">
+                        ✓ Both 0 and 1 work.
+                    </div>
+                </div>
+
+                <!-- 10b -->
+                <div class="missing-row">
+                    <div class="missing-expression">
+                        <span>b)</span>
+                        <span>7,000</span>
+                        <span>&lt;</span>
+                        <input class="digit-input q10" id="q10b" maxlength="1" inputmode="numeric">
+                        <span>,513</span>
+                    </div>
+
+                    <div class="hint">Hint: Try 7, 8, or 9.</div>
+                    <div class="valid-note" id="note10b">
+                        ✓ 7, 8 and 9 work.
+                    </div>
+                </div>
+
+                <!-- 10c -->
+                <div class="missing-row">
+                    <div class="missing-expression">
+                        <span>c)</span>
+                        <span>3,854</span>
+                        <span>&gt;</span>
+                        <span>3,85</span>
+                        <input class="digit-input q10" id="q10c" maxlength="1" inputmode="numeric">
+                    </div>
+
+                    <div class="hint">Hint: Try 0, 1, 2 or 3.</div>
+                    <div class="valid-note" id="note10c">
+                        ✓ 0, 1, 2 and 3 work.
+                    </div>
+                </div>
+
+                <!-- 10d -->
+                <div class="missing-row">
+                    <div class="missing-expression">
+                        <span>d)</span>
+                        <span>5,650</span>
+                        <span>&gt;</span>
+                        <span>4,</span>
+                        <input class="digit-input q10" id="q10d1" maxlength="1" inputmode="numeric">
+                        <span>7</span>
+                        <input class="digit-input q10" id="q10d2" maxlength="1" inputmode="numeric">
+                    </div>
+
+                    <div class="hint">
+                        Any digits 0–9 can be used because every 4,7__ number is less than 5,650.
+                    </div>
+                    <div class="valid-note" id="note10d">
+                        ✓ Any digits 0–9 work here.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="feedback" id="feedbackQ10"></div>
+        </div>
+
+
+        <!-- Q11 -->
+        <div class="question">
+
+            <div class="question-heading">
+                <div class="q-number">11</div>
+                <div>
+                    <h2>Find ALL possible missing digits</h2>
+                    <p>Select every digit that makes the inequality true.</p>
+                </div>
+            </div>
+
+            <!-- 11a -->
+            <div class="missing-row" style="margin-bottom:12px;">
+
+                <div class="missing-expression">
+                    <span>a)</span>
+                    <span>2,778</span>
+                    <span>is less than</span>
+                    <span>2,7</span>
+                    <span class="blank">_</span>
+                    <span>4</span>
+                </div>
+
+                <div class="digit-options" id="q11aOptions"></div>
+
+                <div class="hint">
+                    Think about the tens digit. Which digits make 2,7_4 bigger than 2,778?
+                </div>
+            </div>
+
+
+            <!-- 11b -->
+            <div class="missing-row">
+
+                <div class="missing-expression">
+                    <span>b)</span>
+                    <span>6,000</span>
+                    <span>&gt;</span>
+                    <span class="blank">_</span>
+                    <span>,259</span>
+                </div>
+
+                <div class="digit-options" id="q11bOptions"></div>
+
+                <div class="hint">
+                    The first digit is the thousands digit. Select ALL possible answers.
+                </div>
+            </div>
+
+            <div class="feedback" id="feedbackQ11"></div>
+        </div>
+
+
+        <div class="score-box" id="scoreBox">
+            <div>Great detective work!</div>
+            <div class="score-number" id="scoreNumber">0 / 0</div>
+            <div id="scoreMessage"></div>
+        </div>
+
+    </div>
+</section>
+
+</main>
+
+
+<!-- NAVIGATION -->
+<div class="controls">
+
+    <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+
+    <div class="dots">
+        <div class="dot active" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+    </div>
+
+    <button class="check-btn" id="checkButton" onclick="checkCurrentSlide()">
+        Check Answers ✓
+    </button>
+
+    <button class="nav-btn" onclick="nextSlide()">Next →</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let currentSlide = 1;
+const totalSlides = 3;
+
+let selected = {
+    q7: null
+};
+
+let q11Selections = {
+    a: [],
+    b: []
+};
+
+
+/* =========================
+   SLIDE NAVIGATION
+========================= */
+
+function goToSlide(num) {
+    if (num < 1 || num > totalSlides) return;
+
+    document.querySelectorAll(".slide").forEach(slide => {
+        slide.classList.remove("active");
+    });
+
+    document.getElementById("slide" + num).classList.add("active");
+
+    currentSlide = num;
+
+    document.getElementById("slideCounter").textContent =
+        `Slide ${num} of ${totalSlides}`;
+
+    document.getElementById("progress").style.width =
+        `${(num / totalSlides) * 100}%`;
+
+    document.querySelectorAll(".dot").forEach((dot, index) => {
+        dot.classList.toggle("active", index + 1 === num);
+    });
+
+    document.querySelector("main").scrollTop = 0;
+}
+
+function nextSlide() {
+    if (currentSlide < totalSlides) {
+        goToSlide(currentSlide + 1);
+    }
+}
+
+function previousSlide() {
+    if (currentSlide > 1) {
+        goToSlide(currentSlide - 1);
+    }
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") nextSlide();
+    if (e.key === "ArrowLeft") previousSlide();
+});
+
+
+/* =========================
+   CHOICE BUTTONS
+========================= */
+
+function selectChoice(question, value, button) {
+
+    selected[question] = value;
+
+    const container = button.parentElement;
+
+    container.querySelectorAll(".choice").forEach(btn => {
+        btn.classList.remove(
+            "selected",
+            "correct-choice",
+            "wrong-choice"
+        );
+    });
+
+    button.classList.add("selected");
+}
+
+
+/* =========================
+   FEEDBACK
+========================= */
+
+function showFeedback(id, correct, message) {
+
+    const box = document.getElementById(id);
+
+    box.textContent = correct
+        ? "✓ " + message
+        : "✗ " + message;
+
+    box.className =
+        "feedback show " + (correct ? "success" : "error");
+}
+
+
+/* =========================
+   QUESTION 5
+========================= */
+
+function checkQ5() {
+
+    const answers = ["<", "<", ">"];
+    const inputs = document.querySelectorAll(".q5");
+
+    let score = 0;
+
+    inputs.forEach((input, i) => {
+
+        input.classList.remove("correct", "incorrect");
+
+        if (input.value === answers[i]) {
+            input.classList.add("correct");
+            score++;
+        } else {
+            input.classList.add("incorrect");
+        }
+    });
+
+    showFeedback(
+        "feedbackQ5",
+        score === answers.length,
+        score === answers.length
+            ? "Excellent! You compared the place values correctly."
+            : `${score} of ${answers.length} comparisons are correct. Check the first place value that is different.`
+    );
+
+    return score;
+}
+
+
+/* =========================
+   QUESTION 6
+========================= */
+
+function checkQ6() {
+
+    const answers = ["greater", "greater", "less", "less"];
+    const inputs = document.querySelectorAll(".q6");
+
+    let score = 0;
+
+    inputs.forEach((input, i) => {
+
+        input.classList.remove("correct", "incorrect");
+
+        if (input.value === answers[i]) {
+            input.classList.add("correct");
+            score++;
+        } else {
+            input.classList.add("incorrect");
+        }
+    });
+
+    showFeedback(
+        "feedbackQ6",
+        score === answers.length,
+        score === answers.length
+            ? "Perfect! Your comparison phrases are all correct."
+            : `${score} of ${answers.length} are correct. Look at which number is larger.`
+    );
+
+    return score;
+}
+
+
+/* =========================
+   QUESTION 7
+========================= */
+
+function checkQ7() {
+
+    const buttons = document.querySelectorAll("#q7Choices .choice");
+
+    buttons.forEach(btn => {
+        btn.classList.remove(
+            "correct-choice",
+            "wrong-choice"
+        );
+    });
+
+    if (!selected.q7) {
+        showFeedback(
+            "feedbackQ7",
+            false,
+            "Choose Car A or Car B first."
+        );
+        return 0;
+    }
+
+    const correct = selected.q7 === "B";
+
+    buttons.forEach(btn => {
+
+        const value = btn.textContent.trim() === "Car B"
+            ? "B"
+            : "A";
+
+        if (value === selected.q7 && value !== "B") {
+            btn.classList.add("wrong-choice");
+        }
+
+        if (value === "B") {
+            btn.classList.add("correct-choice");
+        }
+    });
+
+    showFeedback(
+        "feedbackQ7",
+        correct,
+        correct
+            ? "Correct! £4,795 is greater than £4,789."
+            : "Car B is more expensive. Compare the ones: 9 is greater than 5."
+    );
+
+    return correct ? 1 : 0;
+}
+
+
+/* =========================
+   QUESTION 8
+========================= */
+
+function checkQ8() {
+
+    const answers = [">", "<", "<", "<", "<", ">"];
+    const inputs = document.querySelectorAll(".q8");
+
+    let score = 0;
+
+    inputs.forEach((input, i) => {
+
+        input.classList.remove("correct", "incorrect");
+
+        if (input.value === answers[i]) {
+            input.classList.add("correct");
+            score++;
+        } else {
+            input.classList.add("incorrect");
+        }
+    });
+
+    showFeedback(
+        "feedbackQ8",
+        score === answers.length,
+        score === answers.length
+            ? "Fantastic! All six comparisons are correct."
+            : `${score} of ${answers.length} are correct. Start comparing from the largest place value.`
+    );
+
+    return score;
+}
+
+
+/* =========================
+   QUESTION 9
+========================= */
+
+function checkQ9() {
+
+    const input = document.getElementById("q9");
+
+    input.classList.remove("correct", "incorrect");
+
+    if (input.value === "no") {
+
+        input.classList.add("correct");
+
+        showFeedback(
+            "feedbackQ9",
+            true,
+            "Correct! Scott could make 4,715 or 4,751. Both are greater than 4,571 and start with 4."
+        );
+
+        return 1;
+
+    } else {
+
+        input.classList.add("incorrect");
+
+        showFeedback(
+            "feedbackQ9",
+            false,
+            "Not quite. Scott can make a number starting with 4 that is still greater than 4,571."
+        );
+
+        return 0;
+    }
+}
+
+
+/* =========================
+   QUESTION 10
+========================= */
+
+function checkQ10() {
+
+    let score = 0;
+
+    /* 10a */
+    const a = document.getElementById("q10a");
+    a.classList.remove("correct", "incorrect");
+
+    if (["0", "1"].includes(a.value)) {
+        a.classList.add("correct");
+        score++;
+    } else {
+        a.classList.add("incorrect");
+    }
+
+
+    /* 10b */
+    const b = document.getElementById("q10b");
+    b.classList.remove("correct", "incorrect");
+
+    if (["7", "8", "9"].includes(b.value)) {
+        b.classList.add("correct");
+        score++;
+    } else {
+        b.classList.add("incorrect");
+    }
+
+
+    /* 10c */
+    const c = document.getElementById("q10c");
+    c.classList.remove("correct", "incorrect");
+
+    if (["0", "1", "2", "3"].includes(c.value)) {
+        c.classList.add("correct");
+        score++;
+    } else {
+        c.classList.add("incorrect");
+    }
+
+
+    /* 10d */
+    const d1 = document.getElementById("q10d1");
+    const d2 = document.getElementById("q10d2");
+
+    d1.classList.remove("correct", "incorrect");
+    d2.classList.remove("correct", "incorrect");
+
+    const validDigit = /^\d$/;
+
+    if (
+        validDigit.test(d1.value) &&
+        validDigit.test(d2.value)
+    ) {
+        d1.classList.add("correct");
+        d2.classList.add("correct");
+        score++;
+    } else {
+        d1.classList.add("incorrect");
+        d2.classList.add("incorrect");
+    }
+
+    showFeedback(
+        "feedbackQ10",
+        score === 4,
+        score === 4
+            ? "Amazing! You found valid digits for every inequality."
+            : `${score} of 4 missing-digit questions are correct. Remember: the whole inequality must be true.`
+    );
+
+    return score;
+}
+
+
+/* =========================
+   QUESTION 11 OPTIONS
+========================= */
+
+function createDigitOptions(containerId, question) {
+
+    const container = document.getElementById(containerId);
+
+    for (let i = 0; i <= 9; i++) {
+
+        const button = document.createElement("button");
+
+        button.className = "digit-option";
+        button.textContent = i;
+
+        button.onclick = () => {
+
+            const index = q11Selections[question].indexOf(i);
+
+            if (index === -1) {
+                q11Selections[question].push(i);
+                button.classList.add("selected");
+            } else {
+                q11Selections[question].splice(index, 1);
+                button.classList.remove("selected");
+            }
+        };
+
+        container.appendChild(button);
+    }
+}
+
+createDigitOptions("q11aOptions", "a");
+createDigitOptions("q11bOptions", "b");
+
+
+/* =========================
+   QUESTION 11
+========================= */
+
+function checkQ11() {
+
+    const correctA = [8, 9];
+    const correctB = [1, 2, 3, 4, 5];
+
+    let score = 0;
+
+    /* A */
+    const buttonsA =
+        document.querySelectorAll("#q11aOptions .digit-option");
+
+    buttonsA.forEach(button => {
+
+        const digit = Number(button.textContent);
+
+        button.classList.remove(
+            "correct-digit",
+            "wrong-digit"
+        );
+
+        if (correctA.includes(digit)) {
+            button.classList.add("correct-digit");
+        } else if (q11Selections.a.includes(digit)) {
+            button.classList.add("wrong-digit");
+        }
+    });
+
+    const aCorrect =
+        q11Selections.a.length === correctA.length &&
+        q11Selections.a.every(d => correctA.includes(d));
+
+    if (aCorrect) score++;
+
+
+    /* B */
+    const buttonsB =
+        document.querySelectorAll("#q11bOptions .digit-option");
+
+    buttonsB.forEach(button => {
+
+        const digit = Number(button.textContent);
+
+        button.classList.remove(
+            "correct-digit",
+            "wrong-digit"
+        );
+
+        if (correctB.includes(digit)) {
+            button.classList.add("correct-digit");
+        } else if (q11Selections.b.includes(digit)) {
+            button.classList.add("wrong-digit");
+        }
+    });
+
+    const bCorrect =
+        q11Selections.b.length === correctB.length &&
+        q11Selections.b.every(d => correctB.includes(d));
+
+    if (bCorrect) score++;
+
+
+    showFeedback(
+        "feedbackQ11",
+        score === 2,
+        score === 2
+            ? "Excellent! You found ALL the possible digits."
+            : `${score} of 2 questions are completely correct. Green digits show the full correct set.`
+    );
+
+    return score;
+}
+
+
+/* =========================
+   CURRENT SLIDE CHECK
+========================= */
+
+function checkCurrentSlide() {
+
+    if (currentSlide === 1) {
+
+        const score =
+            checkQ5() +
+            checkQ6() +
+            checkQ7();
+
+        return score;
+    }
+
+    if (currentSlide === 2) {
+
+        const score =
+            checkQ8() +
+            checkQ9();
+
+        return score;
+    }
+
+    if (currentSlide === 3) {
+
+        const score =
+            checkQ10() +
+            checkQ11();
+
+        showFinalScore(score);
+
+        return score;
+    }
+}
+
+
+/* =========================
+   FINAL SCORE
+========================= */
+
+function showFinalScore(slide3Score) {
+
+    const scoreBox = document.getElementById("scoreBox");
+    const scoreNumber = document.getElementById("scoreNumber");
+    const scoreMessage = document.getElementById("scoreMessage");
+
+    /*
+        Q10 = 4 points
+        Q11 = 2 points
+        Total on final slide = 6
+    */
+
+    scoreNumber.textContent = `${slide3Score} / 6`;
+
+    if (slide3Score === 6) {
+        scoreMessage.textContent =
+            "🏆 Perfect! You are a missing-digit master!";
+    } else if (slide3Score >= 4) {
+        scoreMessage.textContent =
+            "🌟 Great work! You are getting very good at inequalities.";
+    } else {
+        scoreMessage.textContent =
+            "💪 Keep going! Check which place value decides each comparison.";
+    }
+
+    scoreBox.classList.add("show");
+}
+
+
+/* =========================
+   INPUT RESTRICTION
+========================= */
+
+document.querySelectorAll(".digit-input").forEach(input => {
+
+    input.addEventListener("input", () => {
+
+        input.value = input.value
+            .replace(/\D/g, "")
+            .slice(0, 1);
+
+    });
+
+});
+
+
+/* =========================
+   INITIAL STATE
+========================= */
+
+goToSlide(1);
+
+</script>
+
+</body>
+</html>
