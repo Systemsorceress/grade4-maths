@@ -1,0 +1,792 @@
+<!-- =========================
+     ANIMATED CARRYING LESSON
+========================= -->
+
+<div class="animated-lesson">
+
+    <h2>🎬 Let's Learn Carrying!</h2>
+
+    <p class="lesson-intro">
+        Watch the numbers carefully. We'll solve
+        <strong>27 + 15</strong> step by step!
+    </p>
+
+    <div class="animation-stage">
+
+        <!-- Carry number -->
+        <div id="carryNumber" class="carry-number">1</div>
+
+        <!-- Number columns -->
+
+        <div class="column tens-column">
+            <div class="place-label">Tens</div>
+            <div id="tensTop" class="digit">2</div>
+            <div id="tensBottom" class="digit">1</div>
+        </div>
+
+        <div class="column ones-column">
+            <div class="place-label">Ones</div>
+            <div id="onesTop" class="digit">7</div>
+            <div id="onesBottom" class="digit">5</div>
+        </div>
+
+        <div class="operator">+</div>
+
+        <div class="answer-area">
+
+            <div id="answerTens" class="answer-digit"></div>
+
+            <div id="answerOnes" class="answer-digit"></div>
+
+        </div>
+
+        <div class="answer-line"></div>
+
+    </div>
+
+
+    <!-- Explanation -->
+
+    <div id="explanation" class="explanation">
+        👀 First, look at the <strong>ones column</strong>.
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="animation-controls">
+
+        <button onclick="previousStep()">
+            ◀ Back
+        </button>
+
+        <button class="play-button" onclick="nextStep()">
+            ▶ Next Step
+        </button>
+
+        <button onclick="resetAnimation()">
+            🔄 Start Again
+        </button>
+
+    </div>
+
+
+    <div class="step-counter">
+        Step <span id="stepNumber">1</span> of 5
+    </div>
+
+</div>
+
+
+<style>
+
+/* =================================
+   ANIMATED LESSON
+================================= */
+
+.animated-lesson {
+
+    background:
+        linear-gradient(
+            135deg,
+            #e3f2fd,
+            #f3e5f5
+        );
+
+    border: 3px solid #90caf9;
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+.animated-lesson h2 {
+
+    color: #1565c0;
+
+    font-size: 28px;
+
+    margin-top: 0;
+}
+
+
+.lesson-intro {
+
+    color: #546e7a;
+
+    font-size: 17px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =================================
+   ANIMATION STAGE
+================================= */
+
+.animation-stage {
+
+    position: relative;
+
+    width: 300px;
+
+    height: 330px;
+
+    margin: auto;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-weight: bold;
+}
+
+
+/* Place labels */
+
+.place-label {
+
+    font-family:
+        "Comic Sans MS",
+        sans-serif;
+
+    font-size: 13px;
+
+    color: #78909c;
+
+    margin-bottom: 5px;
+}
+
+
+.column {
+
+    position: absolute;
+
+    top: 25px;
+
+    width: 80px;
+}
+
+
+.tens-column {
+
+    left: 85px;
+}
+
+
+.ones-column {
+
+    left: 165px;
+}
+
+
+/* Digits */
+
+.digit {
+
+    height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 48px;
+
+    transition:
+        transform .6s ease,
+        background .5s ease,
+        color .5s ease;
+
+    border-radius: 15px;
+}
+
+
+/* Operator */
+
+.operator {
+
+    position: absolute;
+
+    left: 42px;
+
+    top: 108px;
+
+    font-size: 45px;
+
+    color: #1976d2;
+}
+
+
+/* Answer */
+
+.answer-area {
+
+    position: absolute;
+
+    top: 205px;
+
+    left: 85px;
+
+    display: flex;
+
+    gap: 20px;
+
+}
+
+
+.answer-digit {
+
+    width: 80px;
+
+    height: 60px;
+
+    font-size: 45px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: #2e7d32;
+
+    transition:
+        transform .5s ease,
+        opacity .5s ease;
+}
+
+
+/* Answer line */
+
+.answer-line {
+
+    position: absolute;
+
+    top: 190px;
+
+    left: 85px;
+
+    width: 160px;
+
+    border-top: 4px solid #263238;
+}
+
+
+/* =================================
+   CARRY
+================================= */
+
+.carry-number {
+
+    position: absolute;
+
+    left: 105px;
+
+    top: 55px;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    color: #e53935;
+
+    opacity: 0;
+
+    z-index: 10;
+
+    transition:
+        all 1s cubic-bezier(.68,-.55,.27,1.55);
+}
+
+
+/* =================================
+   HIGHLIGHT STATES
+================================= */
+
+.highlight-ones {
+
+    background: #fff3cd;
+
+    transform: scale(1.15);
+
+    color: #e65100;
+}
+
+
+.highlight-tens {
+
+    background: #e8f5e9;
+
+    transform: scale(1.15);
+
+    color: #2e7d32;
+}
+
+
+.show-carry {
+
+    opacity: 1;
+
+    top: 55px;
+
+    left: 105px;
+}
+
+
+.move-carry {
+
+    top: 18px;
+
+    left: 105px;
+
+    transform: scale(1.1);
+}
+
+
+.show-answer {
+
+    opacity: 1;
+
+    transform: scale(1.15);
+}
+
+
+/* =================================
+   EXPLANATION
+================================= */
+
+.explanation {
+
+    min-height: 70px;
+
+    max-width: 650px;
+
+    margin: 20px auto;
+
+    padding: 18px;
+
+    background: white;
+
+    border-radius: 15px;
+
+    border: 2px solid #bbdefb;
+
+    font-size: 18px;
+
+    line-height: 1.5;
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
+
+
+.explanation.animate {
+
+    animation:
+        explanationPop .4s ease;
+}
+
+
+@keyframes explanationPop {
+
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =================================
+   BUTTONS
+================================= */
+
+.animation-controls {
+
+    margin-top: 20px;
+}
+
+
+.animation-controls button {
+
+    border: none;
+
+    padding: 12px 20px;
+
+    margin: 5px;
+
+    border-radius: 12px;
+
+    background: #78909c;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.animation-controls button:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+.play-button {
+
+    background: #1976d2 !important;
+
+    padding:
+        14px 28px !important;
+
+    font-size:
+        17px !important;
+}
+
+
+/* =================================
+   STEP COUNTER
+================================= */
+
+.step-counter {
+
+    margin-top: 12px;
+
+    color: #607d8b;
+
+    font-size: 14px;
+}
+
+
+@media(max-width:500px) {
+
+    .animated-lesson {
+
+        padding: 20px 10px;
+
+    }
+
+}
+
+</style>
+
+
+<script>
+
+let currentStep = 1;
+
+const totalSteps = 5;
+
+
+/* =================================
+   STEP CONTENT
+================================= */
+
+const steps = [
+
+    {
+        text:
+        "👀 <strong>Step 1:</strong> Start with the <strong>ones</strong>. Look at 7 and 5."
+    },
+
+    {
+        text:
+        "🧮 <strong>Step 2:</strong> Add the ones: <strong>7 + 5 = 12</strong>. We have more than 9!"
+    },
+
+    {
+        text:
+        "🚀 <strong>Step 3:</strong> 12 has <strong>1 ten and 2 ones</strong>. Write the 2 in the ones place and carry the 1 ten!"
+    },
+
+    {
+        text:
+        "➕ <strong>Step 4:</strong> Now add the tens: <strong>2 + 1 + 1 = 4</strong>."
+    },
+
+    {
+        text:
+        "🎉 <strong>Step 5:</strong> Put the digits together. The answer is <strong>42!</strong>"
+    }
+
+];
+
+
+/* =================================
+   NEXT STEP
+================================= */
+
+function nextStep() {
+
+    if (currentStep < totalSteps) {
+
+        currentStep++;
+
+        showStep(currentStep);
+
+    }
+
+}
+
+
+/* =================================
+   PREVIOUS
+================================= */
+
+function previousStep() {
+
+    if (currentStep > 1) {
+
+        currentStep--;
+
+        showStep(currentStep);
+
+    }
+
+}
+
+
+/* =================================
+   SHOW STEP
+================================= */
+
+function showStep(step) {
+
+    const onesTop =
+        document.getElementById("onesTop");
+
+    const onesBottom =
+        document.getElementById("onesBottom");
+
+    const tensTop =
+        document.getElementById("tensTop");
+
+    const tensBottom =
+        document.getElementById("tensBottom");
+
+    const carry =
+        document.getElementById("carryNumber");
+
+    const answerTens =
+        document.getElementById("answerTens");
+
+    const answerOnes =
+        document.getElementById("answerOnes");
+
+    const explanation =
+        document.getElementById("explanation");
+
+
+    /* Reset */
+
+    onesTop.classList.remove(
+        "highlight-ones"
+    );
+
+    onesBottom.classList.remove(
+        "highlight-ones"
+    );
+
+    tensTop.classList.remove(
+        "highlight-tens"
+    );
+
+    tensBottom.classList.remove(
+        "highlight-tens"
+    );
+
+
+    carry.classList.remove(
+        "show-carry",
+        "move-carry"
+    );
+
+
+    answerTens.textContent = "";
+
+    answerOnes.textContent = "";
+
+
+    /* STEP 1 */
+
+    if (step === 1) {
+
+        onesTop.classList.add(
+            "highlight-ones"
+        );
+
+        onesBottom.classList.add(
+            "highlight-ones"
+        );
+
+    }
+
+
+    /* STEP 2 */
+
+    if (step === 2) {
+
+        onesTop.classList.add(
+            "highlight-ones"
+        );
+
+        onesBottom.classList.add(
+            "highlight-ones"
+        );
+
+        answerOnes.textContent = "2";
+
+        answerOnes.classList.add(
+            "show-answer"
+        );
+
+    }
+
+
+    /* STEP 3 */
+
+    if (step === 3) {
+
+        answerOnes.textContent = "2";
+
+        answerOnes.classList.add(
+            "show-answer"
+        );
+
+        carry.classList.add(
+            "show-carry"
+        );
+
+
+        setTimeout(() => {
+
+            carry.classList.add(
+                "move-carry"
+            );
+
+        }, 100);
+
+    }
+
+
+    /* STEP 4 */
+
+    if (step === 4) {
+
+        answerOnes.textContent = "2";
+
+        answerOnes.classList.add(
+            "show-answer"
+        );
+
+        carry.classList.add(
+            "show-carry",
+            "move-carry"
+        );
+
+        tensTop.classList.add(
+            "highlight-tens"
+        );
+
+        tensBottom.classList.add(
+            "highlight-tens"
+        );
+
+        answerTens.textContent = "4";
+
+        answerTens.classList.add(
+            "show-answer"
+        );
+
+    }
+
+
+    /* STEP 5 */
+
+    if (step === 5) {
+
+        answerTens.textContent = "4";
+
+        answerOnes.textContent = "2";
+
+        answerTens.classList.add(
+            "show-answer"
+        );
+
+        answerOnes.classList.add(
+            "show-answer"
+        );
+
+        carry.classList.add(
+            "show-carry",
+            "move-carry"
+        );
+
+    }
+
+
+    /* Explanation */
+
+    explanation.innerHTML =
+        steps[step - 1].text;
+
+
+    explanation.classList.remove(
+        "animate"
+    );
+
+    void explanation.offsetWidth;
+
+    explanation.classList.add(
+        "animate"
+    );
+
+
+    document.getElementById(
+        "stepNumber"
+    ).textContent = step;
+}
+
+
+/* =================================
+   RESET
+================================= */
+
+function resetAnimation() {
+
+    currentStep = 1;
+
+    showStep(1);
+
+}
+
+
+/* Start */
+
+showStep(1);
+
+</script>

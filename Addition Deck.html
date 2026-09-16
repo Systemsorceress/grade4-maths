@@ -1,0 +1,3366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry — Place Value & Vertical Addition</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root {
+    --brown: #D97706;
+    --gold: #F59E0B;
+    --cheese: #FACC15;
+    --cream: #FEF3C7;
+
+    --slate: #334155;
+    --slate2: #475569;
+    --light: #F1F5F9;
+
+    --purple: #8B5CF6;
+    --green: #10B981;
+    --blue: #3B82F6;
+    --orange: #F97316;
+    --red: #EF4444;
+
+    --white: #FFFFFF;
+
+    --shadow: 0 8px 0 rgba(51,65,85,.9);
+    --soft-shadow: 0 8px 22px rgba(51,65,85,.16);
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    font-family: "Fredoka", "Quicksand", sans-serif;
+    color: var(--slate);
+    background:
+        radial-gradient(circle at 10% 20%, rgba(245,158,11,.18) 0 55px, transparent 56px),
+        radial-gradient(circle at 90% 80%, rgba(139,92,246,.12) 0 80px, transparent 81px),
+        linear-gradient(135deg,#fff7df,#f1f5f9);
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* =========================================================
+   PRESENTATION
+========================================================= */
+
+.presentation {
+    width: min(94vw, 1400px);
+    aspect-ratio: 16 / 9;
+    max-height: 86vh;
+
+    background: white;
+    border: 4px solid var(--slate);
+    border-radius: 30px;
+
+    overflow: hidden;
+    position: relative;
+
+    box-shadow:
+        0 15px 0 rgba(51,65,85,.95),
+        0 30px 50px rgba(51,65,85,.18);
+}
+
+/* =========================================================
+   DECORATIONS
+========================================================= */
+
+.decoration {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cheese-hole {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    box-shadow:
+        50px 25px 0 rgba(255,255,255,.45),
+        95px -15px 0 rgba(255,255,255,.4);
+}
+
+.cheese-top {
+    top: -35px;
+    right: 50px;
+    width: 180px;
+    height: 100px;
+    background: var(--cheese);
+    border: 4px solid var(--slate);
+    border-radius: 0 0 60px 60px;
+    transform: rotate(-5deg);
+}
+
+.cheese-top .hole1 {
+    position:absolute;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:#e9b50c;
+    left:45px;
+    top:45px;
+}
+
+.cheese-top .hole2 {
+    position:absolute;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#e9b50c;
+    right:35px;
+    top:25px;
+}
+
+/* =========================================================
+   SLIDES
+========================================================= */
+
+.slide {
+    position: absolute;
+    inset: 0;
+
+    padding: 34px 70px 65px;
+
+    display: none;
+    flex-direction: column;
+
+    background:
+        radial-gradient(circle at 95% 5%, rgba(250,204,21,.18) 0 100px, transparent 101px),
+        linear-gradient(135deg,#ffffff,#f8fafc);
+
+    overflow: hidden;
+}
+
+.slide.active {
+    display: flex;
+    animation: slideIn .28s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(.985);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: clamp(34px,4.5vw,72px);
+    line-height: 1;
+}
+
+h2 {
+    font-size: clamp(28px,3vw,48px);
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: clamp(20px,2vw,30px);
+}
+
+p {
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.slide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background: var(--gold);
+    border: 3px solid var(--slate);
+    border-radius: 999px;
+
+    padding: 9px 18px;
+
+    font-weight: 700;
+    font-size: 15px;
+
+    box-shadow: 0 4px 0 var(--slate);
+}
+
+.level-badge.purple {
+    background: var(--purple);
+    color: white;
+}
+
+.level-badge.green {
+    background: var(--green);
+    color: white;
+}
+
+.level-badge.blue {
+    background: var(--blue);
+    color: white;
+}
+
+.level-badge.red {
+    background: var(--red);
+    color: white;
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.center {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.two-col {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items:center;
+    height:100%;
+}
+
+.three-col {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.card {
+    background: rgba(255,255,255,.94);
+    border: 3px solid var(--slate);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: var(--soft-shadow);
+}
+
+.card.yellow {
+    background: var(--cream);
+}
+
+.card.blue {
+    background: #eff6ff;
+}
+
+.card.green {
+    background: #ecfdf5;
+}
+
+.card.purple {
+    background: #f5f3ff;
+}
+
+.card.orange {
+    background: #fff7ed;
+}
+
+/* =========================================================
+   BIG NUMBER
+========================================================= */
+
+.big-number {
+    font-size: clamp(80px,12vw,180px);
+    font-weight:700;
+    color:var(--slate);
+    line-height:.9;
+    text-shadow: 5px 5px 0 var(--cheese);
+}
+
+/* =========================================================
+   OBJECTIVES
+========================================================= */
+
+.objectives {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.objective {
+    background:white;
+    border:3px solid var(--slate);
+    border-radius:18px;
+    padding:14px;
+    font-weight:700;
+    box-shadow:0 4px 0 var(--slate);
+}
+
+/* =========================================================
+   PLACE VALUE TABLE
+========================================================= */
+
+.pv-table {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin:20px auto;
+    max-width:750px;
+}
+
+.pv-cell {
+    border:3px solid var(--slate);
+    border-radius:14px;
+    min-height:75px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:700;
+}
+
+.pv-cell .label {
+    font-size:14px;
+    opacity:.75;
+}
+
+.pv-cell .digit {
+    font-size:32px;
+}
+
+.thousands {
+    background:#ede9fe;
+    border-color:var(--purple);
+}
+
+.hundreds {
+    background:#d1fae5;
+    border-color:var(--green);
+}
+
+.tens {
+    background:#dbeafe;
+    border-color:var(--blue);
+}
+
+.ones {
+    background:#ffedd5;
+    border-color:var(--orange);
+}
+
+/* =========================================================
+   VERTICAL MATH
+========================================================= */
+
+.math-box {
+    width:min(100%,460px);
+    margin:auto;
+
+    background:#fff;
+    border:4px solid var(--slate);
+    border-radius:24px;
+    padding:22px;
+
+    box-shadow:0 7px 0 var(--slate);
+}
+
+.math-columns {
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.col-label {
+    width:65px;
+    text-align:center;
+    padding:6px;
+    border-radius:10px;
+    font-weight:700;
+}
+
+.col-label.h {
+    background:#d1fae5;
+}
+
+.col-label.t {
+    background:#dbeafe;
+}
+
+.col-label.o {
+    background:#ffedd5;
+}
+
+.col-label.th {
+    background:#ede9fe;
+}
+
+.vertical-number {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+.digit-box {
+    width:65px;
+    height:65px;
+
+    border:3px solid var(--slate);
+    border-radius:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:34px;
+    font-weight:700;
+
+    background:white;
+}
+
+.digit-box.h {
+    background:#d1fae5;
+}
+
+.digit-box.t {
+    background:#dbeafe;
+}
+
+.digit-box.o {
+    background:#ffedd5;
+}
+
+.digit-box.th {
+    background:#ede9fe;
+}
+
+.plus {
+    font-size:38px;
+    font-weight:700;
+    margin-right:4px;
+}
+
+.math-line {
+    height:4px;
+    background:var(--slate);
+    margin:12px 5px;
+    border-radius:5px;
+}
+
+.answer-row {
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.answer-input {
+    width:65px;
+    height:65px;
+
+    border:3px dashed var(--slate);
+    border-radius:14px;
+
+    text-align:center;
+    font-family:Fredoka;
+    font-size:30px;
+    font-weight:700;
+
+    outline:none;
+}
+
+.answer-input:focus {
+    border-color:var(--blue);
+    box-shadow:0 0 0 4px rgba(59,130,246,.15);
+}
+
+/* =========================================================
+   STEP PANEL
+========================================================= */
+
+.step-panel {
+    background:var(--cream);
+    border:3px solid var(--brown);
+    border-radius:20px;
+    padding:18px;
+}
+
+.prompt {
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+.feedback {
+    min-height:30px;
+    font-weight:700;
+    margin-top:10px;
+}
+
+.feedback.correct {
+    color:#059669;
+}
+
+.feedback.wrong {
+    color:#dc2626;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border:3px solid var(--slate);
+    border-radius:15px;
+
+    background:var(--gold);
+    color:var(--slate);
+
+    padding:11px 18px;
+
+    font-family:Fredoka;
+    font-size:17px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 0 var(--slate);
+
+    transition:.12s;
+}
+
+.btn:hover {
+    background:var(--cheese);
+    transform:translateY(-2px);
+}
+
+.btn:active {
+    transform:translateY(4px);
+    box-shadow:0 1px 0 var(--slate);
+}
+
+.btn.green {
+    background:#34d399;
+}
+
+.btn.blue {
+    background:#60a5fa;
+}
+
+.btn.red {
+    background:#f87171;
+}
+
+.btn.purple {
+    background:#a78bfa;
+    color:white;
+}
+
+.button-row {
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+.options {
+    display:flex;
+    gap:15px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.option {
+    min-width:120px;
+    padding:15px 22px;
+
+    border:3px solid var(--slate);
+    border-radius:18px;
+
+    background:white;
+
+    font-family:Fredoka;
+    font-size:24px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 0 var(--slate);
+    transition:.12s;
+}
+
+.option:hover {
+    background:var(--cream);
+    transform:translateY(-3px);
+}
+
+.option.correct {
+    background:#86efac;
+}
+
+.option.wrong {
+    background:#fca5a5;
+}
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal {
+    margin-top:15px;
+    display:none;
+    padding:15px;
+    background:#dcfce7;
+    border:3px solid #16a34a;
+    border-radius:15px;
+    font-size:20px;
+    font-weight:700;
+}
+
+.reveal.show {
+    display:block;
+}
+
+/* =========================================================
+   STEP CONTROLS
+========================================================= */
+
+.step-controls {
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:15px;
+}
+
+/* =========================================================
+   MISSING DIGITS
+========================================================= */
+
+.missing-input {
+    width:60px;
+    height:60px;
+    border:3px dashed var(--slate);
+    border-radius:12px;
+
+    font-family:Fredoka;
+    font-size:28px;
+    font-weight:700;
+    text-align:center;
+}
+
+/* =========================================================
+   SPEED ROUND
+========================================================= */
+
+.speed-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.speed-card {
+    border:3px solid var(--slate);
+    border-radius:18px;
+    padding:15px;
+    background:white;
+}
+
+.speed-card input {
+    width:90px;
+    padding:8px;
+    border:3px solid var(--slate);
+    border-radius:10px;
+    font-size:20px;
+    font-family:Fredoka;
+    text-align:center;
+}
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+#scratchpad {
+    position:fixed;
+    right:-420px;
+    top:0;
+    width:400px;
+    height:100vh;
+
+    background:#fffdf5;
+    border-left:4px solid var(--slate);
+
+    z-index:3000;
+
+    padding:18px;
+
+    transition:right .3s ease;
+
+    box-shadow:-10px 0 30px rgba(0,0,0,.15);
+}
+
+#scratchpad.open {
+    right:0;
+}
+
+.scratch-title {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+#drawCanvas {
+    width:100%;
+    height:calc(100vh - 150px);
+
+    background:white;
+    border:3px solid var(--slate);
+    border-radius:15px;
+
+    touch-action:none;
+}
+
+.tools {
+    display:flex;
+    gap:7px;
+    margin:10px 0;
+    flex-wrap:wrap;
+}
+
+.tool {
+    padding:7px 12px;
+    border:2px solid var(--slate);
+    border-radius:10px;
+    background:white;
+    cursor:pointer;
+    font-family:Fredoka;
+    font-weight:700;
+}
+
+.tool.active {
+    background:var(--cheese);
+}
+
+/* =========================================================
+   SIDE NAVIGATION
+========================================================= */
+
+.side-nav {
+    position:fixed;
+
+    top:50%;
+    transform:translateY(-50%);
+
+    z-index:2000;
+
+    min-width:112px;
+    height:60px;
+
+    padding:0 16px;
+
+    border:3px solid var(--slate);
+    border-radius:18px;
+
+    background:var(--gold);
+    color:var(--slate);
+
+    font-family:Fredoka;
+    font-size:17px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+
+    box-shadow:
+        0 6px 0 var(--slate),
+        0 10px 20px rgba(51,65,85,.18);
+
+    transition:
+        transform .12s ease,
+        box-shadow .12s ease,
+        background .12s ease;
+}
+
+.side-nav:hover {
+    background:var(--cheese);
+}
+
+.side-nav:active {
+    transform:translateY(calc(-50% + 5px));
+    box-shadow:
+        0 2px 0 var(--slate),
+        0 5px 10px rgba(51,65,85,.15);
+}
+
+.prev-btn {
+    left:18px;
+}
+
+.next-btn {
+    right:18px;
+}
+
+/* =========================================================
+   SLIDE COUNTER
+========================================================= */
+
+.slide-counter {
+    position:fixed;
+
+    left:50%;
+    bottom:18px;
+
+    transform:translateX(-50%);
+
+    z-index:2500;
+
+    padding:8px 20px;
+
+    background:var(--cream);
+
+    border:3px solid var(--slate);
+    border-radius:999px;
+
+    font-family:Fredoka;
+    font-size:16px;
+    font-weight:700;
+
+    box-shadow:0 4px 0 var(--slate);
+}
+
+/* =========================================================
+   SCRATCH BUTTON
+========================================================= */
+
+.scratch-toggle {
+    position:fixed;
+    right:18px;
+    bottom:18px;
+
+    z-index:2500;
+
+    border:3px solid var(--slate);
+    border-radius:16px;
+
+    background:var(--cheese);
+
+    padding:10px 16px;
+
+    font-family:Fredoka;
+    font-weight:700;
+    font-size:16px;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 0 var(--slate);
+}
+
+.scratch-toggle:active {
+    transform:translateY(4px);
+    box-shadow:0 1px 0 var(--slate);
+}
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti {
+    position:fixed;
+    width:10px;
+    height:16px;
+    z-index:5000;
+    pointer-events:none;
+    animation:confettiFall 1.2s ease-out forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform:translateY(0) rotate(0);
+        opacity:1;
+    }
+    100% {
+        transform:translateY(100vh) rotate(720deg);
+        opacity:0;
+    }
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.title-screen {
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.mission {
+    display:inline-block;
+    padding:12px 22px;
+
+    background:var(--cheese);
+    border:4px solid var(--slate);
+    border-radius:999px;
+
+    box-shadow:0 6px 0 var(--slate);
+
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.title-main {
+    max-width:900px;
+    margin-bottom:20px;
+}
+
+.title-main span {
+    color:var(--brown);
+}
+
+.subtitle {
+    font-size:24px;
+    max-width:800px;
+}
+
+/* =========================================================
+   LADDER
+========================================================= */
+
+.ladder {
+    max-width:600px;
+    margin:20px auto;
+
+    display:flex;
+    flex-direction:column-reverse;
+    gap:10px;
+}
+
+.ladder-step {
+    border:3px solid var(--slate);
+    border-radius:16px;
+    padding:13px;
+
+    font-size:22px;
+    font-weight:700;
+
+    box-shadow:0 4px 0 var(--slate);
+}
+
+/* =========================================================
+   VICTORY
+========================================================= */
+
+.trophy {
+    font-size:100px;
+    animation:bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+    from { transform:translateY(0) rotate(-4deg); }
+    to { transform:translateY(-10px) rotate(4deg); }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px) {
+    .presentation {
+        width:88vw;
+    }
+
+    .slide {
+        padding-left:45px;
+        padding-right:45px;
+    }
+
+    .side-nav {
+        min-width:54px;
+        width:54px;
+        height:54px;
+        padding:0;
+        border-radius:50%;
+    }
+
+    .side-nav span {
+        display:none;
+    }
+
+    .prev-btn {
+        left:7px;
+    }
+
+    .next-btn {
+        right:7px;
+    }
+
+    .two-col {
+        gap:15px;
+    }
+
+    .digit-box {
+        width:52px;
+        height:52px;
+    }
+}
+
+@media(max-width:750px) {
+    body {
+        overflow:auto;
+    }
+
+    #app {
+        min-height:100vh;
+        height:auto;
+        padding:15px;
+    }
+
+    .presentation {
+        width:100%;
+        height:calc(100vh - 30px);
+        aspect-ratio:auto;
+        border-radius:20px;
+    }
+
+    .slide {
+        padding:25px 55px 70px;
+        overflow-y:auto;
+    }
+
+    .two-col,
+    .three-col,
+    .objectives {
+        grid-template-columns:1fr;
+    }
+
+    .speed-grid {
+        grid-template-columns:1fr;
+    }
+
+    .big-number {
+        font-size:100px;
+    }
+
+    .pv-cell {
+        min-height:55px;
+    }
+
+    .pv-cell .digit {
+        font-size:25px;
+    }
+
+    #scratchpad {
+        width:100%;
+        right:-100%;
+    }
+
+    #scratchpad.open {
+        right:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- =========================================================
+     PRESENTATION
+========================================================= -->
+
+<div class="presentation">
+
+    <div class="cheese-top">
+        <div class="hole1"></div>
+        <div class="hole2"></div>
+    </div>
+
+<!-- =========================================================
+     SLIDE 1
+========================================================= -->
+
+<section class="slide active title-screen" data-slide="1">
+
+    <div class="mission">🚀 TOP SECRET MISSION</div>
+
+    <h1 class="title-main">
+        Crack the <span>Addition Code!</span>
+    </h1>
+
+    <p class="subtitle">
+        🐱 Tom & Jerry's Place Value & Vertical Addition Adventure
+        <br>
+        From 10 → 1,000
+    </p>
+
+    <div class="objectives" style="max-width:760px;margin:25px auto;">
+        <div class="objective">🎯 Line up place values</div>
+        <div class="objective">🧀 Add Ones → Tens → Hundreds</div>
+        <div class="objective">🔄 Regroup when needed</div>
+        <div class="objective">🏆 Solve numbers up to 1,000</div>
+    </div>
+
+    <button class="btn" onclick="nextSlide()">
+        Start Mission 🚀
+    </button>
+
+</section>
+
+
+<!-- =========================================================
+     SLIDE 2
+========================================================= -->
+
+<section class="slide" data-slide="2">
+
+    <div class="slide-header">
+        <div class="level-badge green">🟩 LEVEL 1</div>
+        <h2>Ones & Tens Review</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="card yellow">
+            <h3>Remember!</h3>
+            <div class="big-number" style="font-size:100px;">10</div>
+            <p style="font-size:23px;text-align:center;">
+                10 Ones = 1 Ten
+            </p>
+
+            <div class="pv-table">
+                <div class="pv-cell tens">
+                    <div class="label">Tens</div>
+                    <div class="digit">2</div>
+                </div>
+
+                <div class="pv-cell ones">
+                    <div class="label">Ones</div>
+                    <div class="digit">4</div>
+                </div>
+            </div>
+
+            <p style="text-align:center;">
+                24 = 2 Tens + 4 Ones
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>🧀 Quick Check</h3>
+            <p style="font-size:22px;">
+                How many Ones are in <strong>24</strong>?
+            </p>
+
+            <div class="options">
+                <button class="option" onclick="checkChoice(this,false)">
+                    2
+                </button>
+
+                <button class="option" onclick="checkChoice(this,true)">
+                    4
+                </button>
+
+                <button class="option" onclick="checkChoice(this,false)">
+                    24
+                </button>
+            </div>
+
+            <div class="reveal">
+                ✅ Correct! The Ones digit is <strong>4</strong>.
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 3
+========================================================= -->
+
+<section class="slide" data-slide="3">
+
+    <div class="slide-header">
+        <div class="level-badge">📝 SETUP</div>
+        <h2>Vertical Setup 101</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="card blue">
+            <h3>Why line up the digits?</h3>
+
+            <p style="font-size:21px;">
+                Each digit has a special place.
+            </p>
+
+            <div class="pv-table">
+                <div class="pv-cell tens">
+                    <div class="label">Tens</div>
+                    <div class="digit">3</div>
+                </div>
+
+                <div class="pv-cell ones">
+                    <div class="label">Ones</div>
+                    <div class="digit">2</div>
+                </div>
+            </div>
+
+            <p>
+                The Tens must stay above the Tens.
+                <br>
+                The Ones must stay above the Ones.
+            </p>
+        </div>
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box t">3</div>
+                <div class="digit-box o">2</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box t">1</div>
+                <div class="digit-box o">5</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box t">?</div>
+                <div class="digit-box o">?</div>
+            </div>
+
+            <p style="text-align:center;margin-top:15px;">
+                Same places = easier addition!
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 4
+========================================================= -->
+
+<section class="slide" data-slide="4">
+
+    <div class="slide-header">
+        <div class="level-badge">⚡ GUIDED</div>
+        <h2>Vertical Addition — No Carry</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label t">Tens</div>
+                <div class="col-label o">Ones</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box t">3</div>
+                <div class="digit-box o">2</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box t">1</div>
+                <div class="digit-box o">5</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box t">4</div>
+                <div class="digit-box o">7</div>
+            </div>
+
+        </div>
+
+        <div class="card green">
+            <h3>Step-by-Step</h3>
+
+            <div class="step-panel">
+                <div class="prompt">
+                    Step 1: Add the Ones
+                    <br>
+                    2 + 5 = ?
+                </div>
+
+                <button class="btn green"
+                        onclick="showReveal('slide4answer')">
+                    Reveal Answer
+                </button>
+
+                <div id="slide4answer" class="reveal">
+                    🧀 2 + 5 = <strong>7</strong>
+                </div>
+            </div>
+
+            <div class="step-panel" style="margin-top:12px;">
+                <div class="prompt">
+                    Step 2: Add the Tens
+                    <br>
+                    3 + 1 = ?
+                </div>
+
+                <button class="btn blue"
+                        onclick="showReveal('slide4answer2')">
+                    Reveal Answer
+                </button>
+
+                <div id="slide4answer2" class="reveal">
+                    🎯 3 + 1 = <strong>4</strong>
+                    <br>
+                    Answer = <strong>47</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 5
+========================================================= -->
+
+<section class="slide" data-slide="5">
+
+    <div class="slide-header">
+        <div class="level-badge">🧀 LEVEL 2</div>
+        <h2>The Regrouping Secret!</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="card yellow center">
+
+            <div style="font-size:70px;">🧀</div>
+
+            <h3>When Ones reach 10...</h3>
+
+            <div style="
+                font-size:40px;
+                font-weight:700;
+                margin:20px 0;
+            ">
+                10 Ones
+                <br>
+                ⬇️
+                <br>
+                1 Ten
+            </div>
+
+            <p>
+                This is called <strong>regrouping</strong>.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>🎯 Think!</h3>
+
+            <p style="font-size:25px;">
+                What happens when the Ones total
+                <strong>10 or more</strong>?
+            </p>
+
+            <div class="options">
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    Ignore it
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,true)">
+                    Regroup
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    Delete the Ones
+                </button>
+
+            </div>
+
+            <div class="reveal">
+                ✅ Regroup! 10 Ones become 1 Ten.
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 6
+========================================================= -->
+
+<section class="slide" data-slide="6">
+
+    <div class="slide-header">
+        <div class="level-badge blue">🎯 GUIDED</div>
+        <h2>Step-by-Step Addition With Carry</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div style="
+                text-align:right;
+                padding-right:20px;
+                color:var(--red);
+                font-weight:700;
+                font-size:22px;
+            ">
+                +1
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box t">4</div>
+                <div class="digit-box o">8</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box t">2</div>
+                <div class="digit-box o">7</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box t">7</div>
+                <div class="digit-box o">5</div>
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="step-panel">
+                <h3>Step 1 — Ones</h3>
+
+                <p>
+                    8 + 7 =
+                    <input
+                        id="carryQ1"
+                        class="answer-input"
+                        style="width:75px;height:50px;font-size:23px;"
+                        maxlength="2"
+                    >
+                </p>
+
+                <button class="btn" onclick="checkCarryStep(1)">
+                    Check Step
+                </button>
+
+                <div id="carryFeedback1" class="feedback"></div>
+            </div>
+
+            <div class="step-panel" style="margin-top:12px;">
+                <h3>Step 2 — Regroup</h3>
+
+                <p>
+                    Ones digit:
+                    <input
+                        id="carryOnes"
+                        class="answer-input"
+                        style="width:60px;height:50px;font-size:23px;"
+                        maxlength="1"
+                    >
+
+                    Carry:
+                    <input
+                        id="carryTen"
+                        class="answer-input"
+                        style="width:60px;height:50px;font-size:23px;"
+                        maxlength="1"
+                    >
+                </p>
+
+                <button class="btn green"
+                        onclick="checkCarryStep(2)">
+                    Check Carry
+                </button>
+
+                <div id="carryFeedback2" class="feedback"></div>
+            </div>
+
+            <div class="step-panel" style="margin-top:12px;">
+                <h3>Step 3 — Tens</h3>
+
+                <p>
+                    1 + 4 + 2 =
+                    <input
+                        id="carryTens"
+                        class="answer-input"
+                        style="width:70px;height:50px;font-size:23px;"
+                        maxlength="1"
+                    >
+                </p>
+
+                <button class="btn blue"
+                        onclick="checkCarryStep(3)">
+                    Finish
+                </button>
+
+                <div id="carryFeedback3" class="feedback"></div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 7
+========================================================= -->
+
+<section class="slide" data-slide="7">
+
+    <div class="slide-header">
+        <div class="level-badge red">🕵️ TOM'S TRAP</div>
+        <h2>Spot the Error!</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <h3 style="text-align:center;">Tom's Answer 😼</h3>
+
+            <div class="vertical-number">
+                <div class="digit-box t">5</div>
+                <div class="digit-box o">8</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box t">2</div>
+                <div class="digit-box o">6</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box t">7</div>
+                <div class="digit-box o">1</div>
+                <div class="digit-box">4</div>
+            </div>
+
+            <p style="text-align:center;color:var(--red);">
+                ❌ 714
+            </p>
+
+        </div>
+
+        <div class="card yellow">
+
+            <h3>🧠 Detective Question</h3>
+
+            <p style="font-size:22px;">
+                What did Tom forget?
+            </p>
+
+            <div class="options">
+
+                <button class="option"
+                        onclick="checkChoice(this,true)">
+                    Carry the 1
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    Add the hundreds
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    Reverse the numbers
+                </button>
+
+            </div>
+
+            <div class="reveal">
+                ✅ Tom forgot to regroup:
+                8 + 6 = 14, so write 4 and carry 1.
+                <br><br>
+                58 + 26 = <strong>84</strong>.
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 8
+========================================================= -->
+
+<section class="slide" data-slide="8">
+
+    <div class="slide-header">
+        <div class="level-badge green">💯 LEVEL 3</div>
+        <h2>Entering Hundreds!</h2>
+    </div>
+
+    <div class="content">
+
+        <div class="card green center" style="max-width:800px;margin:auto;">
+
+            <div style="font-size:70px;">💯</div>
+
+            <h2>10 Tens = 1 Hundred</h2>
+
+            <div class="pv-table">
+
+                <div class="pv-cell hundreds">
+                    <div class="label">Hundreds</div>
+                    <div class="digit">0</div>
+                </div>
+
+                <div class="pv-cell tens">
+                    <div class="label">Tens</div>
+                    <div class="digit">0</div>
+                </div>
+
+                <div class="pv-cell ones">
+                    <div class="label">Ones</div>
+                    <div class="digit">0</div>
+                </div>
+
+            </div>
+
+            <p style="font-size:23px;">
+                Now our addition has a new column:
+                <strong>Hundreds!</strong>
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 9
+========================================================= -->
+
+<section class="slide" data-slide="9">
+
+    <div class="slide-header">
+        <div class="level-badge green">🎯 3-DIGIT</div>
+        <h2>Ones Carry Only</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label h">H</div>
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box h">1</div>
+                <div class="digit-box t">4</div>
+                <div class="digit-box o">6</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box h">2</div>
+                <div class="digit-box t">3</div>
+                <div class="digit-box o">7</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box h">3</div>
+                <div class="digit-box t">8</div>
+                <div class="digit-box o">3</div>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>🧩 Solve the Steps</h3>
+
+            <p>
+                Ones:
+                <strong>6 + 7 = 13</strong>
+                → write 3, carry 1.
+            </p>
+
+            <button class="btn green"
+                    onclick="showReveal('s9r1')">
+                Reveal Tens
+            </button>
+
+            <div id="s9r1" class="reveal">
+                1 + 4 + 3 = <strong>8</strong>
+            </div>
+
+            <br><br>
+
+            <button class="btn blue"
+                    onclick="showReveal('s9r2')">
+                Reveal Hundreds
+            </button>
+
+            <div id="s9r2" class="reveal">
+                1 + 2 = <strong>3</strong>
+                <br>
+                Final answer = <strong>383</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 10
+========================================================= -->
+
+<section class="slide" data-slide="10">
+
+    <div class="slide-header">
+        <div class="level-badge red">🔥 CHALLENGE</div>
+        <h2>Double Carry Challenge</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label h">H</div>
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box h">2</div>
+                <div class="digit-box t">6</div>
+                <div class="digit-box o">8</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box h">1</div>
+                <div class="digit-box t">5</div>
+                <div class="digit-box o">5</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box h">4</div>
+                <div class="digit-box t">2</div>
+                <div class="digit-box o">3</div>
+            </div>
+
+        </div>
+
+        <div class="card yellow">
+
+            <h3>🔄 Two Regroups!</h3>
+
+            <p>
+                Ones:
+                <strong>8 + 5 = 13</strong>
+                → carry 1.
+            </p>
+
+            <p>
+                Tens:
+                <strong>1 + 6 + 5 = 12</strong>
+                → carry another 1.
+            </p>
+
+            <button class="btn"
+                    onclick="showReveal('doubleReveal')">
+                Reveal Final Answer
+            </button>
+
+            <div id="doubleReveal" class="reveal">
+                Hundreds:
+                1 + 2 + 1 = 4
+                <br><br>
+                🎉 <strong>268 + 155 = 423</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 11
+========================================================= -->
+
+<section class="slide" data-slide="11">
+
+    <div class="slide-header">
+        <div class="level-badge red">😈 TRICKY ZERO</div>
+        <h2>Zero Has a Job!</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="card orange">
+
+            <h3>405 + 197</h3>
+
+            <div class="pv-table">
+
+                <div class="pv-cell hundreds">
+                    <div class="label">H</div>
+                    <div class="digit">4</div>
+                </div>
+
+                <div class="pv-cell tens">
+                    <div class="label">T</div>
+                    <div class="digit">0</div>
+                </div>
+
+                <div class="pv-cell ones">
+                    <div class="label">O</div>
+                    <div class="digit">5</div>
+                </div>
+
+            </div>
+
+            <p style="font-size:20px;">
+                Zero means there are
+                <strong>0 Tens</strong>.
+                <br>
+                But we still keep the Tens column!
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>🧠 Your Turn</h3>
+
+            <p style="font-size:21px;">
+                When adding 405 + 197,
+                what happens in the Tens column?
+            </p>
+
+            <button class="btn"
+                    onclick="showReveal('zeroReveal')">
+                Reveal
+            </button>
+
+            <div id="zeroReveal" class="reveal">
+                Ones: 5 + 7 = 12 → write 2, carry 1.
+                <br>
+                Tens: 0 + 9 + 1 = 10 → write 0, carry 1.
+                <br>
+                Hundreds: 4 + 1 + 1 = 6.
+                <br><br>
+                🎯 Answer = <strong>602</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 12
+========================================================= -->
+
+<section class="slide" data-slide="12">
+
+    <div class="slide-header">
+        <div class="level-badge">⚡ SPEED ROUND</div>
+        <h2>Vertical Check</h2>
+    </div>
+
+    <div class="content">
+
+        <div class="speed-grid">
+
+            <div class="speed-card">
+                <h3>🧀 A</h3>
+                <p>64 + 28 = ?</p>
+                <input id="speed1">
+                <button class="btn" onclick="speedCheck('speed1',92,'speedF1')">
+                    Check
+                </button>
+                <div id="speedF1" class="feedback"></div>
+            </div>
+
+            <div class="speed-card">
+                <h3>🐱 B</h3>
+                <p>183 + 214 = ?</p>
+                <input id="speed2">
+                <button class="btn" onclick="speedCheck('speed2',397,'speedF2')">
+                    Check
+                </button>
+                <div id="speedF2" class="feedback"></div>
+            </div>
+
+            <div class="speed-card">
+                <h3>🐭 C</h3>
+                <p>309 + 85 = ?</p>
+                <input id="speed3">
+                <button class="btn" onclick="speedCheck('speed3',394,'speedF3')">
+                    Check
+                </button>
+                <div id="speedF3" class="feedback"></div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 13
+========================================================= -->
+
+<section class="slide" data-slide="13">
+
+    <div class="slide-header">
+        <div class="level-badge purple">🔓 LEVEL 4</div>
+        <h2>Unlocking 1,000!</h2>
+    </div>
+
+    <div class="content center">
+
+        <div class="card purple" style="max-width:850px;">
+
+            <div style="font-size:80px;">🔓</div>
+
+            <h2>10 Hundreds = 1 Thousand</h2>
+
+            <div class="pv-table">
+
+                <div class="pv-cell thousands">
+                    <div class="label">Thousands</div>
+                    <div class="digit">1</div>
+                </div>
+
+                <div class="pv-cell hundreds">
+                    <div class="label">Hundreds</div>
+                    <div class="digit">0</div>
+                </div>
+
+                <div class="pv-cell tens">
+                    <div class="label">Tens</div>
+                    <div class="digit">0</div>
+                </div>
+
+                <div class="pv-cell ones">
+                    <div class="label">Ones</div>
+                    <div class="digit">0</div>
+                </div>
+
+            </div>
+
+            <p style="font-size:24px;">
+                Our new column is the
+                <strong>Thousands place!</strong>
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 14
+========================================================= -->
+
+<section class="slide" data-slide="14">
+
+    <div class="slide-header">
+        <div class="level-badge purple">🏗️ BUILD</div>
+        <h2>Building 1,000 Step-by-Step</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label h">H</div>
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="digit-box h">6</div>
+                <div class="digit-box t">5</div>
+                <div class="digit-box o">0</div>
+            </div>
+
+            <div class="vertical-number">
+                <div class="plus">+</div>
+                <div class="digit-box h">3</div>
+                <div class="digit-box t">5</div>
+                <div class="digit-box o">0</div>
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box th">1</div>
+                <div class="digit-box h">0</div>
+                <div class="digit-box t">0</div>
+                <div class="digit-box o">0</div>
+            </div>
+
+        </div>
+
+        <div class="card purple">
+
+            <h3>Watch the regrouping!</h3>
+
+            <p>
+                Ones:
+                0 + 0 = 0
+            </p>
+
+            <p>
+                Tens:
+                5 + 5 = 10
+                → write 0, carry 1.
+            </p>
+
+            <p>
+                Hundreds:
+                6 + 3 + 1 = 10
+                → write 0, carry 1.
+            </p>
+
+            <button class="btn purple"
+                    onclick="showReveal('thousandReveal')">
+                Unlock the Answer
+            </button>
+
+            <div id="thousandReveal" class="reveal">
+                🎉 The carried 1 enters the Thousands place.
+                <br><br>
+                <strong>650 + 350 = 1,000</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 15
+========================================================= -->
+
+<section class="slide" data-slide="15">
+
+    <div class="slide-header">
+        <div class="level-badge red">🚨 BOSS BATTLE</div>
+        <h2>4-Digit Alignment</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="math-box">
+
+            <div class="math-columns">
+                <div class="col-label th">Th</div>
+                <div class="col-label h">H</div>
+                <div class="col-label t">T</div>
+                <div class="col-label o">O</div>
+            </div>
+
+            <div class="vertical-number">
+
+                <div class="digit-box th">0</div>
+                <div class="digit-box h">4</div>
+                <div class="digit-box t">8</div>
+                <div class="digit-box o">2</div>
+
+            </div>
+
+            <div class="vertical-number">
+
+                <div class="plus">+</div>
+                <div class="digit-box th">0</div>
+                <div class="digit-box h">5</div>
+                <div class="digit-box t">3</div>
+                <div class="digit-box o">9</div>
+
+            </div>
+
+            <div class="math-line"></div>
+
+            <div class="answer-row">
+                <div class="digit-box th">1</div>
+                <div class="digit-box h">0</div>
+                <div class="digit-box t">2</div>
+                <div class="digit-box o">1</div>
+            </div>
+
+        </div>
+
+        <div class="card yellow">
+
+            <h3>🚨 Boss Question</h3>
+
+            <p style="font-size:25px;">
+                What is the value of 7 in the answer?
+            </p>
+
+            <p>
+                Wait... first solve:
+                <strong>482 + 539</strong>
+            </p>
+
+            <div class="options">
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    911
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,true)">
+                    1,021
+                </button>
+
+                <button class="option"
+                        onclick="checkChoice(this,false)">
+                    1,111
+                </button>
+
+            </div>
+
+            <div class="reveal">
+                🎯 <strong>482 + 539 = 1,021</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 16
+========================================================= -->
+
+<section class="slide" data-slide="16">
+
+    <div class="slide-header">
+        <div class="level-badge">🧩 DETECTIVE</div>
+        <h2>Missing Digit Challenge</h2>
+    </div>
+
+    <div class="content center">
+
+        <div class="card" style="max-width:900px;width:100%;">
+
+            <h3>Can you find the missing digits?</h3>
+
+            <div class="math-box">
+
+                <div class="vertical-number">
+
+                    <div class="digit-box h">3</div>
+                    <div class="digit-box t">?</div>
+                    <div class="digit-box o">6</div>
+
+                </div>
+
+                <div class="vertical-number">
+
+                    <div class="plus">+</div>
+                    <div class="digit-box h">2</div>
+                    <div class="digit-box t">4</div>
+                    <div class="digit-box o">?</div>
+
+                </div>
+
+                <div class="math-line"></div>
+
+                <div class="answer-row">
+
+                    <div class="digit-box h">5</div>
+                    <div class="digit-box t">8</div>
+                    <div class="digit-box o">1</div>
+
+                </div>
+
+            </div>
+
+            <p style="font-size:22px;">
+                Find the missing Tens and Ones.
+            </p>
+
+            <div class="button-row">
+
+                <input id="missing1"
+                       class="missing-input"
+                       maxlength="1"
+                       placeholder="T">
+
+                <input id="missing2"
+                       class="missing-input"
+                       maxlength="1"
+                       placeholder="O">
+
+                <button class="btn green"
+                        onclick="checkMissing()">
+                    Check
+                </button>
+
+            </div>
+
+            <div id="missingFeedback" class="feedback"></div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 17
+========================================================= -->
+
+<section class="slide" data-slide="17">
+
+    <div class="slide-header">
+        <div class="level-badge">🏃 CHEESE CHASE</div>
+        <h2>Jerry's Cheese Chase</h2>
+    </div>
+
+    <div class="content two-col">
+
+        <div class="card yellow center">
+
+            <div style="font-size:90px;">🐭🧀</div>
+
+            <h3>Jerry's Mission</h3>
+
+            <p style="font-size:22px;">
+                Jerry collected
+                <strong>385g</strong> of cheese on Monday.
+            </p>
+
+            <p style="font-size:22px;">
+                He collected
+                <strong>437g</strong> on Tuesday.
+            </p>
+
+            <p style="font-size:25px;">
+                How much cheese did he collect altogether?
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Set it up vertically</h3>
+
+            <div class="math-box">
+
+                <div class="math-columns">
+                    <div class="col-label h">H</div>
+                    <div class="col-label t">T</div>
+                    <div class="col-label o">O</div>
+                </div>
+
+                <div class="vertical-number">
+                    <div class="digit-box h">3</div>
+                    <div class="digit-box t">8</div>
+                    <div class="digit-box o">5</div>
+                </div>
+
+                <div class="vertical-number">
+                    <div class="plus">+</div>
+                    <div class="digit-box h">4</div>
+                    <div class="digit-box t">3</div>
+                    <div class="digit-box o">7</div>
+                </div>
+
+                <div class="math-line"></div>
+
+                <div class="answer-row">
+                    <div class="digit-box h">8</div>
+                    <div class="digit-box t">2</div>
+                    <div class="digit-box o">2</div>
+                </div>
+
+            </div>
+
+            <button class="btn"
+                    onclick="showReveal('cheeseReveal')">
+                Reveal Jerry's Total
+            </button>
+
+            <div id="cheeseReveal" class="reveal">
+                🧀 385 + 437 = <strong>822g</strong>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 18
+========================================================= -->
+
+<section class="slide" data-slide="18">
+
+    <div class="slide-header">
+        <div class="level-badge red">👑 FINAL BOSS</div>
+        <h2>Place Value Battle</h2>
+    </div>
+
+    <div class="content">
+
+        <div class="three-col">
+
+            <div class="card">
+                <h3>⚔️ Battle 1</h3>
+                <p>27 + 35 = ?</p>
+
+                <div class="options">
+                    <button class="option" onclick="checkChoice(this,false)">52</button>
+                    <button class="option" onclick="checkChoice(this,true)">62</button>
+                    <button class="option" onclick="checkChoice(this,false)">72</button>
+                </div>
+
+                <div class="reveal">✅ 62</div>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Battle 2</h3>
+                <p>146 + 257 = ?</p>
+
+                <div class="options">
+                    <button class="option" onclick="checkChoice(this,false)">393</button>
+                    <button class="option" onclick="checkChoice(this,true)">403</button>
+                    <button class="option" onclick="checkChoice(this,false)">413</button>
+                </div>
+
+                <div class="reveal">✅ 403</div>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Battle 3</h3>
+                <p>325 + 178 = ?</p>
+
+                <div class="options">
+                    <button class="option" onclick="checkChoice(this,false)">493</button>
+                    <button class="option" onclick="checkChoice(this,true)">503</button>
+                    <button class="option" onclick="checkChoice(this,false)">513</button>
+                </div>
+
+                <div class="reveal">✅ 503</div>
+            </div>
+
+        </div>
+
+        <div class="card center" style="margin-top:18px;">
+            <p style="font-size:22px;">
+                🏆 Beat all three to defeat the Boss!
+            </p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 19
+========================================================= -->
+
+<section class="slide" data-slide="19">
+
+    <div class="slide-header">
+        <div class="level-badge purple">🏆 MASTER CHALLENGE</div>
+        <h2>Final Four</h2>
+    </div>
+
+    <div class="content">
+
+        <div class="speed-grid">
+
+            <div class="speed-card">
+                <h3>1️⃣ Expanded Form</h3>
+
+                <p>
+                    Expand <strong>1,254</strong>
+                </p>
+
+                <button class="btn"
+                        onclick="showReveal('master1')">
+                    Reveal
+                </button>
+
+                <div id="master1" class="reveal">
+                    1,000 + 200 + 50 + 4
+                </div>
+            </div>
+
+
+            <div class="speed-card">
+                <h3>2️⃣ Value Detective</h3>
+
+                <p>
+                    Value of 9 in 1,924?
+                </p>
+
+                <button class="btn"
+                        onclick="showReveal('master2')">
+                    Reveal
+                </button>
+
+                <div id="master2" class="reveal">
+                    The 9 is in the Hundreds place.
+                    <br>
+                    Answer = <strong>900</strong>
+                </div>
+            </div>
+
+
+            <div class="speed-card">
+                <h3>3️⃣ Build It</h3>
+
+                <p>
+                    5H + 2T + 8O
+                </p>
+
+                <button class="btn"
+                        onclick="showReveal('master3')">
+                    Reveal
+                </button>
+
+                <div id="master3" class="reveal">
+                    <strong>528</strong>
+                </div>
+            </div>
+
+
+            <div class="speed-card">
+                <h3>4️⃣ Mystery Number</h3>
+
+                <p>
+                    4H + 7T + 3O
+                </p>
+
+                <button class="btn"
+                        onclick="showReveal('master4')">
+                    Reveal
+                </button>
+
+                <div id="master4" class="reveal">
+                    🕵️ The number is
+                    <strong>473</strong>.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 20
+========================================================= -->
+
+<section class="slide title-screen" data-slide="20">
+
+    <div class="level-badge green">
+        🎉 MISSION COMPLETE
+    </div>
+
+    <div class="trophy">🏆</div>
+
+    <h1>
+        Place Value & Addition
+        <span style="color:var(--brown);">Master!</span>
+    </h1>
+
+    <div class="ladder">
+
+        <div class="ladder-step thousands">
+            🔮 Thousands → 1,000
+        </div>
+
+        <div class="ladder-step hundreds">
+            💯 Hundreds → 100
+        </div>
+
+        <div class="ladder-step tens">
+            🔵 Tens → 10
+        </div>
+
+        <div class="ladder-step ones">
+            🟠 Ones → 1
+        </div>
+
+    </div>
+
+    <div class="card yellow" style="max-width:700px;">
+
+        <h3>🎯 Final Question</h3>
+
+        <p style="font-size:22px;">
+            In <strong>3,482</strong>, which digit has the greatest value?
+        </p>
+
+        <div class="options">
+
+            <button class="option"
+                    onclick="checkChoice(this,true)">
+                3
+            </button>
+
+            <button class="option"
+                    onclick="checkChoice(this,false)">
+                4
+            </button>
+
+            <button class="option"
+                    onclick="checkChoice(this,false)">
+                8
+            </button>
+
+        </div>
+
+        <div class="reveal">
+            🎉 Correct!
+            <br>
+            3 is in the Thousands place.
+            <br>
+            Its value is <strong>3,000</strong>.
+            <br><br>
+            🐱🐭 Mission Complete!
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- =========================================================
+     SIDE NAVIGATION
+========================================================= -->
+
+<button
+    class="side-nav prev-btn"
+    id="prevBtn"
+    onclick="previousSlide()"
+    aria-label="Previous slide">
+
+    ◀
+    <span>Previous</span>
+
+</button>
+
+
+<button
+    class="side-nav next-btn"
+    id="nextBtn"
+    onclick="nextSlide()"
+    aria-label="Next slide">
+
+    <span>Next</span>
+    ▶
+
+</button>
+
+
+<!-- =========================================================
+     SLIDE COUNTER
+========================================================= -->
+
+<div class="slide-counter" id="slideCounter">
+    Slide 1 / 20
+</div>
+
+
+<!-- =========================================================
+     SCRATCHPAD BUTTON
+========================================================= -->
+
+<button
+    class="scratch-toggle"
+    onclick="toggleScratchpad()">
+
+    ✏️ Scratchpad
+
+</button>
+
+
+<!-- =========================================================
+     SCRATCHPAD
+========================================================= -->
+
+<div id="scratchpad">
+
+    <div class="scratch-title">
+
+        <h2>🧀 Jerry's Scratchpad</h2>
+
+        <button
+            class="btn red"
+            onclick="toggleScratchpad()">
+
+            ✕
+
+        </button>
+
+    </div>
+
+    <div class="tools">
+
+        <button
+            class="tool active"
+            id="pencilTool"
+            onclick="setTool('pencil')">
+
+            ✏️ Pencil
+
+        </button>
+
+        <button
+            class="tool"
+            id="eraserTool"
+            onclick="setTool('eraser')">
+
+            🧽 Eraser
+
+        </button>
+
+        <button
+            class="tool"
+            onclick="clearCanvas()">
+
+            🗑 Clear
+
+        </button>
+
+        <label class="tool">
+            Color
+            <input
+                id="penColor"
+                type="color"
+                value="#334155">
+        </label>
+
+    </div>
+
+    <canvas id="drawCanvas"></canvas>
+
+</div>
+
+
+<script>
+/* =========================================================
+   SLIDE SYSTEM
+========================================================= */
+
+const slides = Array.from(document.querySelectorAll(".slide"));
+let currentSlide = 0;
+
+const slideCounter = document.getElementById("slideCounter");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function showSlide(index) {
+
+    if(index < 0) index = 0;
+
+    if(index >= slides.length) {
+        index = slides.length - 1;
+    }
+
+    slides.forEach((slide,i) => {
+        slide.classList.toggle("active", i === index);
+    });
+
+    currentSlide = index;
+
+    slideCounter.textContent =
+        `Slide ${currentSlide + 1} / ${slides.length}`;
+
+    prevBtn.style.opacity =
+        currentSlide === 0 ? ".45" : "1";
+
+    nextBtn.style.opacity =
+        currentSlide === slides.length - 1 ? ".45" : "1";
+}
+
+function nextSlide() {
+
+    if(currentSlide < slides.length - 1) {
+        showSlide(currentSlide + 1);
+    }
+
+}
+
+function previousSlide() {
+
+    if(currentSlide > 0) {
+        showSlide(currentSlide - 1);
+    }
+
+}
+
+
+/* =========================================================
+   KEYBOARD NAVIGATION
+========================================================= */
+
+document.addEventListener("keydown", function(e) {
+
+    /*
+       Don't navigate slides when the student
+       is typing in an input.
+    */
+
+    const tag = document.activeElement.tagName;
+
+    if(
+        tag === "INPUT" ||
+        tag === "TEXTAREA"
+    ) {
+        return;
+    }
+
+    if(e.key === "ArrowRight") {
+        nextSlide();
+    }
+
+    if(e.key === "ArrowLeft") {
+        previousSlide();
+    }
+
+});
+
+
+/* =========================================================
+   REVEAL SYSTEM
+========================================================= */
+
+function showReveal(id) {
+
+    const element = document.getElementById(id);
+
+    if(!element) return;
+
+    element.classList.add("show");
+
+    celebrate();
+
+}
+
+
+/* =========================================================
+   MULTIPLE CHOICE
+========================================================= */
+
+function checkChoice(button, correct) {
+
+    const container =
+        button.closest(".card") ||
+        button.closest(".slide");
+
+    const options =
+        container.querySelectorAll(".option");
+
+    options.forEach(option => {
+        option.classList.remove("correct","wrong");
+    });
+
+    if(correct) {
+
+        button.classList.add("correct");
+
+        const reveal =
+            container.querySelector(".reveal");
+
+        if(reveal) {
+            reveal.classList.add("show");
+        }
+
+        celebrate();
+
+    } else {
+
+        button.classList.add("wrong");
+
+        const feedback =
+            container.querySelector(".feedback");
+
+        if(feedback) {
+            feedback.textContent =
+                "❌ Not quite. Look at the place values again.";
+            feedback.className =
+                "feedback wrong";
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   SLIDE 6 CARRY ENGINE
+========================================================= */
+
+function checkCarryStep(step) {
+
+    if(step === 1) {
+
+        const value =
+            document.getElementById("carryQ1").value.trim();
+
+        const feedback =
+            document.getElementById("carryFeedback1");
+
+        if(value === "15") {
+
+            feedback.textContent =
+                "✅ Correct! 8 + 7 = 15. Now regroup.";
+
+            feedback.className =
+                "feedback correct";
+
+            celebrate();
+
+        } else {
+
+            feedback.textContent =
+                "❌ Try again. Add 8 and 7.";
+
+            feedback.className =
+                "feedback wrong";
+        }
+
+    }
+
+
+    if(step === 2) {
+
+        const ones =
+            document.getElementById("carryOnes").value.trim();
+
+        const carry =
+            document.getElementById("carryTen").value.trim();
+
+        const feedback =
+            document.getElementById("carryFeedback2");
+
+        if(ones === "5" && carry === "1") {
+
+            feedback.textContent =
+                "✅ Excellent! Write 5 in Ones and carry 1 to Tens.";
+
+            feedback.className =
+                "feedback correct";
+
+            celebrate();
+
+        } else {
+
+            feedback.textContent =
+                "❌ Remember: 15 means 5 Ones and 1 Ten.";
+
+            feedback.className =
+                "feedback wrong";
+        }
+
+    }
+
+
+    if(step === 3) {
+
+        const value =
+            document.getElementById("carryTens").value.trim();
+
+        const feedback =
+            document.getElementById("carryFeedback3");
+
+        if(value === "7") {
+
+            feedback.textContent =
+                "🎉 Perfect! 48 + 27 = 75.";
+
+            feedback.className =
+                "feedback correct";
+
+            celebrate();
+
+        } else {
+
+            feedback.textContent =
+                "❌ Add 1 + 4 + 2 again.";
+
+            feedback.className =
+                "feedback wrong";
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   SPEED CHECK
+========================================================= */
+
+function speedCheck(inputId, answer, feedbackId) {
+
+    const input =
+        document.getElementById(inputId);
+
+    const feedback =
+        document.getElementById(feedbackId);
+
+    const value =
+        Number(input.value);
+
+    if(value === answer) {
+
+        feedback.textContent =
+            "✅ Correct!";
+
+        feedback.className =
+            "feedback correct";
+
+        celebrate();
+
+    } else {
+
+        feedback.textContent =
+            "❌ Try again. Work from Ones to Tens.";
+
+        feedback.className =
+            "feedback wrong";
+
+    }
+
+}
+
+
+/* =========================================================
+   MISSING DIGIT
+========================================================= */
+
+function checkMissing() {
+
+    const a =
+        document.getElementById("missing1").value.trim();
+
+    const b =
+        document.getElementById("missing2").value.trim();
+
+    const feedback =
+        document.getElementById("missingFeedback");
+
+    /*
+       3?6 + 24? = 581
+
+       Ones:
+       6 + ? = 1 with carry
+       ? = 5
+
+       Tens:
+       ? + 4 + 1 = 8
+       ? = 3
+
+       Therefore:
+       336 + 245 = 581
+    */
+
+    if(a === "3" && b === "5") {
+
+        feedback.textContent =
+            "🎉 Detective success! 336 + 245 = 581.";
+
+        feedback.className =
+            "feedback correct";
+
+        celebrate();
+
+    } else {
+
+        feedback.textContent =
+            "❌ Think from the Ones column first.";
+
+        feedback.className =
+            "feedback wrong";
+
+    }
+
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function celebrate() {
+
+    for(let i = 0; i < 24; i++) {
+
+        const piece =
+            document.createElement("div");
+
+        piece.className = "confetti";
+
+        piece.style.left =
+            Math.random() * 100 + "vw";
+
+        piece.style.top =
+            "-20px";
+
+        piece.style.background =
+            [
+                "#F59E0B",
+                "#FACC15",
+                "#8B5CF6",
+                "#10B981",
+                "#3B82F6",
+                "#EF4444"
+            ][Math.floor(Math.random() * 6)];
+
+        piece.style.animationDelay =
+            Math.random() * .3 + "s";
+
+        document.body.appendChild(piece);
+
+        setTimeout(() => {
+            piece.remove();
+        },1500);
+
+    }
+
+}
+
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+const scratchpad =
+    document.getElementById("scratchpad");
+
+const canvas =
+    document.getElementById("drawCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+let drawing = false;
+let tool = "pencil";
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const oldCanvas =
+        document.createElement("canvas");
+
+    oldCanvas.width = canvas.width;
+    oldCanvas.height = canvas.height;
+
+    if(canvas.width && canvas.height) {
+
+        oldCanvas
+            .getContext("2d")
+            .drawImage(canvas,0,0);
+
+    }
+
+    canvas.width =
+        Math.floor(rect.width * window.devicePixelRatio);
+
+    canvas.height =
+        Math.floor(rect.height * window.devicePixelRatio);
+
+    ctx.scale(
+        window.devicePixelRatio,
+        window.devicePixelRatio
+    );
+
+    if(oldCanvas.width) {
+
+        ctx.drawImage(
+            oldCanvas,
+            0,
+            0,
+            oldCanvas.width,
+            oldCanvas.height,
+            0,
+            0,
+            rect.width,
+            rect.height
+        );
+
+    }
+
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+setTimeout(resizeCanvas,100);
+
+
+function getPointerPosition(e) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+
+}
+
+
+canvas.addEventListener("pointerdown", function(e) {
+
+    drawing = true;
+
+    const pos =
+        getPointerPosition(e);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+});
+
+
+canvas.addEventListener("pointermove", function(e) {
+
+    if(!drawing) return;
+
+    const pos =
+        getPointerPosition(e);
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    if(tool === "eraser") {
+
+        ctx.globalCompositeOperation =
+            "destination-out";
+
+        ctx.lineWidth = 25;
+
+    } else {
+
+        ctx.globalCompositeOperation =
+            "source-over";
+
+        ctx.strokeStyle =
+            document.getElementById("penColor").value;
+
+        ctx.lineWidth = 4;
+
+    }
+
+    ctx.lineTo(pos.x,pos.y);
+
+    ctx.stroke();
+
+});
+
+
+canvas.addEventListener("pointerup", function() {
+
+    drawing = false;
+    ctx.closePath();
+
+});
+
+
+canvas.addEventListener("pointerleave", function() {
+
+    drawing = false;
+
+});
+
+
+function setTool(newTool) {
+
+    tool = newTool;
+
+    document
+        .getElementById("pencilTool")
+        .classList.toggle(
+            "active",
+            newTool === "pencil"
+        );
+
+    document
+        .getElementById("eraserTool")
+        .classList.toggle(
+            "active",
+            newTool === "eraser"
+        );
+
+}
+
+
+function clearCanvas() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+}
+
+
+function toggleScratchpad() {
+
+    scratchpad.classList.toggle("open");
+
+    if(scratchpad.classList.contains("open")) {
+
+        setTimeout(
+            resizeCanvas,
+            320
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+showSlide(0);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rounding Numbers Interactive Worksheet</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --blue: #557cff;
+    --purple: #7658e8;
+    --yellow: #ffd65a;
+    --orange: #ffad4d;
+    --green: #21a366;
+    --green-bg: #eaf9f1;
+    --red: #e05252;
+    --red-bg: #fff0f0;
+    --ink: #29364d;
+    --muted: #718096;
+    --border: #dfe6f0;
+    --bg: #f4f7fc;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 5% 5%, #e7efff 0, transparent 25%),
+        radial-gradient(circle at 95% 10%, #eee8ff 0, transparent 25%),
+        var(--bg);
+}
+
+.page {
+    width: min(1150px, 94%);
+    margin: auto;
+    padding: 25px 0 60px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    background: linear-gradient(135deg, #557cff, #7658e8);
+    color: white;
+    padding: 32px 22px;
+    border-radius: 27px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 15px 35px rgba(65, 80, 170, .20);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 44px);
+}
+
+.header p {
+    margin: 10px 0 0;
+    font-size: 17px;
+}
+
+.header-pill {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 17px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.18);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.worksheet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(40, 60, 90, .07);
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.question-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 12px;
+}
+
+.badge {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    font-weight: 900;
+    color: #514000;
+    box-shadow: 0 4px 0 #dfb73c;
+}
+
+.question-heading h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.description {
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* =========================================================
+   INPUT SENTENCES
+========================================================= */
+
+.sentence-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.sentence {
+    background: #f8faff;
+    border: 1px solid #e1e7f1;
+    border-radius: 15px;
+    padding: 14px;
+    font-size: 16px;
+    line-height: 1.8;
+    font-weight: 700;
+}
+
+input[type="text"] {
+    width: 120px;
+    max-width: 100%;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 2px solid #d4dce9;
+    background: white;
+    outline: none;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+input[type="text"]:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(85,124,255,.10);
+}
+
+input.correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+    color: #147347;
+}
+
+input.incorrect {
+    border-color: var(--red);
+    background: var(--red-bg);
+    color: #b72e2e;
+}
+
+/* =========================================================
+   NUMBER LINE
+========================================================= */
+
+.number-line-card {
+    margin: 20px 0;
+    padding: 24px 18px 28px;
+    background: #f8faff;
+    border: 1px solid #e1e7f1;
+    border-radius: 20px;
+    overflow-x: auto;
+}
+
+.number-line {
+    position: relative;
+    min-width: 650px;
+    height: 100px;
+    margin: auto;
+}
+
+.line {
+    position: absolute;
+    left: 2%;
+    right: 2%;
+    top: 43px;
+    height: 5px;
+    border-radius: 10px;
+    background: #52627c;
+}
+
+.tick {
+    position: absolute;
+    top: 30px;
+    width: 4px;
+    height: 31px;
+    background: #52627c;
+    border-radius: 3px;
+    transform: translateX(-50%);
+}
+
+.tick-label {
+    position: absolute;
+    top: 66px;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.arrow-marker {
+    position: absolute;
+    top: 3px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.arrow-marker .arrow {
+    color: var(--red);
+    font-size: 27px;
+    line-height: 22px;
+}
+
+.arrow-marker .marker-label {
+    background: #fff0a8;
+    border: 1px solid #f1cf53;
+    border-radius: 7px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   ROLLING VISUAL
+========================================================= */
+
+.rounding-box {
+    background: linear-gradient(135deg, #fff8e5, #fff1cc);
+    border: 2px solid #ffd875;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 18px;
+}
+
+.rounding-title {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 15px;
+}
+
+.big-number {
+    text-align: center;
+    font-size: 38px;
+    font-weight: 900;
+    color: #455a88;
+    margin: 8px 0 20px;
+}
+
+/* =========================================================
+   QUESTION 4 CHIPS
+========================================================= */
+
+.target-box {
+    text-align: center;
+    background: linear-gradient(135deg, #eef4ff, #f5efff);
+    border: 2px solid #dbe3ff;
+    padding: 23px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.target-label {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.target-number {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--purple);
+    margin-top: 5px;
+}
+
+.chips {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.chip {
+    border: 2px solid #d7deeb;
+    background: white;
+    color: var(--ink);
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .18s;
+    box-shadow: 0 3px 7px rgba(40,50,80,.06);
+}
+
+.chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+}
+
+.chip.selected {
+    background: #e9f0ff;
+    border-color: var(--blue);
+    color: #3159c1;
+    box-shadow: 0 0 0 3px rgba(85,124,255,.10);
+}
+
+.chip.correct {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: #147347;
+}
+
+.chip.incorrect {
+    background: var(--red-bg);
+    border-color: var(--red);
+    color: #b72e2e;
+}
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+.feedback {
+    min-height: 25px;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.feedback.correct {
+    color: var(--green);
+}
+
+.feedback.incorrect {
+    color: var(--red);
+}
+
+/* =========================================================
+   CHECK BUTTON
+========================================================= */
+
+.check-area {
+    text-align: center;
+    margin-top: 28px;
+}
+
+.check-button {
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+    padding: 17px 38px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #21b978, #158b59);
+    box-shadow: 0 6px 0 #0d7047;
+    transition: .15s;
+}
+
+.check-button:hover {
+    transform: translateY(-2px);
+}
+
+.check-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #0d7047;
+}
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+.score-box {
+    display: none;
+    max-width: 700px;
+    margin: 23px auto 0;
+    background: white;
+    border: 2px solid #dfe7f0;
+    border-radius: 22px;
+    padding: 23px;
+    box-shadow: 0 10px 30px rgba(30,50,80,.08);
+}
+
+.score-number {
+    font-size: 38px;
+    font-weight: 900;
+}
+
+.score-message {
+    margin-top: 7px;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 800px) {
+
+    .worksheet {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .sentence-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 550px) {
+
+    .page {
+        width: 96%;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    .question-heading h2 {
+        font-size: 18px;
+    }
+
+    input[type="text"] {
+        width: 105px;
+    }
+
+    .number-line-card {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<header class="header">
+
+    <h1>🎯 Rounding Numbers!</h1>
+
+    <p>
+        Number lines • Nearest 10 • Nearest 100 • Nearest 1,000
+    </p>
+
+    <div class="header-pill">
+        🧠 Look at the place value that is changing!
+    </div>
+
+</header>
+
+
+<main class="worksheet">
+
+
+<!-- ======================================================
+     QUESTION 1
+====================================================== -->
+
+<section class="card full">
+
+    <div class="question-heading">
+
+        <div class="badge">1</div>
+
+        <h2>
+            Let's round 628!
+        </h2>
+
+    </div>
+
+    <div class="description">
+
+        Use the number line to decide which multiples 628 is
+        closest to. Then round it to the nearest 10, 100 and 1,000.
+
+    </div>
+
+
+    <!-- NUMBER LINE 0–1000 -->
+
+    <div class="number-line-card">
+
+        <div class="number-line">
+
+            <div class="line"></div>
+
+
+            <div class="tick" style="left:2%"></div>
+            <div class="tick-label" style="left:2%">0</div>
+
+
+            <div class="tick" style="left:12%"></div>
+            <div class="tick-label" style="left:12%">100</div>
+
+
+            <div class="tick" style="left:22%"></div>
+            <div class="tick-label" style="left:22%">200</div>
+
+
+            <div class="tick" style="left:32%"></div>
+            <div class="tick-label" style="left:32%">300</div>
+
+
+            <div class="tick" style="left:42%"></div>
+            <div class="tick-label" style="left:42%">400</div>
+
+
+            <div class="tick" style="left:52%"></div>
+            <div class="tick-label" style="left:52%">500</div>
+
+
+            <div class="tick" style="left:62%"></div>
+            <div class="tick-label" style="left:62%">600</div>
+
+
+            <div class="tick" style="left:72%"></div>
+            <div class="tick-label" style="left:72%">700</div>
+
+
+            <div class="tick" style="left:82%"></div>
+            <div class="tick-label" style="left:82%">800</div>
+
+
+            <div class="tick" style="left:92%"></div>
+            <div class="tick-label" style="left:92%">900</div>
+
+
+            <div class="tick" style="left:98%"></div>
+            <div class="tick-label" style="left:98%">1,000</div>
+
+
+            <!-- 628 MARKER -->
+
+            <div
+                class="arrow-marker"
+                style="left:64.8%"
+            >
+
+                <div class="marker-label">
+                    628
+                </div>
+
+                <div class="arrow">
+                    ↓
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="sentence-list">
+
+        <div class="sentence">
+
+            628 is closer to
+
+            <input
+                id="q1lower10"
+                type="text"
+                placeholder="?"
+            >
+
+            than
+
+            <input
+                id="q1upper10"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            To the nearest 10:
+
+            <input
+                id="q1round10"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            628 is closer to
+
+            <input
+                id="q1lower100"
+                type="text"
+                placeholder="?"
+            >
+
+            than
+
+            <input
+                id="q1upper100"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            To the nearest 100:
+
+            <input
+                id="q1round100"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            To the nearest 1,000:
+
+            <input
+                id="q1round1000"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div id="feedback1" class="feedback"></div>
+
+</section>
+
+
+
+<!-- ======================================================
+     QUESTION 2
+====================================================== -->
+
+<section class="card">
+
+    <div class="question-heading">
+
+        <div class="badge">2</div>
+
+        <h2>
+            Round 9,515
+        </h2>
+
+    </div>
+
+    <div class="description">
+
+        Round the number to the nearest 10, 100 and 1,000.
+
+    </div>
+
+
+    <div class="rounding-box">
+
+        <div class="big-number">
+            9,515
+        </div>
+
+
+        <div class="sentence-list">
+
+            <div class="sentence">
+
+                Nearest 10:
+
+                <input
+                    id="q2round10"
+                    type="text"
+                    placeholder="?"
+                >
+
+            </div>
+
+
+            <div class="sentence">
+
+                Nearest 100:
+
+                <input
+                    id="q2round100"
+                    type="text"
+                    placeholder="?"
+                >
+
+            </div>
+
+
+            <div class="sentence">
+
+                Nearest 1,000:
+
+                <input
+                    id="q2round1000"
+                    type="text"
+                    placeholder="?"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="feedback2" class="feedback"></div>
+
+</section>
+
+
+
+<!-- ======================================================
+     QUESTION 3
+====================================================== -->
+
+<section class="card">
+
+    <div class="question-heading">
+
+        <div class="badge">3</div>
+
+        <h2>
+            Rounding Practice
+        </h2>
+
+    </div>
+
+    <div class="description">
+
+        Round each number to the place value shown.
+
+    </div>
+
+
+    <div class="sentence-list"
+         style="grid-template-columns:1fr;">
+
+        <div class="sentence">
+
+            <strong>(a)</strong>
+            347 to the nearest 10 =
+
+            <input
+                id="q3a"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            <strong>(b)</strong>
+            682 to the nearest 100 =
+
+            <input
+                id="q3b"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            <strong>(c)</strong>
+            4,261 to the nearest 10 =
+
+            <input
+                id="q3c"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            <strong>(d)</strong>
+            4,261 to the nearest 100 =
+
+            <input
+                id="q3d"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            <strong>(e)</strong>
+            7,650 to the nearest 1,000 =
+
+            <input
+                id="q3e"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+
+        <div class="sentence">
+
+            <strong>(f)</strong>
+            12,499 to the nearest 1,000 =
+
+            <input
+                id="q3f"
+                type="text"
+                placeholder="?"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div id="feedback3" class="feedback"></div>
+
+</section>
+
+
+
+<!-- ======================================================
+     QUESTION 4
+====================================================== -->
+
+<section class="card full">
+
+    <div class="question-heading">
+
+        <div class="badge">4</div>
+
+        <h2>
+            🎯 Which numbers round to 8,000?
+        </h2>
+
+    </div>
+
+    <div class="description">
+
+        Select <strong>all</strong> the numbers that round to
+        <strong>8,000 when rounded to the nearest 100</strong>.
+        Click a number to select it. Click again to deselect it.
+
+    </div>
+
+
+    <div class="target-box">
+
+        <div class="target-label">
+            Target number
+        </div>
+
+        <div class="target-number">
+            8,000
+        </div>
+
+        <div class="target-label">
+            nearest 100
+        </div>
+
+    </div>
+
+
+    <div class="chips" id="q4chips">
+
+        <button class="chip" data-value="7950">
+            7,950
+        </button>
+
+        <button class="chip" data-value="7980">
+            7,980
+        </button>
+
+        <button class="chip" data-value="8010">
+            8,010
+        </button>
+
+        <button class="chip" data-value="8050">
+            8,050
+        </button>
+
+        <button class="chip" data-value="8099">
+            8,099
+        </button>
+
+        <button class="chip" data-value="7900">
+            7,900
+        </button>
+
+        <button class="chip" data-value="8100">
+            8,100
+        </button>
+
+        <button class="chip" data-value="7999">
+            7,999
+        </button>
+
+    </div>
+
+
+    <div id="feedback4" class="feedback"></div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- ======================================================
+     CHECK ANSWERS
+====================================================== -->
+
+<div class="check-area">
+
+    <button
+        class="check-button"
+        onclick="checkAnswers()"
+    >
+        ✅ Check Answers
+    </button>
+
+
+    <div
+        id="scoreBox"
+        class="score-box"
+    >
+
+        <div
+            id="scoreNumber"
+            class="score-number"
+        ></div>
+
+        <div
+            id="scoreMessage"
+            class="score-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   ANSWERS
+========================================================= */
+
+const answers = {
+
+    q1: {
+        q1lower10: "620",
+        q1upper10: "630",
+        q1round10: "630",
+
+        q1lower100: "600",
+        q1upper100: "700",
+        q1round100: "600",
+
+        q1round1000: "1000"
+    },
+
+
+    q2: {
+        q2round10: "9520",
+        q2round100: "9500",
+        q2round1000: "10000"
+    },
+
+
+    q3: {
+        q3a: "350",
+        q3b: "700",
+        q3c: "4260",
+        q3d: "4300",
+        q3e: "8000",
+        q3f: "12000"
+    },
+
+
+    /* Numbers which round to 8,000
+       to nearest 100 */
+
+    q4: [
+        "7950",
+        "7980",
+        "8010",
+        "8050",
+        "7999"
+    ]
+
+};
+
+
+/* =========================================================
+   NORMALIZE ANSWERS
+   Accepts:
+   8,000
+   8000
+   8 000
+========================================================= */
+
+function normalize(value) {
+
+    return String(value)
+        .replace(/,/g, "")
+        .replace(/\s+/g, "")
+        .trim()
+        .toLowerCase();
+
+}
+
+
+/* =========================================================
+   CHECK ONE INPUT
+========================================================= */
+
+function checkInput(id, answer) {
+
+    const input =
+        document.getElementById(id);
+
+    const userAnswer =
+        normalize(input.value);
+
+    const correct =
+        userAnswer === normalize(answer);
+
+    input.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    input.classList.add(
+        correct ? "correct" : "incorrect"
+    );
+
+    return correct;
+
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function setFeedback(
+    id,
+    correct,
+    successMessage,
+    errorMessage
+) {
+
+    const element =
+        document.getElementById(id);
+
+    element.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if (correct) {
+
+        element.textContent =
+            "✓ " + successMessage;
+
+        element.classList.add("correct");
+
+    } else {
+
+        element.textContent =
+            "✗ " + errorMessage;
+
+        element.classList.add("incorrect");
+
+    }
+
+}
+
+
+/* =========================================================
+   CHIP SELECTION
+========================================================= */
+
+document
+    .querySelectorAll("#q4chips .chip")
+    .forEach(chip => {
+
+        chip.addEventListener("click", () => {
+
+            chip.classList.toggle("selected");
+
+            chip.classList.remove(
+                "correct",
+                "incorrect"
+            );
+
+        });
+
+    });
+
+
+/* =========================================================
+   CHECK ANSWERS
+========================================================= */
+
+function checkAnswers() {
+
+    let score = 0;
+
+    const totalQuestions = 4;
+
+
+    /* =====================================================
+       QUESTION 1
+    ===================================================== */
+
+    const q1Results = [
+
+        checkInput(
+            "q1lower10",
+            answers.q1.q1lower10
+        ),
+
+        checkInput(
+            "q1upper10",
+            answers.q1.q1upper10
+        ),
+
+        checkInput(
+            "q1round10",
+            answers.q1.q1round10
+        ),
+
+        checkInput(
+            "q1lower100",
+            answers.q1.q1lower100
+        ),
+
+        checkInput(
+            "q1upper100",
+            answers.q1.q1upper100
+        ),
+
+        checkInput(
+            "q1round100",
+            answers.q1.q1round100
+        ),
+
+        checkInput(
+            "q1round1000",
+            answers.q1.q1round1000
+        )
+
+    ];
+
+    const q1Correct =
+        q1Results.every(Boolean);
+
+    if (q1Correct) score++;
+
+    setFeedback(
+        "feedback1",
+        q1Correct,
+        "Excellent! You understand how to use the number line for rounding.",
+        "Look at which multiples of 10 and 100 the number lies between."
+    );
+
+
+    /* =====================================================
+       QUESTION 2
+    ===================================================== */
+
+    const q2Results = [
+
+        checkInput(
+            "q2round10",
+            answers.q2.q2round10
+        ),
+
+        checkInput(
+            "q2round100",
+            answers.q2.q2round100
+        ),
+
+        checkInput(
+            "q2round1000",
+            answers.q2.q2round1000
+        )
+
+    ];
+
+    const q2Correct =
+        q2Results.every(Boolean);
+
+    if (q2Correct) score++;
+
+    setFeedback(
+        "feedback2",
+        q2Correct,
+        "Great work! You rounded 9,515 correctly.",
+        "Remember to look at the digit immediately to the right of the place you are rounding to."
+    );
+
+
+    /* =====================================================
+       QUESTION 3
+    ===================================================== */
+
+    const q3Results = [
+
+        checkInput(
+            "q3a",
+            answers.q3.q3a
+        ),
+
+        checkInput(
+            "q3b",
+            answers.q3.q3b
+        ),
+
+        checkInput(
+            "q3c",
+            answers.q3.q3c
+        ),
+
+        checkInput(
+            "q3d",
+            answers.q3.q3d
+        ),
+
+        checkInput(
+            "q3e",
+            answers.q3.q3e
+        ),
+
+        checkInput(
+            "q3f",
+            answers.q3.q3f
+        )
+
+    ];
+
+    const q3Correct =
+        q3Results.every(Boolean);
+
+    if (q3Correct) score++;
+
+    setFeedback(
+        "feedback3",
+        q3Correct,
+        "Fantastic! Your rounding skills are getting strong.",
+        "Check the place value being rounded and then look at the digit immediately to its right."
+    );
+
+
+    /* =====================================================
+       QUESTION 4
+    ===================================================== */
+
+    const chips =
+        [...document.querySelectorAll(
+            "#q4chips .chip"
+        )];
+
+
+    const selectedValues =
+        chips
+            .filter(chip =>
+                chip.classList.contains("selected")
+            )
+            .map(chip =>
+                chip.dataset.value
+            );
+
+
+    /*
+       Compare the selected set with the correct set.
+       Order does not matter.
+    */
+
+    const correctSet =
+        new Set(answers.q4);
+
+    const selectedSet =
+        new Set(selectedValues);
+
+
+    let q4Correct =
+        selectedSet.size === correctSet.size;
+
+
+    if (q4Correct) {
+
+        for (const value of correctSet) {
+
+            if (!selectedSet.has(value)) {
+
+                q4Correct = false;
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    /* Apply individual chip feedback */
+
+    chips.forEach(chip => {
+
+        const value =
+            chip.dataset.value;
+
+        chip.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+
+        const shouldBeSelected =
+            correctSet.has(value);
+
+        const isSelected =
+            chip.classList.contains("selected");
+
+
+        if (shouldBeSelected && isSelected) {
+
+            chip.classList.add("correct");
+
+        }
+
+        else if (
+            (!shouldBeSelected && isSelected)
+            ||
+            (shouldBeSelected && !isSelected)
+        ) {
+
+            chip.classList.add("incorrect");
+
+        }
+
+    });
+
+
+    if (q4Correct) score++;
+
+
+    setFeedback(
+        "feedback4",
+        q4Correct,
+        "🎯 Perfect! You selected every number that rounds to 8,000.",
+        "Some selections are missing or extra. Remember that numbers from 7,950 up to 8,049 round to 8,000 when using the usual half-up rule."
+    );
+
+
+    /* =====================================================
+       SCORE
+    ===================================================== */
+
+    const percentage =
+        Math.round(
+            (score / totalQuestions) * 100
+        );
+
+
+    const scoreBox =
+        document.getElementById(
+            "scoreBox"
+        );
+
+    const scoreNumber =
+        document.getElementById(
+            "scoreNumber"
+        );
+
+    const scoreMessage =
+        document.getElementById(
+            "scoreMessage"
+        );
+
+
+    scoreBox.style.display =
+        "block";
+
+
+    scoreNumber.textContent =
+        `${score} / ${totalQuestions} ⭐`;
+
+
+    if (score === 4) {
+
+        scoreMessage.textContent =
+            "🏆 PERFECT SCORE! You are a Rounding Superstar!";
+
+    }
+
+    else if (score === 3) {
+
+        scoreMessage.textContent =
+            "🌟 Excellent work! Just one more step to perfection!";
+
+    }
+
+    else if (score === 2) {
+
+        scoreMessage.textContent =
+            "👏 Good job! Keep practising your rounding rules.";
+
+    }
+
+    else {
+
+        scoreMessage.textContent =
+            "💪 Keep practising! Remember: 5 or more means round up.";
+
+    }
+
+
+    scoreMessage.textContent +=
+        ` Score: ${percentage}%.`;
+
+
+    scoreBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+/* =========================================================
+   CLEAR COLOURS WHEN USER EDITS ANSWERS
+========================================================= */
+
+document
+    .querySelectorAll(
+        "input[type='text']"
+    )
+    .forEach(input => {
+
+        input.addEventListener(
+            "input",
+            function() {
+
+                this.classList.remove(
+                    "correct",
+                    "incorrect"
+                );
+
+            }
+        );
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tom &amp; Jerry Math Chase — Grade 4</title>
+
+<style>
+    :root {
+        --bg1: #eaf4ff;
+        --bg2: #fff4d9;
+        --panel: #ffffff;
+        --card: #fffaf0;
+        --primary: #2f6fb0;
+        --primary-dark: #1b4a7d;
+        --secondary: #c0642c;
+        --accent: #ffd447;
+        --border: #ffdca0;
+        --text: #1e293b;
+        --muted: #64748b;
+        --success: #22c55e;
+        --success-bg: #dcfce7;
+        --error: #ef4444;
+        --error-bg: #fee2e2;
+        --shadow: 0 12px 35px rgba(47, 111, 176, 0.16);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: var(--text);
+        background:
+            radial-gradient(circle at top left, rgba(255,255,255,.8), transparent 30%),
+            linear-gradient(135deg, var(--bg1), var(--bg2));
+        transition: background .35s ease, color .35s ease;
+    }
+
+    .app {
+        max-width: 1600px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    /* HEADER */
+    .topbar {
+        background: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 24px;
+        padding: 18px 22px;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        box-shadow: 0 8px 18px rgba(79, 70, 229, .25);
+        overflow: hidden;
+    }
+
+    .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: clamp(1.25rem, 3vw, 1.8rem);
+    }
+
+    .brand p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: .92rem;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+    }
+
+    .primary-btn {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 12px 20px;
+        border-radius: 14px;
+        font-weight: 800;
+        font-size: .95rem;
+        box-shadow: 0 8px 18px rgba(79, 70, 229, .22);
+    }
+
+    .secondary-btn {
+        background: var(--card);
+        color: var(--primary-dark);
+        border: 1px solid var(--border);
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    /* WORKSPACE */
+    .workspace {
+        display: flex;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .left-panel {
+        flex: 2;
+        min-width: 0;
+    }
+
+    .right-panel {
+        flex: 1;
+        min-width: 320px;
+    }
+
+    .section-title {
+        margin: 0 0 14px;
+        font-size: 1.15rem;
+    }
+
+    .intro-card,
+    .scratchpad-card {
+        background: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+    }
+
+    .intro-card {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .intro-card p {
+        color: var(--muted);
+        margin: 8px 0 0;
+        line-height: 1.5;
+    }
+
+    /* PROBLEM GRID */
+    .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .problem-card {
+        background: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .problem-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    }
+
+    .problem-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--primary-dark);
+        border: 1px solid var(--border);
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .operation-label {
+        color: var(--muted);
+        font-size: .85rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .equation {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin: 8px 0 14px;
+    }
+
+    .answer-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .check-btn {
+        flex-shrink: 0;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 13px 16px;
+        border-radius: 14px;
+        font-weight: 800;
+        font-size: .9rem;
+        white-space: nowrap;
+        box-shadow: 0 6px 14px rgba(47, 111, 176, .22);
+    }
+
+    .answer-input {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 2px solid var(--border);
+        outline: none;
+        background: var(--card);
+        color: var(--text);
+        font-size: 1.15rem;
+        font-weight: 800;
+        transition: .2s ease;
+    }
+
+    .answer-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, .12);
+    }
+
+    .answer-input.correct {
+        border-color: var(--success);
+        background: var(--success-bg);
+    }
+
+    .answer-input.incorrect {
+        border-color: var(--error);
+        background: var(--error-bg);
+        animation: shake .3s ease;
+    }
+
+    .status {
+        margin-top: 10px;
+        min-height: 22px;
+        font-size: .9rem;
+        font-weight: 700;
+    }
+
+    .status.correct-text {
+        color: #15803d;
+    }
+
+    .status.incorrect-text {
+        color: #dc2626;
+    }
+
+    .feedback-gif {
+        display: none;
+        width: 84px;
+        height: 84px;
+        object-fit: cover;
+        border-radius: 14px;
+        margin-top: 8px;
+        border: 2px solid var(--border);
+        box-shadow: 0 6px 14px rgba(0,0,0,.12);
+    }
+
+    .feedback-gif.show {
+        display: block;
+    }
+
+    .result-banner img {
+        display: block;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin: 10px auto 0;
+        border: 2px solid rgba(0,0,0,.08);
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+
+    /* COLUMN METHOD VISUAL */
+    .column-work {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: fit-content;
+        margin: 10px auto 16px;
+        font-size: 1.55rem;
+        font-weight: 800;
+        font-family: monospace;
+    }
+
+    .column-line {
+        min-width: 180px;
+        text-align: right;
+        padding: 2px 8px;
+    }
+
+    .column-bottom {
+        border-bottom: 3px solid var(--text);
+        padding-bottom: 6px;
+    }
+
+    /* SCRATCHPAD */
+    .scratchpad-card {
+        padding: 18px;
+        height: 100%;
+        min-height: 650px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .scratch-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .scratch-header h2 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .scratch-header span {
+        color: var(--muted);
+        font-size: .85rem;
+    }
+
+    .toolbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+    }
+
+    .tool-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px;
+        border-radius: 12px;
+        background: var(--card);
+        color: var(--text);
+        border: 2px solid var(--border);
+        font-weight: 800;
+    }
+
+    .tool-btn.active {
+        color: white;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-color: transparent;
+    }
+
+    .canvas-wrap {
+        flex: 1;
+        min-height: 500px;
+        border: 2px dashed var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        background:
+            linear-gradient(var(--card) 1px, transparent 1px),
+            linear-gradient(90deg, var(--card) 1px, transparent 1px),
+            #fff;
+        background-size: 24px 24px;
+        position: relative;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: none;
+        cursor: crosshair;
+    }
+
+    /* RESULT */
+    .result-banner {
+        display: none;
+        margin-top: 18px;
+        padding: 16px;
+        border-radius: 16px;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .result-banner.show {
+        display: block;
+    }
+
+    .result-banner.good {
+        background: var(--success-bg);
+        color: #166534;
+        border: 2px solid var(--success);
+    }
+
+    .result-banner.try {
+        background: var(--error-bg);
+        color: #b91c1c;
+        border: 2px solid var(--error);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1050px) {
+        .workspace {
+            flex-direction: column;
+        }
+
+        .right-panel {
+            min-width: 0;
+        }
+
+        .scratchpad-card {
+            min-height: 500px;
+        }
+
+        .canvas-wrap {
+            min-height: 400px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .app {
+            padding: 12px;
+        }
+
+        .topbar {
+            padding: 15px;
+            border-radius: 18px;
+        }
+
+        .problem-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .header-actions {
+            width: 100%;
+        }
+
+        .primary-btn {
+            flex: 1;
+        }
+
+        .canvas-wrap {
+            min-height: 350px;
+        }
+
+        .column-line {
+            min-width: 160px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBWwlhfBLdok5uCwfQimdaswr5CWJRjS7qP76cFkT-og&s=10" alt="Tom and Jerry"></div>
+            <div>
+                <h1>Tom &amp; Jerry Math Chase</h1>
+                <p>Addition & subtraction • Thousands • Carrying & Borrowing</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="primary-btn" onclick="checkAnswers()">
+                ✓ Check Answers
+            </button>
+        </div>
+    </header>
+
+    <main class="workspace">
+
+        <!-- LEFT PANEL -->
+        <section class="left-panel">
+
+            <div class="intro-card">
+                <h2 class="section-title">🧠 Today's Mission</h2>
+                <p>
+                    Solve each calculation carefully. Use column addition for carrying
+                    and column subtraction for borrowing/exchanging. You can use the
+                    rough work area to solve tricky questions!
+                </p>
+            </div>
+
+            <div class="problem-grid" id="problemGrid">
+
+                <!-- Addition 1 -->
+                <div class="problem-card">
+                    <div class="problem-number">1</div>
+                    <div class="operation-label">Addition with carrying</div>
+
+                    <div class="column-work">
+                        <div class="column-line">2,748</div>
+                        <div class="column-line column-bottom">+ 1,596</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="4344"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+                <!-- Addition 2 -->
+                <div class="problem-card">
+                    <div class="problem-number">2</div>
+                    <div class="operation-label">Addition with regrouping</div>
+
+                    <div class="column-work">
+                        <div class="column-line">3,867</div>
+                        <div class="column-line column-bottom">+ 2,759</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="6626"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+                <!-- Addition 3 -->
+                <div class="problem-card">
+                    <div class="problem-number">3</div>
+                    <div class="operation-label">Addition challenge</div>
+
+                    <div class="column-work">
+                        <div class="column-line">4,586</div>
+                        <div class="column-line column-bottom">+ 3,947</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="8533"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+                <!-- Subtraction 1 -->
+                <div class="problem-card">
+                    <div class="problem-number">4</div>
+                    <div class="operation-label">Subtraction with borrowing</div>
+
+                    <div class="column-work">
+                        <div class="column-line">6,542</div>
+                        <div class="column-line column-bottom">− 2,786</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="3756"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+                <!-- Subtraction Across Zeros -->
+                <div class="problem-card">
+                    <div class="problem-number">5</div>
+                    <div class="operation-label">Borrowing across zeros</div>
+
+                    <div class="column-work">
+                        <div class="column-line">5,002</div>
+                        <div class="column-line column-bottom">− 1,785</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="3217"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+                <!-- Subtraction Challenge -->
+                <div class="problem-card">
+                    <div class="problem-number">6</div>
+                    <div class="operation-label">Exchanging challenge</div>
+
+                    <div class="column-work">
+                        <div class="column-line">7,030</div>
+                        <div class="column-line column-bottom">− 2,846</div>
+                    </div>
+
+                    <div class="answer-row">
+                        <input class="answer-input" type="number" data-answer="4184"
+                               placeholder="Your answer">
+                        <button class="check-btn" onclick="checkSingleAnswer(this)">✓ Check</button>
+                    </div>
+                    <div class="status"></div>
+                    <img class="feedback-gif" alt="Tom and Jerry reaction">
+                </div>
+
+            </div>
+
+            <div id="resultBanner" class="result-banner"></div>
+
+        </section>
+
+        <!-- RIGHT PANEL -->
+        <aside class="right-panel">
+            <div class="scratchpad-card">
+
+                <div class="scratch-header">
+                    <div>
+                        <h2>✏️ Rough Work Scratchpad</h2>
+                        <span>Draw your calculations here!</span>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <button class="tool-btn active" id="penBtn" onclick="setTool('pen')">
+                        🖊 Pen
+                    </button>
+
+                    <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')">
+                        🧽 Eraser
+                    </button>
+
+                    <button class="tool-btn" onclick="clearCanvas()">
+                        🗑 Clear
+                    </button>
+                </div>
+
+                <div class="canvas-wrap">
+                    <canvas id="scratchCanvas"></canvas>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+</div>
+
+<script>
+    /* =========================================================
+       TOM & JERRY REACTION GIFS
+    ========================================================= */
+
+    const happyGIFs = [
+        "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+        "https://www.bing.com/th/id/OGC.47eafc0e15ef4519c6e5afadd7e31820?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fmedia.giphy.com%2fmedia%2fSjxtmBS267NOU%2fgiphy.gif&ehk=TnQMdNiG9iAx8wak0XiJPydnz1CLeWi6JQafDV5G17U%3d",
+        "https://www.bing.com/th/id/OGC.00998de84aab5c31be3375d53da50572?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fwww.gifcen.com%2fwp-content%2fuploads%2f2021%2f09%2ftom-and-jerry-gif.gif&ehk=UjXi%2fTAwW1ev6gckpLNETy7QxH%2bVlF%2fujvKqyFkt1Z8%3d",
+        "https://www.bing.com/th/id/OGC.ec75547f520d87efdb93db63c0bf5108?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fwww.gifcen.com%2fwp-content%2fuploads%2f2021%2f09%2ftom-and-jerry-gif-12.gif&ehk=Cypw0BD1u%2fq0r0gU%2b0MbrsZOn9G90LhjA3Wgmv1MrQM%3d",
+        "https://www.bing.com/th/id/OGC.d25f8be8d104b9f20f9007264c2202ae?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fwww.icegif.com%2fwp-content%2fuploads%2ftom-and-jerry-icegif-25.gif&ehk=oV2JYNUsZkPn7JgPoLHSpMiZm%2fPr0%2bixjRx5ymsD%2blk%3d"
+    ];
+
+    const mockingGIFs = [
+        "https://www.bing.com/th/id/OGC.07de969c3f7cd3c3d5dda968ddd8fa30?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fgifdb.com%2fimages%2fthumbnail%2fjerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif&ehk=CR2DV2IN3PAZiSN6IeOzk%2fO0Z59Myl8wiUhwQs6PS5E%3d",
+        "https://www.bing.com/th/id/OGC.d9b45abb9aaaca5022b235f693e1b9a9?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fmedia.giphy.com%2fmedia%2fKicQlFsDHdhAs%2fgiphy.gif&ehk=pvbpz5B3wix45sOCmeAa2EA9IGKgx8PRX30RXAXYxh4%3d",
+        "https://www.bing.com/th/id/OGC.a00ebbe8fb3991b6d7a906f9168ce185?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fmedia.giphy.com%2fmedia%2fMLHzHuG02FVUQ%2fgiphy.gif&ehk=zK7dnsxmrePKnZ3o6M6cOIQObQudY1I8yubt4i9GMSE%3d",
+        "https://www.bing.com/th/id/OGC.04cfcfd226548449ae58e48a553ef0f0?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fmedia3.giphy.com%2fmedia%2fv1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw%2f89JYxSZmqebwJNUzLe%2fgiphy.gif&ehk=9JOjgrsBPAofTvibRP4HIFw1BBtoMgNhpi7lOipc2F8%3d",
+        "https://www.bing.com/th/id/OGC.98ade1e386db5ccf2fa7e01cee577943?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fgifdb.com%2fimages%2fhigh%2fmad-angry-tom-2jyv5oslyy49z7dq.gif&ehk=43yNN%2bcDzabfShblcCL%2bGzwOoMpYcrruq0yl1t5Eus0%3d",
+        "https://www.bing.com/th/id/OGC.7c517e4eec6eea24f8296c77fafb51d6?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fgifdb.com%2fimages%2fhigh%2ftom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif&ehk=D1iBS5vmmy1jASh%2bhbrfXU8iOlKShm%2bFpNUr3hEy0cc%3d"
+    ];
+
+    function randomGIF(list) {
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+
+    /* =========================================================
+       ANSWER VALIDATION
+    ========================================================= */
+
+    function evaluateInput(input) {
+        const correctAnswer = Number(input.dataset.answer);
+        const studentAnswer = Number(input.value);
+        const status = input.parentElement.nextElementSibling;
+        const gif = status.nextElementSibling;
+
+        input.classList.remove("correct", "incorrect");
+        status.classList.remove("correct-text", "incorrect-text");
+        gif.classList.remove("show");
+
+        if (input.value.trim() === "") {
+            input.classList.add("incorrect");
+            status.textContent = "✏️ Please enter an answer.";
+            status.classList.add("incorrect-text");
+            return "empty";
+        }
+        else if (studentAnswer === correctAnswer) {
+            input.classList.add("correct");
+            status.textContent = "🎉 Correct! Great job!";
+            status.classList.add("correct-text");
+            gif.src = randomGIF(happyGIFs);
+            gif.classList.add("show");
+            return "correct";
+        }
+        else {
+            input.classList.add("incorrect");
+            status.textContent = "🔄 Not quite. Check your carrying or borrowing!";
+            status.classList.add("incorrect-text");
+            gif.src = randomGIF(mockingGIFs);
+            gif.classList.add("show");
+            return "incorrect";
+        }
+    }
+
+
+    function checkSingleAnswer(button) {
+        const input = button.previousElementSibling;
+        evaluateInput(input);
+    }
+
+
+    function checkAnswers() {
+        const inputs = document.querySelectorAll(".answer-input");
+        const resultBanner = document.getElementById("resultBanner");
+
+        let correctCount = 0;
+        let unanswered = 0;
+
+        inputs.forEach(input => {
+            const result = evaluateInput(input);
+            if (result === "correct") correctCount++;
+            else if (result === "empty") unanswered++;
+        });
+
+        resultBanner.classList.add("show");
+
+        if (correctCount === inputs.length) {
+            resultBanner.className = "result-banner show good";
+            resultBanner.innerHTML =
+                "🏆 Amazing! You got all " + inputs.length +
+                " answers correct! Jerry is doing a victory dance!" +
+                '<img src="' + randomGIF(happyGIFs) + '" alt="Happy Tom and Jerry">';
+        }
+        else if (unanswered > 0) {
+            resultBanner.className = "result-banner show try";
+            resultBanner.innerHTML =
+                "📝 You have " + unanswered +
+                " unanswered question(s). Complete them and try again!" +
+                '<img src="' + randomGIF(mockingGIFs) + '" alt="Tom waiting">';
+        }
+        else {
+            resultBanner.className = "result-banner show try";
+            resultBanner.innerHTML =
+                "💪 You got " + correctCount + " out of " +
+                inputs.length + " correct. Tom's still chasing — keep trying!" +
+                '<img src="' + randomGIF(mockingGIFs) + '" alt="Tom mocking">';
+        }
+
+        resultBanner.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    }
+
+
+    /* =========================================================
+       CANVAS SCRATCHPAD
+    ========================================================= */
+
+    const canvas = document.getElementById("scratchCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+    let currentTool = "pen";
+
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+
+        const imageData = canvas.width && canvas.height
+            ? ctx.getImageData(0, 0, canvas.width, canvas.height)
+            : null;
+
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        if (imageData) {
+            // Existing drawing is cleared on major responsive resize
+            // to keep canvas coordinates accurate.
+        }
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("load", resizeCanvas);
+
+
+    function getCanvasPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+
+        let clientX, clientY;
+
+        if (event.touches && event.touches.length > 0) {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+        } else {
+            clientX = event.clientX;
+            clientY = event.clientY;
+        }
+
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+
+    function startDrawing(event) {
+        event.preventDefault();
+
+        drawing = true;
+
+        const pos = getCanvasPosition(event);
+
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+
+    function draw(event) {
+        if (!drawing) return;
+
+        event.preventDefault();
+
+        const pos = getCanvasPosition(event);
+
+        ctx.lineWidth = currentTool === "pen" ? 3 : 24;
+        ctx.strokeStyle = currentTool === "pen"
+            ? getComputedStyle(document.body).getPropertyValue("--text").trim()
+            : "#ffffff";
+
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+
+    function stopDrawing() {
+        drawing = false;
+        ctx.beginPath();
+    }
+
+
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+
+    canvas.addEventListener("touchstart", startDrawing, { passive: false });
+    canvas.addEventListener("touchmove", draw, { passive: false });
+    canvas.addEventListener("touchend", stopDrawing);
+
+
+    /* =========================================================
+       TOOLBAR
+    ========================================================= */
+
+    function setTool(tool) {
+        currentTool = tool;
+
+        document.getElementById("penBtn").classList.remove("active");
+        document.getElementById("eraserBtn").classList.remove("active");
+
+        if (tool === "pen") {
+            document.getElementById("penBtn").classList.add("active");
+            canvas.style.cursor = "crosshair";
+        } else {
+            document.getElementById("eraserBtn").classList.add("active");
+            canvas.style.cursor = "cell";
+        }
+    }
+
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+
+    /* =========================================================
+       ENTER KEY SUPPORT
+    ========================================================= */
+
+    document.querySelectorAll(".answer-input").forEach(input => {
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                evaluateInput(input);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

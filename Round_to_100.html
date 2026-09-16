@@ -1,0 +1,2672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rounding to the Nearest 100 — The Nearest Park Challenge 🌳</title>
+<style>
+:root{
+  --green:#2f6b4f;
+  --green-dark:#214936;
+  --green-light:#dcefe3;
+  --blue:#4d9dcc;
+  --blue-light:#dff2fb;
+  --yellow:#f6c85f;
+  --yellow-light:#fff3c9;
+  --cream:#fffaf0;
+  --coral:#e87862;
+  --coral-light:#ffe1d9;
+  --ink:#18352a;
+  --muted:#60756b;
+  --white:#fff;
+  --shadow:0 12px 30px rgba(33,73,54,.13);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  font-family:Arial,Verdana,sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+button:focus-visible,
+input:focus-visible{
+  outline:4px solid var(--blue);
+  outline-offset:3px;
+}
+
+#app{
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  position:relative;
+}
+
+.slide{
+  display:none;
+  width:100%;
+  height:100vh;
+  min-height:620px;
+  padding:18px 28px 22px;
+  position:relative;
+  overflow:hidden;
+}
+
+.slide.active{
+  display:flex;
+  flex-direction:column;
+}
+
+.slide::before{
+  content:"";
+  position:absolute;
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  background:rgba(223,242,251,.65);
+  top:-150px;
+  right:-80px;
+  z-index:0;
+}
+
+.slide::after{
+  content:"🌿";
+  position:absolute;
+  right:22px;
+  bottom:50px;
+  font-size:90px;
+  opacity:.08;
+  transform:rotate(-12deg);
+  pointer-events:none;
+}
+
+.topbar{
+  width:min(1180px,100%);
+  margin:0 auto 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  position:relative;
+  z-index:2;
+}
+
+.progress-label{
+  font-weight:800;
+  font-size:14px;
+  color:var(--green-dark);
+  background:var(--green-light);
+  padding:8px 13px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+.progress-wrap{
+  flex:1;
+  max-width:520px;
+  height:10px;
+  background:#e4e9e5;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0;
+  background:var(--green);
+  border-radius:999px;
+  transition:width .3s ease;
+}
+
+.slide-content{
+  width:min(1180px,100%);
+  flex:1;
+  min-height:0;
+  margin:auto;
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+}
+
+h1{
+  margin:4px 0 10px;
+  text-align:center;
+  font-size:clamp(28px,4vw,48px);
+  line-height:1.08;
+  color:var(--green-dark);
+}
+
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  font-size:clamp(16px,2vw,21px);
+  margin:0 auto 15px;
+  max-width:850px;
+  line-height:1.45;
+}
+
+.card{
+  background:rgba(255,255,255,.96);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px;
+  border:2px solid rgba(47,107,79,.08);
+}
+
+.story-card{
+  max-width:850px;
+  margin:0 auto;
+  text-align:center;
+  font-size:clamp(18px,2.1vw,24px);
+  line-height:1.5;
+}
+
+.park-scene{
+  display:flex;
+  justify-content:center;
+  align-items:end;
+  gap:40px;
+  margin:10px auto 18px;
+  min-height:105px;
+}
+
+.tree{
+  font-size:68px;
+  filter:drop-shadow(0 5px 3px rgba(0,0,0,.08));
+}
+
+.character{
+  font-size:56px;
+  display:inline-block;
+  transition:transform .35s ease,left .35s ease;
+}
+
+.distance-sign{
+  background:var(--yellow-light);
+  border:3px solid var(--yellow);
+  border-radius:16px;
+  padding:8px 16px;
+  font-size:22px;
+  font-weight:900;
+  display:inline-block;
+}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(180px,1fr));
+  gap:18px;
+  max-width:760px;
+  margin:14px auto;
+  width:100%;
+}
+
+.park-button{
+  border:3px solid var(--green);
+  background:var(--green-light);
+  color:var(--green-dark);
+  border-radius:22px;
+  padding:18px 16px;
+  min-height:125px;
+  font-weight:900;
+  transition:.2s ease;
+  box-shadow:0 6px 0 rgba(47,107,79,.14);
+}
+
+.park-button:hover{
+  transform:translateY(-3px);
+}
+
+.park-button.selected{
+  border-color:var(--blue);
+  background:var(--blue-light);
+}
+
+.park-button.correct{
+  border-color:var(--green);
+  background:#ccebd6;
+}
+
+.park-button.incorrect{
+  border-color:var(--coral);
+  background:var(--coral-light);
+}
+
+.park-icon{
+  font-size:48px;
+  display:block;
+  margin-bottom:6px;
+}
+
+.feedback{
+  max-width:850px;
+  margin:10px auto 0;
+  padding:12px 17px;
+  border-radius:15px;
+  font-weight:800;
+  line-height:1.4;
+  text-align:center;
+  min-height:0;
+}
+
+.feedback:empty{
+  display:none;
+}
+
+.feedback.correct{
+  background:#d8f1df;
+  border:2px solid var(--green);
+}
+
+.feedback.incorrect{
+  background:var(--coral-light);
+  border:2px solid var(--coral);
+}
+
+.feedback.info{
+  background:var(--blue-light);
+  border:2px solid var(--blue);
+}
+
+.teacher-tip{
+  margin:12px auto 0;
+  max-width:900px;
+  padding:11px 16px;
+  border-left:6px solid var(--yellow);
+  background:#fffdf4;
+  border-radius:10px;
+  color:#53645c;
+  font-size:15px;
+  line-height:1.4;
+}
+
+.teacher-tip strong{
+  color:var(--green-dark);
+}
+
+.number-line-card{
+  max-width:1050px;
+  margin:6px auto;
+  width:100%;
+}
+
+.number-line{
+  position:relative;
+  height:150px;
+  margin:10px 35px 5px;
+}
+
+.line-track{
+  position:absolute;
+  top:74px;
+  left:0;
+  right:0;
+  height:8px;
+  background:var(--green);
+  border-radius:10px;
+}
+
+.nl-point{
+  position:absolute;
+  top:59px;
+  width:26px;
+  height:38px;
+  transform:translateX(-50%);
+  border-radius:8px;
+  background:var(--green);
+}
+
+.nl-point.major{
+  width:34px;
+  height:52px;
+  top:52px;
+  background:var(--coral);
+}
+
+.nl-label{
+  position:absolute;
+  top:105px;
+  transform:translateX(-50%);
+  font-weight:900;
+  font-size:17px;
+  white-space:nowrap;
+}
+
+.nl-marker{
+  position:absolute;
+  top:5px;
+  transform:translateX(-50%);
+  text-align:center;
+  transition:left .3s ease;
+}
+
+.nl-marker .mini-char{
+  font-size:40px;
+  display:block;
+}
+
+.nl-marker .marker-number{
+  background:var(--yellow);
+  border:2px solid #b98b15;
+  padding:3px 8px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:14px;
+}
+
+.distance-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  max-width:700px;
+  margin:0 auto;
+}
+
+.distance-box{
+  text-align:center;
+  border-radius:15px;
+  padding:10px;
+  font-weight:900;
+  background:var(--blue-light);
+}
+
+.distance-box.near{
+  background:var(--green-light);
+  border:2px solid var(--green);
+}
+
+.two-column{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  align-items:stretch;
+  max-width:1000px;
+  margin:8px auto;
+  width:100%;
+}
+
+.big-number{
+  font-size:clamp(56px,9vw,100px);
+  font-weight:900;
+  color:var(--green-dark);
+  text-align:center;
+  line-height:1;
+}
+
+.arrow{
+  font-size:42px;
+  text-align:center;
+  color:var(--coral);
+  font-weight:900;
+}
+
+.rule-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  max-width:900px;
+  margin:10px auto;
+  width:100%;
+}
+
+.rule-card{
+  border-radius:20px;
+  padding:20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.rule-down{
+  background:var(--blue-light);
+  border:3px solid var(--blue);
+}
+
+.rule-up{
+  background:var(--yellow-light);
+  border:3px solid var(--yellow);
+}
+
+.rule-card .range{
+  font-size:34px;
+  font-weight:900;
+}
+
+.rule-card .direction{
+  font-size:25px;
+  font-weight:900;
+  margin-top:7px;
+}
+
+.memory-card{
+  max-width:900px;
+  margin:10px auto;
+  background:var(--green);
+  color:white;
+  border-radius:24px;
+  padding:25px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.memory-card .memory{
+  font-size:clamp(21px,3vw,31px);
+  font-weight:900;
+  line-height:1.3;
+}
+
+.table-wrap{
+  max-width:850px;
+  width:100%;
+  margin:5px auto;
+  overflow:auto;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  font-size:18px;
+}
+
+th,td{
+  padding:11px 14px;
+  border-bottom:1px solid #dce6e0;
+  text-align:center;
+}
+
+th{
+  background:var(--green);
+  color:white;
+}
+
+tr.clickable{
+  cursor:pointer;
+}
+
+tr.clickable:hover{
+  background:var(--blue-light);
+}
+
+tr.revealed{
+  background:var(--green-light);
+  font-weight:900;
+}
+
+.question-card{
+  max-width:850px;
+  margin:8px auto;
+  width:100%;
+  text-align:center;
+}
+
+.question-number{
+  font-size:clamp(50px,8vw,90px);
+  font-weight:900;
+  color:var(--green-dark);
+  line-height:1;
+  margin:8px;
+}
+
+.option-row{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin:12px 0;
+}
+
+.option{
+  min-width:145px;
+  padding:15px 22px;
+  border:3px solid var(--green);
+  background:white;
+  border-radius:16px;
+  font-weight:900;
+  font-size:20px;
+}
+
+.option:hover{
+  background:var(--green-light);
+}
+
+.option.correct{
+  background:#ccebd6;
+  border-color:var(--green);
+}
+
+.option.wrong{
+  background:var(--coral-light);
+  border-color:var(--coral);
+}
+
+.practice-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  max-width:1000px;
+  margin:8px auto;
+  width:100%;
+}
+
+.practice-item{
+  background:white;
+  border:2px solid #dbe6df;
+  border-radius:18px;
+  padding:15px;
+  box-shadow:0 5px 16px rgba(33,73,54,.08);
+}
+
+.practice-item h3{
+  margin:0 0 7px;
+  font-size:18px;
+}
+
+.practice-item .small-options{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.small-options button{
+  padding:9px 13px;
+  border-radius:11px;
+  border:2px solid var(--green);
+  background:white;
+  font-weight:800;
+}
+
+.small-options button.correct{
+  background:var(--green-light);
+}
+
+.small-options button.wrong{
+  background:var(--coral-light);
+}
+
+.score-pill{
+  display:inline-block;
+  margin:5px auto;
+  padding:8px 15px;
+  background:var(--yellow-light);
+  border:2px solid var(--yellow);
+  border-radius:999px;
+  font-weight:900;
+}
+
+.input-answer{
+  width:150px;
+  padding:13px;
+  border-radius:14px;
+  border:3px solid var(--green);
+  text-align:center;
+  font-size:24px;
+  font-weight:900;
+}
+
+.check-btn,
+.secondary-btn,
+.next-btn,
+.home-btn,
+.reset-btn{
+  border:0;
+  border-radius:14px;
+  padding:12px 18px;
+  font-weight:900;
+  transition:.2s ease;
+}
+
+.check-btn{
+  background:var(--green);
+  color:white;
+}
+
+.secondary-btn{
+  background:var(--blue-light);
+  color:var(--green-dark);
+  border:2px solid var(--blue);
+}
+
+.reset-btn{
+  background:#f0f3f1;
+  color:var(--green-dark);
+  border:2px solid #b9c8c0;
+}
+
+.check-btn:hover,
+.secondary-btn:hover,
+.next-btn:hover,
+.home-btn:hover,
+.reset-btn:hover{
+  transform:translateY(-2px);
+}
+
+.controls{
+  width:min(1180px,100%);
+  margin:10px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  position:relative;
+  z-index:3;
+}
+
+.controls-left,
+.controls-right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.controls button{
+  min-width:100px;
+}
+
+.home-btn{
+  background:white;
+  border:2px solid var(--green);
+  color:var(--green-dark);
+}
+
+.next-btn{
+  background:var(--green);
+  color:white;
+}
+
+.nav-disabled{
+  opacity:.4;
+  pointer-events:none;
+}
+
+.menu-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(24,53,42,.55);
+  z-index:20;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  backdrop-filter:blur(5px);
+}
+
+.menu-overlay.open{
+  display:flex;
+}
+
+.menu-panel{
+  width:min(1050px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--cream);
+  border-radius:28px;
+  padding:25px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+.menu-title{
+  text-align:center;
+  color:var(--green-dark);
+  margin:0 0 15px;
+  font-size:30px;
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+
+.menu-item{
+  min-height:62px;
+  border-radius:14px;
+  border:2px solid #cbdad1;
+  background:white;
+  color:var(--ink);
+  font-weight:800;
+  text-align:left;
+  padding:9px 11px;
+}
+
+.menu-item:hover,
+.menu-item.current{
+  background:var(--green-light);
+  border-color:var(--green);
+}
+
+.menu-close{
+  display:block;
+  margin:15px auto 0;
+  background:var(--green);
+  color:white;
+  border:0;
+  padding:11px 20px;
+  border-radius:13px;
+  font-weight:900;
+}
+
+.teacher-panel{
+  position:absolute;
+  right:20px;
+  top:65px;
+  width:min(390px,calc(100% - 40px));
+  max-height:70vh;
+  overflow:auto;
+  background:white;
+  border:3px solid var(--yellow);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  padding:17px;
+  z-index:10;
+  display:none;
+}
+
+.teacher-panel.open{
+  display:block;
+}
+
+.teacher-panel h3{
+  margin-top:0;
+  color:var(--green-dark);
+}
+
+.teacher-panel .answer{
+  background:var(--green-light);
+  border-radius:12px;
+  padding:10px;
+  margin:8px 0;
+  font-weight:800;
+}
+
+.teacher-toggle{
+  position:absolute;
+  top:65px;
+  right:20px;
+  z-index:8;
+  background:white;
+  border:2px solid var(--yellow);
+  border-radius:12px;
+  padding:8px 12px;
+  font-weight:900;
+  color:var(--green-dark);
+}
+
+.drag-area{
+  max-width:1050px;
+  margin:5px auto;
+  width:100%;
+  background:white;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+
+.drag-track{
+  position:relative;
+  height:125px;
+  margin:8px 30px 15px;
+  border-bottom:8px solid var(--green);
+}
+
+.drag-tick{
+  position:absolute;
+  bottom:-10px;
+  transform:translateX(-50%);
+  width:4px;
+  height:25px;
+  background:var(--green);
+}
+
+.drag-label{
+  position:absolute;
+  top:22px;
+  transform:translateX(-50%);
+  font-weight:900;
+}
+
+.drag-character{
+  position:absolute;
+  left:50%;
+  top:35px;
+  transform:translateX(-50%);
+  font-size:45px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  z-index:3;
+}
+
+.drag-character:active{
+  cursor:grabbing;
+}
+
+.target-number{
+  position:absolute;
+  bottom:-53px;
+  transform:translateX(-50%);
+  font-size:16px;
+  font-weight:900;
+  color:var(--green-dark);
+}
+
+.builder{
+  max-width:850px;
+  margin:10px auto;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  font-size:22px;
+  font-weight:800;
+}
+
+.select-box{
+  padding:10px 14px;
+  border:3px solid var(--green);
+  border-radius:12px;
+  background:white;
+  font-weight:900;
+}
+
+.bridge{
+  max-width:1000px;
+  width:100%;
+  margin:8px auto;
+}
+
+.bridge-track{
+  height:50px;
+  display:flex;
+  border-radius:18px;
+  overflow:hidden;
+  border:3px solid var(--green-dark);
+}
+
+.bridge-half{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.bridge-left{background:var(--blue-light)}
+.bridge-right{background:var(--yellow-light)}
+
+.bridge-middle{
+  position:relative;
+  text-align:center;
+  margin:8px auto;
+  font-weight:900;
+  font-size:20px;
+}
+
+.bridge-numbers{
+  display:grid;
+  grid-template-columns:repeat(11,1fr);
+  gap:5px;
+  margin-top:12px;
+}
+
+.bridge-number{
+  border:2px solid #cbdad1;
+  background:white;
+  border-radius:10px;
+  padding:11px 3px;
+  font-weight:900;
+}
+
+.bridge-number:hover{
+  background:var(--green-light);
+}
+
+.bridge-number.down{
+  background:var(--blue-light);
+  border-color:var(--blue);
+}
+
+.bridge-number.middle{
+  background:var(--yellow-light);
+  border-color:#d9a928;
+}
+
+.bridge-number.up{
+  background:var(--green-light);
+  border-color:var(--green);
+}
+
+.celebration{
+  text-align:center;
+  max-width:900px;
+  margin:auto;
+}
+
+.celebration .emoji{
+  font-size:75px;
+}
+
+.final-rules{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+  margin:12px auto;
+  max-width:850px;
+}
+
+.final-rule{
+  background:white;
+  border-radius:15px;
+  padding:13px;
+  font-weight:800;
+  box-shadow:0 4px 12px rgba(0,0,0,.07);
+}
+
+.hidden{
+  display:none!important;
+}
+
+.pop{
+  animation:pop .35s ease;
+}
+
+@keyframes pop{
+  0%{transform:scale(.94);opacity:.5}
+  100%{transform:scale(1);opacity:1}
+}
+
+.float-in{
+  animation:floatIn .45s ease;
+}
+
+@keyframes floatIn{
+  from{transform:translateY(12px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+
+@media(max-width:800px){
+  .slide{
+    padding:12px 14px 15px;
+    min-height:600px;
+  }
+
+  h1{font-size:29px}
+
+  .two-column,
+  .rule-grid,
+  .practice-list{
+    grid-template-columns:1fr;
+  }
+
+  .menu-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .choice-grid{
+    gap:10px;
+  }
+
+  .park-button{
+    min-height:100px;
+  }
+
+  .controls button{
+    min-width:0;
+    padding:10px 12px;
+  }
+
+  .teacher-toggle{
+    top:55px;
+  }
+
+  .slide-content{
+    overflow:auto;
+    padding-bottom:4px;
+  }
+}
+
+@media(max-width:520px){
+  .progress-wrap{display:none}
+  .topbar{justify-content:center}
+  .choice-grid{grid-template-columns:1fr}
+  .menu-grid{grid-template-columns:1fr}
+  .distance-row{grid-template-columns:1fr}
+  .final-rules{grid-template-columns:1fr}
+  .controls{flex-wrap:wrap;justify-content:center}
+  .controls-left,.controls-right{width:100%;justify-content:center}
+  .number-line{margin-left:20px;margin-right:20px}
+}
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+
+<script>
+/* ============================================================
+   ROUNDING TO THE NEAREST 100
+   Standalone educational deck — HTML/CSS/Vanilla JS only
+   ============================================================ */
+
+const TOTAL_SLIDES = 28;
+
+const slideData = [
+  {
+    title:"Mom’s Park Challenge 🌳",
+    type:"park",
+    prompt:`Your mom says:<br><strong>“You can go and play at the nearby park. Choose the park that is nearest to our house!”</strong><br><br>You are standing at <strong>247 metres</strong> from the starting point.`,
+    number:247,
+    lower:200,
+    upper:300,
+    correct:"upper",
+    explanation:"247 is 47 metres from 200 and 53 metres from 300, so Park B is nearer. Therefore, 247 rounds to 200.",
+    teacher:"Ask: “Which park would you reach first?” Then connect the story to rounding: the nearest hundred is 200."
+  },
+  {
+    title:"Let’s Find the Nearest Park",
+    type:"line",
+    number:247,
+    lower:200,
+    upper:300,
+    answer:200,
+    explanation:"247 is 47 metres from 200 and 53 metres from 300. Park A is closer, so 247 rounds to 200.",
+    teacher:"Emphasise that the nearest park in the story is 200 m. Rounding means choosing the nearest multiple of 100."
+  },
+  {
+    title:"What Does Nearest Mean?",
+    type:"concept",
+    number:247,
+    lower:200,
+    upper:300,
+    answer:200,
+    explanation:"Nearest means closest. 247 lies between 200 and 300, and it is closer to 200.",
+    teacher:"Have students say: “Nearest means closest.”"
+  },
+  {
+    title:"The Number Line Becomes Our Road",
+    type:"lineChoice",
+    number:247,
+    lower:200,
+    upper:300,
+    answer:200,
+    explanation:"247 is closer to 200 than 300. Rounding chooses the nearest multiple of 100.",
+    teacher:"Ask: “Are you closer to 200 or 300?”"
+  },
+  {
+    title:"A New Park Visit",
+    type:"lineChoice",
+    number:243,
+    lower:200,
+    upper:300,
+    answer:200,
+    explanation:"243 is 43 metres from 200 and 57 metres from 300. So 243 rounds to 200.",
+    teacher:"Point out that 243 is still before the halfway point, 250."
+  },
+  {
+    title:"The Park in the Middle",
+    type:"middle",
+    number:250,
+    lower:200,
+    upper:300,
+    answer:300,
+    explanation:"250 is exactly halfway between 200 and 300. Both are 50 metres away. They are equally close, but the rounding rule says to round up: 250 → 300.",
+    teacher:"Never say 250 is physically closer to 300. Both are equally close. The rule chooses 300."
+  },
+  {
+    title:"Let’s Discover the Rule",
+    type:"table",
+    rows:[
+      [242,200,200],
+      [243,200,200],
+      [244,200,200],
+      [250,300,300],
+      [256,300,300],
+      [247,200,200],
+      [248,200,200],
+      [249,200,200]
+    ],
+    teacher:"Ask: “What do you notice about the last two digits?”"
+  },
+  {
+    title:"The Park Rule",
+    type:"rules",
+    teacher:"Use the memory sentence together as a class."
+  },
+  {
+    title:"Interactive Park Challenge",
+    type:"park",
+    prompt:`You are at <strong>226 m</strong>.<br><br>Park A: <strong>200 m</strong><br>Park B: <strong>300 m</strong>`,
+    number:226,
+    lower:200,
+    upper:300,
+    correct:"lower",
+    explanation:"226 is 26 metres from 200 and 74 metres from 300. It is closer to 200, so 226 → 200.",
+    teacher:"Ask students to estimate first, then check using the distances."
+  },
+  {
+    title:"Your Turn",
+    type:"drag",
+    number:364,
+    lower:300,
+    upper:400,
+    answer:400,
+    explanation:"364 is 64 metres from 300 and 36 metres from 400. It is closer to 400, so 364 → 400.",
+    teacher:"Let the student drag the character to 364, then ask which endpoint is closer."
+  },
+  {
+    title:"A Park Adventure with 997",
+    type:"park",
+    prompt:`You are at <strong>997 metres</strong>.<br><br>Park A: <strong>900 m</strong><br>Park B: <strong>1000 m</strong>`,
+    number:997,
+    lower:900,
+    upper:1000,
+    correct:"upper",
+    explanation:"997 is only 3 metres from 1000. Therefore 997 → 1000. Also, 900 + 100 = 1000.",
+    teacher:"Ask: “What happens when we round 997 up?”"
+  },
+  {
+    title:"Connect the Story to Mathematics",
+    type:"estimate",
+    teacher:"Emphasise the word approximately. Rounding gives an estimate; it does not change the actual distance."
+  },
+  {
+    title:"Practice: Choose the Nearest Park",
+    type:"practice",
+    questions:[
+      {n:332,a:300,b:400,correct:300},
+      {n:558,a:500,b:600,correct:600},
+      {n:775,a:700,b:800,correct:800},
+      {n:891,a:900,b:1000,correct:900}
+    ],
+    teacher:"Encourage students to look at the last two digits before choosing."
+  },
+  {
+    title:"Final Challenge",
+    type:"builder",
+    number:687,
+    lower:600,
+    upper:700,
+    answer:700,
+    teacher:"Ask students to explain their choice using the last two digits: 87 means round up."
+  },
+  {
+    title:"Exit Ticket",
+    type:"fillmulti",
+    questions:[
+      {n:124,a:100},
+      {n:350,a:400},
+      {n:442,a:400},
+      {n:667,a:700},
+      {n:889,a:900}
+    ],
+    teacher:"Students should explain at least one answer using the last two digits."
+  },
+  {
+    title:"The Park in the Middle 🌳",
+    type:"middle",
+    number:250,
+    lower:200,
+    upper:300,
+    answer:"both",
+    explanation:"250 is 50 metres from both 200 and 300. Both parks are equally near!",
+    teacher:"Ask: “Which park is nearest?” The mathematical answer here is both. Then introduce the rounding rule."
+  },
+  {
+    title:"What Happens When We Are Exactly in the Middle?",
+    type:"middleRule",
+    number:250,
+    lower:200,
+    upper:300,
+    answer:300,
+    explanation:"250 is halfway between 200 and 300. When exactly halfway, we round up: 250 → 300.",
+    teacher:"Say: “Exactly in the middle? Round up!”"
+  },
+  {
+    title:"Let’s Try Another Middle Number",
+    type:"middle",
+    number:650,
+    lower:600,
+    upper:700,
+    answer:700,
+    explanation:"650 is exactly halfway between 600 and 700. Both are 50 metres away, but the rounding rule chooses 700.",
+    teacher:"Again distinguish physical distance from the rounding decision."
+  },
+  {
+    title:"The Middle Number Rule",
+    type:"tableMiddle",
+    rows:[
+      [150,"100 and 200",200],
+      [250,"200 and 300",300],
+      [350,"300 and 400",400],
+      [450,"400 and 500",500],
+      [550,"500 and 600",600]
+    ],
+    teacher:"Ask students what every middle number has in common."
+  },
+  {
+    title:"Interactive: Choose the Park",
+    type:"middleChoice",
+    number:350,
+    lower:300,
+    upper:400,
+    answer:400,
+    explanation:"Both parks are 50 metres away. They are equally close, but our rounding rule says 350 → 400.",
+    teacher:"Use the phrase: “Both are equally close; the rule chooses the next hundred.”"
+  },
+  {
+    title:"What If the Number Is Just Before the Middle?",
+    type:"lineChoice",
+    number:244,
+    lower:200,
+    upper:300,
+    answer:200,
+    explanation:"244 is 44 metres from 200 and 56 metres from 300. It is not exactly in the middle; it is just before 250. So 244 → 200.",
+    teacher:"Ask: “Is 244 exactly in the middle?”"
+  },
+  {
+    title:"What If the Number Is Just After the Middle?",
+    type:"lineChoice",
+    number:256,
+    lower:200,
+    upper:300,
+    answer:300,
+    explanation:"256 is 56 metres from 200 and 44 metres from 300. It is above the middle, so 256 → 300.",
+    teacher:"Remind students: 250 is the middle; below 250 rounds down and above 250 rounds up."
+  },
+  {
+    title:"The Rounding Bridge",
+    type:"bridge",
+    teacher:"Ask students to classify numbers around the middle point of 250."
+  },
+  {
+    title:"Interactive Practice: The Nearest Park",
+    type:"practice",
+    questions:[
+      {n:650,a:600,b:700,correct:700},
+      {n:750,a:700,b:800,correct:800},
+      {n:850,a:800,b:900,correct:900},
+      {n:950,a:900,b:1000,correct:1000}
+    ],
+    teacher:"Every answer is a middle number ending in 50, so each rounds up."
+  },
+  {
+    title:"Can You Explain Your Choice?",
+    type:"fill",
+    number:250,
+    answer:"up",
+    explanation:"250 is exactly halfway between 200 and 300. When a number ends in 50, we round up.",
+    teacher:"Ask the student to say the whole sentence aloud."
+  },
+  {
+    title:"Challenge: Find the Middle",
+    type:"middleFind",
+    answer:750,
+    explanation:"750 is exactly halfway between 700 and 800. Then 750 → 800.",
+    teacher:"Ask: “What number is exactly in the middle?” Then ask students to round it."
+  },
+  {
+    title:"Final Challenge: The Park Map",
+    type:"park",
+    prompt:`Your mom says:<br><strong>“You are at 687 metres. Choose the nearest park.”</strong><br><br>Park A: <strong>600 m</strong><br>Park B: <strong>700 m</strong>`,
+    number:687,
+    lower:600,
+    upper:700,
+    correct:"upper",
+    explanation:"687 is 87 metres from 600 and 13 metres from 700. Park B is nearer, so 687 → 700.",
+    teacher:"Have students calculate both distances before giving the rounded answer."
+  },
+  {
+    title:"Exit Ticket",
+    type:"final",
+    questions:[
+      {n:450,a:500},
+      {n:550,a:600},
+      {n:650,a:700},
+      {n:750,a:800},
+      {n:850,a:900}
+    ],
+    teacher:"Final reminder: when exactly in the middle, round up."
+  }
+];
+
+const app = document.getElementById("app");
+
+let current = 0;
+let score = 0;
+let answered = new Set();
+let teacherOpen = false;
+
+/* ---------- Mathematical helper ---------- */
+function round100(n){
+  const remainder = n % 100;
+  return remainder < 50 ? n - remainder : n + (100 - remainder);
+}
+
+function escapeHTML(value){
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+/* ---------- Core slide shell ---------- */
+function createSlides(){
+  app.innerHTML = "";
+
+  slideData.forEach((data,i)=>{
+    const slide = document.createElement("section");
+    slide.className = "slide" + (i===0 ? " active" : "");
+    slide.id = `slide-${i+1}`;
+    slide.setAttribute("aria-label",`Slide ${i+1}: ${data.title}`);
+
+    slide.innerHTML = `
+      <div class="topbar">
+        <div class="progress-label">Slide ${i+1} of ${TOTAL_SLIDES}</div>
+        <div class="progress-wrap" aria-label="Progress">
+          <div class="progress-bar" style="width:${((i+1)/TOTAL_SLIDES)*100}%"></div>
+        </div>
+      </div>
+      <div class="slide-content">
+        <h1>${data.title}</h1>
+        <div id="content-${i}" class="content-host"></div>
+      </div>
+      <button class="teacher-toggle" onclick="toggleTeacher()" aria-expanded="false">👩‍🏫 Teacher</button>
+      <div class="teacher-panel" id="teacher-${i}"></div>
+      <div class="controls">
+        <div class="controls-left">
+          <button class="home-btn" onclick="openMenu()">🏠 Home</button>
+          <button class="reset-btn" onclick="resetSlide()">↻ Reset</button>
+        </div>
+        <div class="controls-right">
+          <button class="secondary-btn" onclick="previousSlide()" ${i===0?"disabled":""}>← Previous</button>
+          <button class="next-btn" onclick="nextSlide()">${i===TOTAL_SLIDES-1?"Finish":"Next →"}</button>
+        </div>
+      </div>
+    `;
+
+    app.appendChild(slide);
+    renderSlideContent(i,data);
+  });
+
+  const overlay = document.createElement("div");
+  overlay.id = "menuOverlay";
+  overlay.className = "menu-overlay";
+  overlay.innerHTML = `
+    <div class="menu-panel">
+      <h2 class="menu-title">🌳 Park Adventure Map</h2>
+      <div class="menu-grid">
+        ${slideData.map((s,i)=>`
+          <button class="menu-item" onclick="goToSlide(${i})">
+            <strong>${i+1}.</strong> ${s.title.replace("🌳","🌳")}
+          </button>
+        `).join("")}
+      </div>
+      <button class="menu-close" onclick="closeMenu()">Continue Adventure</button>
+    </div>
+  `;
+  app.appendChild(overlay);
+
+  renderTeacherPanel(0);
+}
+
+function renderSlideContent(index,data){
+  const host = document.getElementById(`content-${index}`);
+  if(!host) return;
+
+  let html = "";
+
+  switch(data.type){
+    case "park":
+      html = parkActivity(index,data);
+      break;
+    case "line":
+      html = lineActivity(index,data,false);
+      break;
+    case "lineChoice":
+      html = lineActivity(index,data,true);
+      break;
+    case "concept":
+      html = conceptSlide(index,data);
+      break;
+    case "middle":
+      html = middleActivity(index,data);
+      break;
+    case "table":
+      html = tableActivity(index,data);
+      break;
+    case "rules":
+      html = rulesActivity(index);
+      break;
+    case "drag":
+      html = dragActivity(index,data);
+      break;
+    case "estimate":
+      html = estimateActivity(index);
+      break;
+    case "practice":
+      html = practiceActivity(index,data);
+      break;
+    case "builder":
+      html = builderActivity(index,data);
+      break;
+    case "fillmulti":
+      html = fillMultiActivity(index,data);
+      break;
+    case "middleRule":
+      html = middleRuleActivity(index,data);
+      break;
+    case "tableMiddle":
+      html = middleTableActivity(index,data);
+      break;
+    case "middleChoice":
+      html = middleChoiceActivity(index,data);
+      break;
+    case "bridge":
+      html = bridgeActivity(index);
+      break;
+    case "fill":
+      html = fillActivity(index,data);
+      break;
+    case "middleFind":
+      html = middleFindActivity(index,data);
+      break;
+    case "final":
+      html = finalActivity(index,data);
+      break;
+  }
+
+  host.innerHTML = html;
+
+  if(data.teacher){
+    document.getElementById(`teacher-${index}`).innerHTML = `
+      <h3>👩‍🏫 Teacher Panel</h3>
+      <p><strong>Prompt:</strong> ${data.teacher}</p>
+      <div class="answer">Answer / key idea: ${teacherAnswer(data)}</div>
+      <button class="check-btn" onclick="revealTeacher(${index})">Reveal Answer</button>
+    `;
+  }
+}
+
+function teacherAnswer(data){
+  if(data.answer !== undefined){
+    return typeof data.answer === "string" ? data.answer : `${data.number} → ${data.answer}`;
+  }
+  if(data.type==="rules") return "00–49 → previous hundred; 50–99 → next hundred.";
+  if(data.type==="final") return "450→500, 550→600, 650→700, 750→800, 850→900.";
+  return "Use the explanation on the slide.";
+}
+
+/* ---------- Park selection ---------- */
+function parkActivity(index,data){
+  return `
+    <div class="story-card card float-in">
+      ${data.prompt}
+    </div>
+
+    <div class="park-scene">
+      <div>
+        <div class="tree">🌳</div>
+        <div class="distance-sign">${data.lower} m</div>
+      </div>
+      <div class="character">🧒</div>
+      <div>
+        <div class="tree">🌳</div>
+        <div class="distance-sign">${data.upper} m</div>
+      </div>
+    </div>
+
+    <div class="choice-grid">
+      <button class="park-button" id="park-${index}-lower"
+              onclick="choosePark(${index},'lower')">
+        <span class="park-icon">🌳</span>
+        Park A<br><strong>${data.lower} m</strong>
+      </button>
+      <button class="park-button" id="park-${index}-upper"
+              onclick="choosePark(${index},'upper')">
+        <span class="park-icon">🌳</span>
+        Park B<br><strong>${data.upper} m</strong>
+      </button>
+    </div>
+
+    <div id="feedback-${index}" class="feedback" aria-live="polite"></div>
+
+    <div class="teacher-tip">
+      <strong>Think:</strong> Compare how far the number is from each hundred.
+    </div>
+  `;
+}
+
+function choosePark(index,choice){
+  const data = slideData[index];
+  const lower = document.getElementById(`park-${index}-lower`);
+  const upper = document.getElementById(`park-${index}-upper`);
+  const feedback = document.getElementById(`feedback-${index}`);
+
+  lower.classList.remove("selected","correct","incorrect");
+  upper.classList.remove("selected","correct","incorrect");
+
+  const clicked = choice==="lower" ? lower : upper;
+  clicked.classList.add("selected");
+
+  const correct = choice===data.correct;
+
+  if(correct){
+    clicked.classList.add("correct");
+    feedback.className = "feedback correct pop";
+    feedback.innerHTML = `✅ Great choice! ${data.explanation}`;
+    award(index);
+  }else{
+    clicked.classList.add("incorrect");
+    feedback.className = "feedback incorrect pop";
+    const dLow = Math.abs(data.number-data.lower);
+    const dUp = Math.abs(data.upper-data.number);
+    feedback.innerHTML = `🌱 Not quite. ${data.number} is ${dLow} m from ${data.lower} and ${dUp} m from ${data.upper}. Try again!`;
+  }
+}
+
+/* ---------- Number line ---------- */
+function numberLineHTML(number,lower,upper,showMarker=true){
+  const range = upper-lower;
+  const position = Math.max(0,Math.min(100,((number-lower)/range)*100));
+
+  const ticks = [];
+  for(let n=lower;n<=upper;n+=10){
+    const p=((n-lower)/range)*100;
+    ticks.push(`
+      <span class="nl-point ${n===lower||n===upper?"major":""}" style="left:${p}%"></span>
+      <span class="nl-label" style="left:${p}%">${n}</span>
+    `);
+  }
+
+  return `
+    <div class="number-line-card card">
+      <div class="number-line">
+        <div class="line-track"></div>
+        ${ticks.join("")}
+        ${showMarker ? `
+          <div class="nl-marker" style="left:${position}%">
+            <span class="mini-char">🧒</span>
+            <span class="marker-number">${number}</span>
+          </div>
+        `:""}
+      </div>
+    </div>
+  `;
+}
+
+function lineActivity(index,data,choices){
+  return `
+    <div class="subtitle">
+      ${data.number} is between <strong>${data.lower}</strong> and <strong>${data.upper}</strong>.
+    </div>
+    ${numberLineHTML(data.number,data.lower,data.upper)}
+
+    <div class="distance-row">
+      <div class="distance-box ${data.answer===data.lower?"near":""}">
+        ${Math.abs(data.number-data.lower)} metres from ${data.lower}
+      </div>
+      <div class="distance-box ${data.answer===data.upper?"near":""}">
+        ${Math.abs(data.upper-data.number)} metres from ${data.upper}
+      </div>
+    </div>
+
+    ${choices ? `
+      <div class="question-card">
+        <h2>Which park is nearest?</h2>
+        <div class="option-row">
+          <button class="option" onclick="lineChoice(${index},${data.lower})">${data.lower}</button>
+          <button class="option" onclick="lineChoice(${index},${data.upper})">${data.upper}</button>
+        </div>
+      </div>
+    ` : `
+      <div class="question-card">
+        <button class="check-btn" onclick="revealLine(${index})">🔎 Reveal Answer</button>
+        <div id="feedback-${index}" class="feedback"></div>
+      </div>
+    `}
+  `;
+}
+
+function lineChoice(index,value){
+  const data=slideData[index];
+  const host=document.getElementById(`content-${index}`);
+  const buttons=host.querySelectorAll(".option");
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+  if(value===data.answer){
+    selected.classList.add("correct");
+    const fb=document.getElementById(`feedback-${index}`) || createFeedback(index);
+    fb.className="feedback correct pop";
+    fb.innerHTML=`✅ Correct! ${data.explanation}`;
+    award(index);
+  }else{
+    selected.classList.add("wrong");
+    const fb=document.getElementById(`feedback-${index}`) || createFeedback(index);
+    fb.className="feedback incorrect pop";
+    fb.innerHTML=`🌱 Try again. Look at the two distances on the number line.`;
+  }
+}
+
+function createFeedback(index){
+  const div=document.createElement("div");
+  div.id=`feedback-${index}`;
+  div.className="feedback";
+  document.getElementById(`content-${index}`).appendChild(div);
+  return div;
+}
+
+function revealLine(index){
+  const data=slideData[index];
+  const fb=document.getElementById(`feedback-${index}`);
+  fb.className="feedback correct pop";
+  fb.innerHTML=`💡 ${data.explanation}`;
+  award(index);
+}
+
+/* ---------- Concept slide ---------- */
+function conceptSlide(index,data){
+  return `
+    <div class="two-column">
+      <div class="card">
+        <h2>Nearest = Closest</h2>
+        <p style="font-size:21px;line-height:1.5">
+          When we round a number to the nearest 100, we find the
+          <strong>closest multiple of 100</strong>.
+        </p>
+        <div class="big-number">247</div>
+      </div>
+
+      <div class="card">
+        ${numberLineHTML(247,200,300)}
+        <div class="distance-row">
+          <div class="distance-box near">200 is 47 away</div>
+          <div class="distance-box">300 is 53 away</div>
+        </div>
+        <div class="feedback correct">
+          Therefore: <strong>247 → 200</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="teacher-tip">
+      <strong>Remember:</strong> 200 and 300 are multiples of 100.
+    </div>
+  `;
+}
+
+/* ---------- Middle activity ---------- */
+function middleActivity(index,data){
+  const isBoth=data.answer==="both";
+  return `
+    <div class="subtitle">
+      ${data.number} is exactly halfway between ${data.lower} and ${data.upper}.
+    </div>
+
+    ${numberLineHTML(data.number,data.lower,data.upper)}
+
+    <div class="distance-row">
+      <div class="distance-box">${Math.abs(data.number-data.lower)} metres from ${data.lower}</div>
+      <div class="distance-box">${Math.abs(data.upper-data.number)} metres from ${data.upper}</div>
+    </div>
+
+    <div class="question-card card">
+      <h2>${isBoth ? "Which park is nearest?" : "What does the rounding rule choose?"}</h2>
+      <div class="option-row">
+        <button class="option" onclick="middleAnswer(${index},'lower')">${data.lower}</button>
+        <button class="option" onclick="middleAnswer(${index},'upper')">${data.upper}</button>
+        ${isBoth ? `<button class="option" onclick="middleAnswer(${index},'both')">Both are equally near</button>`:""}
+      </div>
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+function middleAnswer(index,choice){
+  const data=slideData[index];
+  const correct=data.answer==="both" ? choice==="both" : choice==="upper";
+  const buttons=document.querySelectorAll(`#content-${index} .option`);
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const labels={
+    lower:String(data.lower),
+    upper:String(data.upper),
+    both:"Both are equally near"
+  };
+
+  const selected=[...buttons].find(b=>b.textContent.trim()===labels[choice]);
+  if(selected) selected.classList.add(correct?"correct":"wrong");
+
+  const fb=document.getElementById(`feedback-${index}`);
+  fb.className=`feedback ${correct?"correct":"incorrect"} pop`;
+
+  if(correct){
+    fb.innerHTML=`${data.answer==="both" ? "🌟 Exactly! Both parks are 50 metres away.":"✅ Correct!"} ${data.explanation}`;
+    award(index);
+  }else{
+    fb.innerHTML=`🌱 Look carefully: both endpoints are 50 metres away. For rounding, the exact-middle rule chooses the next hundred.`;
+  }
+}
+
+function middleRuleActivity(index,data){
+  return `
+    <div class="card question-card">
+      <div class="big-number">250</div>
+      <p style="font-size:22px">250 is exactly halfway between 200 and 300.</p>
+      <div class="distance-row">
+        <div class="distance-box">50 m from 200</div>
+        <div class="distance-box">50 m from 300</div>
+      </div>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory">🎯 Exactly halfway? ROUND UP!</div>
+      <div style="font-size:22px;margin-top:10px">250 → 300</div>
+    </div>
+
+    <div class="question-card">
+      <button class="check-btn" onclick="revealGeneric(${index},'feedback-${index}')">Reveal Explanation</button>
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+/* ---------- Tables ---------- */
+function tableActivity(index,data){
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Distance</th>
+            <th>Nearest park</th>
+            <th>Rounded number</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.rows.map((r,i)=>`
+            <tr class="clickable" onclick="revealRow(this,${i})">
+              <td>${r[0]} m</td>
+              <td class="hidden-cell">Tap to reveal</td>
+              <td class="hidden-cell">Tap to reveal</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+
+    <div id="feedback-${index}" class="feedback"></div>
+
+    <div class="memory-card">
+      <div class="memory">00–49 → Round down<br>50–99 → Round up</div>
+    </div>
+  `;
+}
+
+function revealRow(row,i){
+  const data=slideData[current];
+  const r=data.rows[i];
+  row.classList.add("revealed");
+  row.children[1].textContent=r[1]+" m";
+  row.children[2].textContent=r[2];
+  row.children[1].classList.remove("hidden-cell");
+  row.children[2].classList.remove("hidden-cell");
+}
+
+function middleTableActivity(index,data){
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Number</th><th>Between</th><th>Rounded answer</th></tr>
+        </thead>
+        <tbody>
+          ${data.rows.map((r,i)=>`
+            <tr class="clickable" onclick="revealMiddleRow(this,${i})">
+              <td>${r[0]}</td>
+              <td>${r[1]}</td>
+              <td>Tap to reveal</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory">Every number ending in 50 rounds UP!</div>
+    </div>
+  `;
+}
+
+function revealMiddleRow(row,i){
+  const data=slideData[current];
+  row.children[2].textContent=data.rows[i][2];
+  row.classList.add("revealed");
+}
+
+/* ---------- Rules ---------- */
+function rulesActivity(index){
+  return `
+    <div class="rule-grid">
+      <div class="rule-card rule-down">
+        <div class="range">00–49</div>
+        <div class="direction">⬅ ROUND DOWN</div>
+        <p>Go back to the previous hundred.</p>
+        <strong>Example: 247 → 200</strong>
+      </div>
+
+      <div class="rule-card rule-up">
+        <div class="range">50–99</div>
+        <div class="direction">ROUND UP ➡</div>
+        <p>Go forward to the next hundred.</p>
+        <strong>Example: 247 would not be here; 256 → 300</strong>
+      </div>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory">“00–49, go back to the previous hundred.<br>50–99, go forward to the next hundred.”</div>
+    </div>
+
+    <div class="question-card">
+      <button class="check-btn" onclick="revealGeneric(${index},'feedback-${index}')">🔎 Reveal the Rule</button>
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+/* ---------- Drag challenge ---------- */
+function dragActivity(index,data){
+  return `
+    <div class="subtitle">
+      Drag 🧒 to <strong>364</strong> on the road. Then choose the nearest hundred.
+    </div>
+
+    <div class="drag-area">
+      <div class="drag-track" id="drag-track-${index}">
+        <span class="drag-tick" style="left:0%"></span>
+        <span class="drag-label" style="left:0%">300</span>
+        <span class="drag-tick" style="left:20%"></span>
+        <span class="drag-label" style="left:20%">320</span>
+        <span class="drag-tick" style="left:40%"></span>
+        <span class="drag-label" style="left:40%">340</span>
+        <span class="drag-tick" style="left:60%"></span>
+        <span class="drag-label" style="left:60%">360</span>
+        <span class="drag-tick" style="left:80%"></span>
+        <span class="drag-label" style="left:80%">380</span>
+        <span class="drag-tick" style="left:100%"></span>
+        <span class="drag-label" style="left:100%">400</span>
+
+        <div class="drag-character" id="drag-character-${index}"
+             role="slider" tabindex="0" aria-label="Drag character to 364"
+             data-value="350">🧒</div>
+
+        <span class="target-number" style="left:64%">364 🎯</span>
+      </div>
+
+      <div class="option-row">
+        <button class="option" onclick="dragAnswer(${index},300)">300</button>
+        <button class="option" onclick="dragAnswer(${index},400)">400</button>
+      </div>
+
+      <button class="reset-btn" onclick="resetDrag(${index})">↻ Reset Character</button>
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+function setupDrag(index){
+  const char=document.getElementById(`drag-character-${index}`);
+  const track=document.getElementById(`drag-track-${index}`);
+  if(!char || !track) return;
+
+  let dragging=false;
+
+  function move(clientX){
+    const rect=track.getBoundingClientRect();
+    let pct=((clientX-rect.left)/rect.width)*100;
+    pct=Math.max(0,Math.min(100,pct));
+    char.style.left=pct+"%";
+    char.dataset.value=Math.round(300+(pct/100)*100);
+  }
+
+  char.addEventListener("pointerdown",e=>{
+    dragging=true;
+    char.setPointerCapture(e.pointerId);
+  });
+
+  char.addEventListener("pointermove",e=>{
+    if(dragging) move(e.clientX);
+  });
+
+  char.addEventListener("pointerup",()=>dragging=false);
+
+  char.addEventListener("keydown",e=>{
+    let value=Number(char.dataset.value)||350;
+    if(e.key==="ArrowLeft") value=Math.max(300,value-1);
+    if(e.key==="ArrowRight") value=Math.min(400,value+1);
+    char.dataset.value=value;
+    char.style.left=((value-300)/100*100)+"%";
+  });
+}
+
+function dragAnswer(index,value){
+  const data=slideData[index];
+  const fb=document.getElementById(`feedback-${index}`);
+  const buttons=document.querySelectorAll(`#content-${index} .option`);
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+
+  if(value===data.answer){
+    selected.classList.add("correct");
+    fb.className="feedback correct pop";
+    fb.innerHTML=`✅ Correct! ${data.explanation}`;
+    award(index);
+  }else{
+    selected.classList.add("wrong");
+    fb.className="feedback incorrect pop";
+    fb.innerHTML=`🌱 Try again. Look at where 364 sits between 300 and 400.`;
+  }
+}
+
+function resetDrag(index){
+  const char=document.getElementById(`drag-character-${index}`);
+  if(char){
+    char.style.left="50%";
+    char.dataset.value="350";
+  }
+  const fb=document.getElementById(`feedback-${index}`);
+  if(fb) fb.innerHTML="";
+}
+
+/* ---------- Estimate slide ---------- */
+function estimateActivity(index){
+  return `
+    <div class="two-column">
+      <div class="card">
+        <h2 style="text-align:center">Before rounding</h2>
+        <div class="big-number">247</div>
+        <p style="text-align:center;font-size:21px">actual metres</p>
+      </div>
+
+      <div class="card">
+        <h2 style="text-align:center">After rounding</h2>
+        <div class="big-number">≈ 200</div>
+        <p style="text-align:center;font-size:21px">an estimate</p>
+      </div>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory">“247 metres is approximately 200 metres.”</div>
+      <p style="font-size:19px">Rounding gives an estimate. It does not change the actual distance you walked.</p>
+    </div>
+
+    <div class="question-card">
+      <button class="check-btn" onclick="revealGeneric(${index},'feedback-${index}')">I Understand</button>
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+/* ---------- Practice ---------- */
+function practiceActivity(index,data){
+  return `
+    <div class="score-pill">Practice score: <span id="local-score-${index}">0</span> / ${data.questions.length}</div>
+
+    <div class="practice-list">
+      ${data.questions.map((q,i)=>`
+        <div class="practice-item" id="practice-${index}-${i}">
+          <h3>Question ${i+1}: ${q.n} → ?</h3>
+          <div class="small-options">
+            <button onclick="practiceAnswer(${index},${i},${q.a})">${q.a}</button>
+            <button onclick="practiceAnswer(${index},${i},${q.b})">${q.b}</button>
+          </div>
+          <div id="practice-feedback-${index}-${i}" class="feedback"></div>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="teacher-tip">
+      <strong>Strategy:</strong> Look at the last two digits. 00–49 goes down; 50–99 goes up.
+    </div>
+  `;
+}
+
+function practiceAnswer(index,qIndex,value){
+  const data=slideData[index];
+  const q=data.questions[qIndex];
+  const item=document.getElementById(`practice-${index}-${qIndex}`);
+  const buttons=item.querySelectorAll("button");
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+  const fb=document.getElementById(`practice-feedback-${index}-${qIndex}`);
+
+  if(value===q.correct){
+    selected.classList.add("correct");
+    fb.className="feedback correct pop";
+    fb.innerHTML=`✅ Correct! ${q.n} → ${q.correct}`;
+    if(!item.dataset.correct){
+      item.dataset.correct="true";
+      const counter=document.getElementById(`local-score-${index}`);
+      counter.textContent=Number(counter.textContent)+1;
+      award(index, true);
+    }
+  }else{
+    selected.classList.add("wrong");
+    fb.className="feedback incorrect pop";
+    fb.innerHTML=`🌱 Try again. Look at the last two digits: ${String(q.n).slice(-2)}.`;
+  }
+}
+
+/* ---------- Explanation builder ---------- */
+function builderActivity(index,data){
+  return `
+    <div class="card question-card">
+      <div class="big-number">${data.number}</div>
+      <p style="font-size:20px">
+        Find the nearest hundred and explain why.
+      </p>
+
+      ${numberLineHTML(data.number,data.lower,data.upper)}
+
+      <div class="builder">
+        <span>${data.number} is closer to</span>
+        <button class="option" onclick="builderChoice(${index},${data.lower})">${data.lower}</button>
+        <button class="option" onclick="builderChoice(${index},${data.upper})">${data.upper}</button>
+      </div>
+
+      <div class="builder">
+        <span>because the last two digits are</span>
+        <strong style="font-size:30px">87</strong>
+        <span>→ round</span>
+        <button class="option" onclick="builderDirection(${index},'down')">down</button>
+        <button class="option" onclick="builderDirection(${index},'up')">up</button>
+      </div>
+
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+function builderChoice(index,value){
+  const data=slideData[index];
+  const fb=document.getElementById(`feedback-${index}`);
+  const buttons=document.querySelectorAll(`#content-${index} .builder:first-of-type .option`);
+
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+
+  if(value===data.answer){
+    selected.classList.add("correct");
+    fb.className="feedback correct";
+    fb.innerHTML="✅ Correct: 687 is closer to 700.";
+    window.builderPark=true;
+    award(index);
+  }else{
+    selected.classList.add("wrong");
+    fb.className="feedback incorrect";
+    fb.innerHTML="🌱 Check the distances from 600 and 700.";
+  }
+}
+
+function builderDirection(index,direction){
+  const fb=document.getElementById(`feedback-${index}`);
+  if(direction==="up"){
+    fb.className="feedback correct";
+    fb.innerHTML="🌟 Exactly! The last two digits are 87, so 687 rounds up to 700.";
+    award(index);
+  }else{
+    fb.className="feedback incorrect";
+    fb.innerHTML="🌱 87 is in the 50–99 range, so we round up.";
+  }
+}
+
+/* ---------- Fill multi ---------- */
+function fillMultiActivity(index,data){
+  return `
+    <div class="practice-list">
+      ${data.questions.map((q,i)=>`
+        <div class="practice-item">
+          <h3>${i+1}. ${q.n} → nearest 100</h3>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:center">
+            <input class="input-answer" id="fill-${index}-${i}" type="number"
+                   aria-label="Answer for ${q.n}">
+            <button class="check-btn" onclick="checkFillMulti(${index},${i})">Check</button>
+          </div>
+          <div id="fill-feedback-${index}-${i}" class="feedback"></div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function checkFillMulti(index,i){
+  const data=slideData[index];
+  const q=data.questions[i];
+  const input=document.getElementById(`fill-${index}-${i}`);
+  const fb=document.getElementById(`fill-feedback-${index}-${i}`);
+  const value=Number(input.value);
+
+  if(value===q.a){
+    fb.className="feedback correct pop";
+    fb.innerHTML=`✅ Correct! ${q.n} → ${q.a}`;
+    if(!input.dataset.correct){
+      input.dataset.correct="true";
+      award(index,true);
+    }
+  }else{
+    fb.className="feedback incorrect pop";
+    fb.innerHTML="🌱 Try again. Look at the last two digits.";
+  }
+}
+
+/* ---------- Middle choice ---------- */
+function middleChoiceActivity(index,data){
+  return `
+    <div class="card question-card">
+      <h2>You are at ${data.number} metres.</h2>
+      ${numberLineHTML(data.number,data.lower,data.upper)}
+      <div class="distance-row">
+        <div class="distance-box">50 m from ${data.lower}</div>
+        <div class="distance-box">50 m from ${data.upper}</div>
+      </div>
+
+      <p style="font-size:20px">
+        Which park should we choose <strong>for rounding</strong>?
+      </p>
+
+      <div class="option-row">
+        <button class="option" onclick="middleChoiceAnswer(${index},${data.lower})">${data.lower}</button>
+        <button class="option" onclick="middleChoiceAnswer(${index},${data.upper})">${data.upper}</button>
+      </div>
+
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+function middleChoiceAnswer(index,value){
+  const data=slideData[index];
+  const fb=document.getElementById(`feedback-${index}`);
+  const buttons=document.querySelectorAll(`#content-${index} .option`);
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+
+  if(value===data.answer){
+    selected.classList.add("correct");
+    fb.className="feedback correct pop";
+    fb.innerHTML=`🌟 Both parks are 50 metres away, but our rounding rule says <strong>${data.number} → ${data.answer}</strong>.`;
+    award(index);
+  }else{
+    selected.classList.add("wrong");
+    fb.className="feedback incorrect pop";
+    fb.innerHTML="🌱 Both are equally close physically. The special rounding rule chooses the next hundred.";
+  }
+}
+
+/* ---------- Bridge ---------- */
+function bridgeActivity(index){
+  const nums=[200,210,220,230,240,250,260,270,280,290,300];
+
+  return `
+    <div class="bridge">
+      <div class="bridge-track">
+        <div class="bridge-half bridge-left">⬅ ROUND DOWN TO 200</div>
+        <div class="bridge-half bridge-right">ROUND UP TO 300 ➡</div>
+      </div>
+
+      <div class="bridge-middle">🎯 250 is exactly in the middle</div>
+
+      <div class="bridge-numbers">
+        ${nums.map(n=>`
+          <button class="bridge-number" onclick="bridgeClick(${index},${n})">${n}</button>
+        `).join("")}
+      </div>
+
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+
+    <div class="teacher-tip">
+      <strong>Classify:</strong> numbers below 250 round to 200, 250 rounds to 300, and numbers above 250 round to 300.
+    </div>
+  `;
+}
+
+function bridgeClick(index,n){
+  const fb=document.getElementById(`feedback-${index}`);
+  let result;
+
+  if(n<250) result=200;
+  else result=300;
+
+  const buttons=document.querySelectorAll(`#content-${index} .bridge-number`);
+  buttons.forEach(b=>b.classList.remove("down","middle","up"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===n);
+  if(n<250) selected.classList.add("down");
+  else if(n===250) selected.classList.add("middle");
+  else selected.classList.add("up");
+
+  fb.className="feedback correct pop";
+
+  if(n===250){
+    fb.innerHTML=`🎯 ${n} is exactly halfway. The rule says round up: <strong>${n} → ${result}</strong>.`;
+  }else{
+    fb.innerHTML=`${n} → <strong>${result}</strong>. ${n<250?"It is below the middle point.":"It is above the middle point."}`;
+  }
+
+  award(index);
+}
+
+/* ---------- Fill blank ---------- */
+function fillActivity(index,data){
+  return `
+    <div class="card question-card">
+      <div class="big-number">250</div>
+      <p style="font-size:22px">
+        “250 is exactly halfway between 200 and 300.
+        When a number ends in 50, we round
+        <input class="input-answer" id="single-fill-${index}" type="text"
+               aria-label="Complete the sentence">.”
+      </p>
+
+      <button class="check-btn" onclick="checkSingleFill(${index})">Check Answer</button>
+
+      <div id="feedback-${index}" class="feedback"></div>
+    </div>
+  `;
+}
+
+function checkSingleFill(index){
+  const input=document.getElementById(`single-fill-${index}`);
+  const value=input.value.trim().toLowerCase();
+  const fb=document.getElementById(`feedback-${index}`);
+
+  if(value==="up"){
+    fb.className="feedback correct pop";
+    fb.innerHTML="🌟 Correct! 250 is halfway, so the rule says round <strong>up</strong>.";
+    award(index);
+  }else{
+    fb.className="feedback incorrect pop";
+    fb.innerHTML="🌱 Try again. The memory rule says: 50–99, go forward to the next hundred.";
+  }
+}
+
+/* ---------- Find middle ---------- */
+function middleFindActivity(index,data){
+  return `
+    <div class="card question-card">
+      <h2>Which number is exactly halfway between 700 and 800?</h2>
+      <div class="option-row">
+        <button class="option" onclick="middleFindAnswer(${index},740)">740</button>
+        <button class="option" onclick="middleFindAnswer(${index},750)">750</button>
+        <button class="option" onclick="middleFindAnswer(${index},760)">760</button>
+      </div>
+
+      <div id="feedback-${index}" class="feedback"></div>
+
+      <div id="followup-${index}" class="hidden">
+        <div class="memory-card">
+          <div class="memory">750 → 800</div>
+          <p style="font-size:19px">750 ends in 50, so we round up.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function middleFindAnswer(index,value){
+  const fb=document.getElementById(`feedback-${index}`);
+  const buttons=document.querySelectorAll(`#content-${index} .option`);
+  buttons.forEach(b=>b.classList.remove("correct","wrong"));
+
+  const selected=[...buttons].find(b=>Number(b.textContent)===value);
+
+  if(value===750){
+    selected.classList.add("correct");
+    fb.className="feedback correct pop";
+    fb.innerHTML="🌟 Correct! 750 is exactly halfway between 700 and 800.";
+    document.getElementById(`followup-${index}`).classList.remove("hidden");
+    award(index);
+  }else{
+    selected.classList.add("wrong");
+    fb.className="feedback incorrect pop";
+    fb.innerHTML="🌱 Try again. Halfway means the same distance from both 700 and 800.";
+  }
+}
+
+/* ---------- Final slide ---------- */
+function finalActivity(index,data){
+  return `
+    <div class="celebration">
+      <div class="emoji">🎉🌳🧒🌳🎉</div>
+      <h2>You reached the final park!</h2>
+      <p class="subtitle">
+        Complete the exit ticket to finish your rounding adventure.
+      </p>
+
+      <div class="practice-list">
+        ${data.questions.map((q,i)=>`
+          <div class="practice-item">
+            <h3>${q.n} → ?</h3>
+            <div style="display:flex;gap:8px;justify-content:center">
+              <input class="input-answer" id="final-${index}-${i}" type="number"
+                     aria-label="Final answer ${q.n}">
+              <button class="check-btn" onclick="checkFinal(${index},${i})">Check</button>
+            </div>
+            <div id="final-feedback-${index}-${i}" class="feedback"></div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div id="final-complete-${index}" class="hidden"></div>
+    </div>
+  `;
+}
+
+function checkFinal(index,i){
+  const data=slideData[index];
+  const q=data.questions[i];
+  const input=document.getElementById(`final-${index}-${i}`);
+  const fb=document.getElementById(`final-feedback-${index}-${i}`);
+  const value=Number(input.value);
+
+  if(value===q.a){
+    fb.className="feedback correct pop";
+    fb.innerHTML=`✅ Correct! ${q.n} → ${q.a}`;
+    if(!input.dataset.correct){
+      input.dataset.correct="true";
+      award(index,true);
+    }
+    checkFinalComplete(index);
+  }else{
+    fb.className="feedback incorrect pop";
+    fb.innerHTML="🌱 Try again. Remember: a number ending in 50 rounds up.";
+  }
+}
+
+function checkFinalComplete(index){
+  const inputs=[...document.querySelectorAll(`[id^="final-${index}-"]`)];
+  if(inputs.length===5 && inputs.every(i=>i.dataset.correct==="true")){
+    const box=document.getElementById(`final-complete-${index}`);
+    box.classList.remove("hidden");
+    box.innerHTML=`
+      <div class="memory-card pop">
+        <div class="memory">🌟 Amazing! You completed the exit ticket!</div>
+        <p style="font-size:20px">
+          When we are exactly in the middle, we round up.
+        </p>
+        <button class="check-btn" onclick="showCelebration(${index})">See My Final Score 🎉</button>
+      </div>
+    `;
+  }
+}
+
+function showCelebration(index){
+  const host=document.getElementById(`content-${index}`);
+  host.innerHTML=`
+    <div class="celebration card pop">
+      <div class="emoji">🏆🌳🎉</div>
+      <h2>Rounding Park Champion!</h2>
+
+      <div class="big-number">${score}</div>
+      <p style="font-size:20px">points earned</p>
+
+      <div class="final-rules">
+        <div class="final-rule">🔵 <strong>00–49:</strong> Round down to the previous hundred.</div>
+        <div class="final-rule">🟡 <strong>50–99:</strong> Round up to the next hundred.</div>
+        <div class="final-rule">🎯 <strong>Exactly halfway:</strong> Round up.</div>
+        <div class="final-rule">📏 Rounding gives an estimate; it does not change the actual distance.</div>
+      </div>
+
+      <div class="option-row">
+        <button class="check-btn" onclick="resetAll()">🔄 Play Again</button>
+        <button class="secondary-btn" onclick="goToSlide(22)">🔎 Review the Number Line</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Generic reveal ---------- */
+function revealGeneric(index,targetId){
+  const fb=document.getElementById(targetId);
+  const data=slideData[index];
+
+  let text="";
+
+  if(data.type==="rules"){
+    text="00–49 means round down to the previous hundred. 50–99 means round up to the next hundred. When exactly halfway, round up.";
+  }else if(data.type==="estimate"){
+    text="247 is approximately 200. The estimate does not change the actual distance.";
+  }else{
+    text=data.explanation || "";
+  }
+
+  fb.className="feedback correct pop";
+  fb.innerHTML=`💡 ${text}`;
+  award(index);
+}
+
+/* ---------- Scoring ---------- */
+function award(index,sub=false){
+  const key=sub ? `${index}-${eventKey(index)}` : `slide-${index}`;
+
+  if(sub){
+    if(!answered.has(key)){
+      answered.add(key);
+      score++;
+      updateScoreDisplays();
+    }
+  }else{
+    if(!answered.has(key)){
+      answered.add(key);
+      score++;
+      updateScoreDisplays();
+    }
+  }
+}
+
+function eventKey(index){
+  return Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+
+function updateScoreDisplays(){
+  document.querySelectorAll(".score-pill").forEach(el=>{
+    const counter=el.querySelector("span");
+    if(counter && current===12){
+      // Practice slide has its own local score.
+    }
+  });
+}
+
+/* ---------- Teacher panel ---------- */
+function renderTeacherPanel(index){
+  const panel=document.getElementById(`teacher-${index}`);
+  if(!panel) return;
+  const data=slideData[index];
+
+  panel.innerHTML=`
+    <h3>👩‍🏫 Teacher Panel</h3>
+    <p><strong>Prompt:</strong> ${data.teacher || "Ask students to explain their reasoning."}</p>
+    <div class="answer"><strong>Key rule:</strong> 00–49 down; 50–99 up; exactly halfway → up.</div>
+    <button class="check-btn" onclick="teacherRevealCurrent()">Reveal Answer</button>
+  `;
+}
+
+function teacherRevealCurrent(){
+  const data=slideData[current];
+  let message="";
+
+  if(data.type==="practice"){
+    message=data.questions.map(q=>`${q.n} → ${q.correct}`).join(" | ");
+  }else if(data.type==="fillmulti" || data.type==="final"){
+    message=data.questions.map(q=>`${q.n} → ${q.a}`).join(" | ");
+  }else if(data.type==="table" || data.type==="tableMiddle"){
+    message="Click each row to reveal the answer.";
+  }else if(data.answer!==undefined){
+    message=`${data.number !== undefined ? data.number+" → ":""}${data.answer}`;
+  }else{
+    message=data.explanation || "Use the rule shown on the slide.";
+  }
+
+  const panel=document.getElementById(`teacher-${current}`);
+  const old=panel.querySelector(".answer");
+  old.innerHTML=`<strong>Answer:</strong> ${message}`;
+}
+
+function toggleTeacher(){
+  teacherOpen=!teacherOpen;
+  const panel=document.getElementById(`teacher-${current}`);
+  const btn=document.querySelector(`#slide-${current+1} .teacher-toggle`);
+
+  if(panel){
+    panel.classList.toggle("open",teacherOpen);
+  }
+
+  if(btn){
+    btn.setAttribute("aria-expanded",teacherOpen);
+  }
+}
+
+function revealTeacher(index){
+  const data=slideData[index];
+  alert(teacherAnswer(data));
+}
+
+/* ---------- Navigation ---------- */
+function showSlide(index){
+  index=Math.max(0,Math.min(TOTAL_SLIDES-1,index));
+
+  document.querySelectorAll(".slide").forEach((s,i)=>{
+    s.classList.toggle("active",i===index);
+  });
+
+  current=index;
+  teacherOpen=false;
+
+  document.querySelectorAll(".teacher-panel").forEach(p=>p.classList.remove("open"));
+
+  const btn=document.querySelector(`#slide-${current+1} .teacher-toggle`);
+  if(btn) btn.setAttribute("aria-expanded","false");
+
+  renderTeacherPanel(index);
+
+  if(slideData[index].type==="drag"){
+    setTimeout(()=>setupDrag(index),50);
+  }
+
+  const host=document.getElementById(`content-${index}`);
+  if(host) host.classList.add("float-in");
+}
+
+function nextSlide(){
+  if(current<TOTAL_SLIDES-1){
+    showSlide(current+1);
+  }
+}
+
+function previousSlide(){
+  if(current>0){
+    showSlide(current-1);
+  }
+}
+
+function goToSlide(index){
+  closeMenu();
+  showSlide(index);
+}
+
+function openMenu(){
+  document.getElementById("menuOverlay").classList.add("open");
+  const items=document.querySelectorAll(".menu-item");
+  items.forEach((item,i)=>item.classList.toggle("current",i===current));
+}
+
+function closeMenu(){
+  document.getElementById("menuOverlay").classList.remove("open");
+}
+
+function resetSlide(){
+  const data=slideData[current];
+
+  // Re-render current slide content while preserving navigation.
+  renderSlideContent(current,data);
+
+  if(data.teacher){
+    renderTeacherPanel(current);
+  }
+
+  if(data.type==="drag"){
+    setTimeout(()=>setupDrag(current),50);
+  }
+}
+
+function resetAll(){
+  score=0;
+  answered.clear();
+  window.builderPark=false;
+  showSlide(0);
+}
+
+/* ---------- Keyboard navigation ---------- */
+document.addEventListener("keydown",e=>{
+  const menu=document.getElementById("menuOverlay");
+
+  if(menu && menu.classList.contains("open")){
+    if(e.key==="Escape") closeMenu();
+    return;
+  }
+
+  const tag=e.target.tagName.toLowerCase();
+
+  if(tag==="input" || tag==="textarea" || tag==="select") return;
+
+  if(e.key==="ArrowRight"){
+    e.preventDefault();
+    nextSlide();
+  }else if(e.key==="ArrowLeft"){
+    e.preventDefault();
+    previousSlide();
+  }else if(e.key==="Home"){
+    e.preventDefault();
+    openMenu();
+  }else if(e.key>="1" && e.key<="9"){
+    const n=Number(e.key);
+    if(n<=TOTAL_SLIDES) goToSlide(n-1);
+  }else if(e.key==="0"){
+    goToSlide(9);
+  }
+});
+
+/* ---------- Escape menu click ---------- */
+document.addEventListener("click",e=>{
+  const overlay=document.getElementById("menuOverlay");
+  if(e.target===overlay) closeMenu();
+});
+
+/* ---------- Initial render ---------- */
+createSlides();
+showSlide(0);
+</script>
+</body>
+</html>

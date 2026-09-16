@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rounding to the Nearest 10 & 100 — Mixed Practice</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --navy: #172554;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --green: #15803d;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --purple: #7e22ce;
+    --purple-light: #f3e8ff;
+    --orange: #ea580c;
+    --orange-light: #ffedd5;
+    --yellow: #facc15;
+    --cream: #fffdf7;
+    --text: #172033;
+    --muted: #64748b;
+    --border: #dbe2ea;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, "Trebuchet MS", sans-serif;
+    background: #f1f5f9;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, #172554, #1e40af);
+    color: white;
+    padding: 18px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    box-shadow: 0 4px 18px rgba(0,0,0,.15);
+}
+
+.header-inner {
+    max-width: 1150px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: clamp(20px, 3vw, 30px);
+}
+
+.brand p {
+    margin: 3px 0 0;
+    opacity: .85;
+    font-size: 14px;
+}
+
+.score-box {
+    min-width: 145px;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 14px;
+    padding: 9px 14px;
+    text-align: center;
+}
+
+.score-box strong {
+    display: block;
+    font-size: 21px;
+}
+
+/* PROGRESS */
+
+.progress-wrap {
+    max-width: 1150px;
+    margin: 18px auto 0;
+    padding: 0 20px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.progress {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #2563eb;
+    transition: width .3s ease;
+}
+
+/* MAIN */
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 18px 100px;
+}
+
+.name-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
+}
+
+.name-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.text-field {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 17px;
+    outline: none;
+}
+
+.text-field:focus {
+    border-color: var(--blue);
+}
+
+/* SECTION */
+
+.section {
+    display: none;
+    animation: fadeIn .25s ease;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-title {
+    background: white;
+    border-radius: 18px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+    border-left: 7px solid var(--blue);
+    box-shadow: 0 3px 12px rgba(15,23,42,.05);
+}
+
+.section-title h2 {
+    margin: 0 0 4px;
+    font-size: 25px;
+}
+
+.section-title p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.green .section-title {
+    border-left-color: var(--green);
+}
+
+.blue .section-title {
+    border-left-color: var(--blue);
+}
+
+.purple .section-title {
+    border-left-color: var(--purple);
+}
+
+.orange .section-title {
+    border-left-color: var(--orange);
+}
+
+.red .section-title {
+    border-left-color: var(--red);
+}
+
+/* QUESTION CARD */
+
+.question-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 12px rgba(15,23,42,.04);
+}
+
+.question-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 32px;
+    padding: 0 9px;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.question-text {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.instruction {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 9px;
+    color: var(--muted);
+    margin-bottom: 13px;
+    font-weight: 600;
+}
+
+/* ANSWERS */
+
+.answer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.answer-btn {
+    border: 2px solid #cbd5e1;
+    background: white;
+    min-width: 90px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.answer-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+    background: #eff6ff;
+}
+
+.answer-btn.correct {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.answer-btn.wrong {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.answer-btn:disabled {
+    cursor: default;
+    transform: none;
+}
+
+/* INPUT QUESTIONS */
+
+.input-answer {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+}
+
+.answer-input {
+    flex: 1;
+    min-width: 0;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 20px;
+    font-weight: 700;
+    outline: none;
+}
+
+.answer-input:focus {
+    border-color: var(--blue);
+}
+
+.check-btn {
+    border: none;
+    background: var(--blue);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.check-btn:hover {
+    background: #1d4ed8;
+}
+
+/* FEEDBACK */
+
+.feedback {
+    margin-top: 13px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: none;
+    font-weight: 700;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.correct {
+    background: var(--green-light);
+    color: #166534;
+}
+
+.feedback.wrong {
+    background: var(--red-light);
+    color: #991b1b;
+}
+
+.hint {
+    margin-top: 10px;
+    background: #fff7ed;
+    border-left: 4px solid var(--orange);
+    padding: 10px 12px;
+    border-radius: 8px;
+    display: none;
+}
+
+.hint.show {
+    display: block;
+}
+
+/* SPECIAL MIDDLE BOX */
+
+.middle-rule {
+    background: #fff7ed;
+    border: 2px solid #fed7aa;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.middle-rule strong {
+    color: #9a3412;
+}
+
+.rule-line {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.rule-pill {
+    padding: 7px 11px;
+    border-radius: 99px;
+    font-weight: 800;
+    background: white;
+}
+
+/* REAL LIFE */
+
+.story {
+    background: #f8fafc;
+    border-radius: 13px;
+    padding: 14px;
+    margin-bottom: 14px;
+}
+
+/* CHECKBOX */
+
+.checkbox-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.checkbox-choice {
+    border: 2px solid #cbd5e1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.checkbox-choice.selected {
+    border-color: var(--blue);
+    background: var(--blue-light);
+}
+
+/* NAVIGATION */
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.nav-btn {
+    border: none;
+    border-radius: 13px;
+    padding: 13px 21px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.prev-btn {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.next-btn {
+    background: var(--blue);
+    color: white;
+}
+
+.next-btn:hover {
+    background: #1d4ed8;
+}
+
+.nav-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+/* FINAL */
+
+.final-screen {
+    display: none;
+    background: white;
+    border-radius: 22px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 8px 35px rgba(15,23,42,.1);
+}
+
+.final-screen.active {
+    display: block;
+}
+
+.trophy {
+    font-size: 65px;
+}
+
+.final-score {
+    font-size: 42px;
+    color: var(--blue);
+    font-weight: 900;
+}
+
+.restart {
+    border: none;
+    background: var(--blue);
+    color: white;
+    border-radius: 13px;
+    padding: 14px 25px;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* MOBILE */
+
+@media(max-width:650px) {
+
+    header {
+        padding: 13px 15px;
+    }
+
+    .header-inner {
+        align-items: flex-start;
+    }
+
+    .score-box {
+        min-width: 95px;
+        padding: 7px;
+    }
+
+    .score-box strong {
+        font-size: 17px;
+    }
+
+    main {
+        padding: 20px 12px 80px;
+    }
+
+    .name-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .question-card {
+        padding: 17px;
+    }
+
+    .question-text {
+        font-size: 19px;
+    }
+
+    .answer-btn {
+        flex: 1;
+        min-width: 75px;
+    }
+
+    .input-answer {
+        flex-direction: column;
+    }
+
+    .nav-buttons {
+        position: sticky;
+        bottom: 10px;
+        background: rgba(241,245,249,.95);
+        padding: 8px;
+        border-radius: 14px;
+        z-index: 10;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <div class="header-inner">
+        <div class="brand">
+            <h1>🔢 Rounding Challenge</h1>
+            <p>Nearest 10 & Nearest 100</p>
+        </div>
+
+        <div class="score-box">
+            Score
+            <strong id="score">0 / 60</strong>
+        </div>
+    </div>
+</header>
+
+<div class="progress-wrap">
+    <div class="progress-info">
+        <span id="sectionLabel">Part A</span>
+        <span id="progressText">1 of 8</span>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</div>
+
+<main>
+
+<div class="name-card">
+    <div class="name-grid">
+        <div>
+            <label for="studentName">Name</label>
+            <input class="text-field" id="studentName" placeholder="Your name">
+        </div>
+
+        <div>
+            <label for="studentDate">Date</label>
+            <input class="text-field" id="studentDate" type="date">
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= PART A ================= -->
+
+<section class="section green active" id="section0">
+
+<div class="section-title">
+    <h2>🟢 Part A — Round to the Nearest 10</h2>
+    <p>Round each number to the nearest 10.</p>
+</div>
+
+<div id="partA"></div>
+
+</section>
+
+
+<!-- ================= PART B ================= -->
+
+<section class="section blue" id="section1">
+
+<div class="section-title">
+    <h2>🔵 Part B — Round to the Nearest 100</h2>
+    <p>Round each number to the nearest 100.</p>
+</div>
+
+<div id="partB"></div>
+
+</section>
+
+
+<!-- ================= PART C ================= -->
+
+<section class="section purple" id="section2">
+
+<div class="section-title">
+    <h2>🟣 Part C — Mixed Challenge</h2>
+    <p>Read the instruction carefully. Is it nearest 10 or nearest 100?</p>
+</div>
+
+<div id="partC"></div>
+
+</section>
+
+
+<!-- ================= PART D ================= -->
+
+<section class="section orange" id="section3">
+
+<div class="section-title">
+    <h2>🟠 Part D — Which One?</h2>
+    <p>Choose the correct rounded number.</p>
+</div>
+
+<div id="partD"></div>
+
+</section>
+
+
+<!-- ================= PART E ================= -->
+
+<section class="section red" id="section4">
+
+<div class="section-title">
+    <h2>🔴 Part E — Watch the Middle!</h2>
+
+    <div class="middle-rule">
+        <strong>Remember:</strong>
+
+        <div class="rule-line">
+            <span class="rule-pill">5 or more → ROUND UP ⬆️</span>
+            <span class="rule-pill">4 or less → ROUND DOWN ⬇️</span>
+        </div>
+    </div>
+</div>
+
+<div id="partE"></div>
+
+</section>
+
+
+<!-- ================= PART F ================= -->
+
+<section class="section" id="section5">
+
+<div class="section-title">
+    <h2>⭐ Part F — Real-Life Problems</h2>
+    <p>Use rounding to estimate real-world quantities.</p>
+</div>
+
+<div id="partF"></div>
+
+</section>
+
+
+<!-- ================= PART G ================= -->
+
+<section class="section" id="section6">
+
+<div class="section-title">
+    <h2>🧠 Part G — Think Carefully</h2>
+    <p>Some questions have more than one possible answer.</p>
+</div>
+
+<div id="partG"></div>
+
+</section>
+
+
+<!-- ================= FINAL ================= -->
+
+<section class="section" id="section7">
+
+<div class="section-title">
+    <h2>🏆 Final Challenge</h2>
+    <p>Decide whether to round to the nearest 10 or 100 — then solve!</p>
+</div>
+
+<div id="finalQuestions"></div>
+
+<div class="section-title" style="margin-top:25px;border-left-color:#facc15;">
+    <h2>⭐ Bonus</h2>
+    <p>Can you find a number that fits BOTH clues?</p>
+</div>
+
+<div id="bonus"></div>
+
+</section>
+
+
+<!-- FINAL SCORE -->
+
+<div class="final-screen" id="finalScreen">
+
+    <div class="trophy">🏆</div>
+
+    <h2>Rounding Challenge Complete!</h2>
+
+    <p id="studentResult"></p>
+
+    <div class="final-score" id="finalScore">0 / 60</div>
+
+    <p id="finalMessage"></p>
+
+    <button class="restart" onclick="restartQuiz()">
+        🔄 Try Again
+    </button>
+
+</div>
+
+
+<div class="nav-buttons">
+
+    <button class="nav-btn prev-btn" id="prevBtn" onclick="previousSection()">
+        ← Previous
+    </button>
+
+    <button class="nav-btn next-btn" id="nextBtn" onclick="nextSection()">
+        Next →
+    </button>
+
+</div>
+
+</main>
+</div>
+
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const sections = [
+    "Part A",
+    "Part B",
+    "Part C",
+    "Part D",
+    "Part E",
+    "Part F",
+    "Part G",
+    "Final Challenge"
+];
+
+let currentSection = 0;
+let score = 0;
+
+const totalQuestions = 60;
+
+const answered = new Set();
+
+
+/* =========================================================
+   ROUNDING FUNCTION
+========================================================= */
+
+function roundNumber(number, place) {
+
+    return Math.floor((number + place / 2) / place) * place;
+
+}
+
+
+/* =========================================================
+   QUESTION DATA
+========================================================= */
+
+const partA = [
+    [1,23,10],
+    [2,47,10],
+    [3,61,10],
+    [4,85,10],
+    [5,132,10],
+    [6,176,10],
+    [7,204,10],
+    [8,259,10],
+    [9,341,10],
+    [10,398,10]
+];
+
+const partB = [
+    [11,124,100],
+    [12,149,100],
+    [13,251,100],
+    [14,278,100],
+    [15,321,100],
+    [16,349,100],
+    [17,451,100],
+    [18,472,100],
+    [19,625,100],
+    [20,799,100]
+];
+
+const partC = [
+    [21,67,10],
+    [22,367,100],
+    [23,142,10],
+    [24,142,100],
+    [25,285,10],
+    [26,285,100],
+    [27,649,10],
+    [28,649,100],
+    [29,951,10],
+    [30,951,100]
+];
+
+const partD = [
+    [31,46,10,[40,50,60]],
+    [32,146,10,[140,150,160]],
+    [33,146,100,[100,200,300]],
+    [34,349,100,[300,400,500]],
+    [35,349,10,[340,350,360]],
+    [36,751,100,[700,800,900]]
+];
+
+const partE = [
+    [37,45,10],
+    [38,150,100],
+    [39,250,100],
+    [40,350,100],
+    [41,650,100],
+    [42,75,10],
+    [43,250,10],
+    [44,550,10]
+];
+
+const partF = [
+    [45,"A school is 47 metres from your house. Round the distance to the nearest 10 metres.",47,10,"metres"],
+    [46,"A park is 247 metres from your house. Round the distance to the nearest 100 metres.",247,100,"metres"],
+    [47,"A shop has 368 pencils. About how many pencils is that to the nearest 100?",368,100,"pencils"],
+    [48,"A bus travels 163 km. About how far is this to the nearest 10 km?",163,10,"km"],
+    [49,"A stadium has 1,249 seats. About how many seats is that to the nearest 100?",1249,100,"seats"],
+    [50,"A runner completes 587 metres. Round this distance to the nearest 10 metres.",587,10,"metres"]
+];
+
+const partG = [
+    {
+        number:51,
+        text:"A number rounds to 300 when rounded to the nearest 100.<br><br>Write two possible numbers.",
+        type:"two"
+    },
+    {
+        number:52,
+        text:"A number rounds to 70 when rounded to the nearest 10.<br><br>Write two possible numbers.",
+        type:"two"
+    },
+    {
+        number:53,
+        text:"Which is closer to 500?<br><br><strong>451 or 549?</strong>",
+        type:"choice",
+        choices:["451","549"],
+        answer:"451"
+    },
+    {
+        number:54,
+        text:"Which is closer to 800?<br><br><strong>749 or 851?</strong>",
+        type:"choice",
+        choices:["749","851"],
+        answer:"749"
+    },
+    {
+        number:55,
+        text:"Can a number round to 500 when rounding to the nearest 100?",
+        type:"choice",
+        choices:["Yes","No"],
+        answer:"Yes"
+    }
+];
+
+const finalData = [
+    [56,73,10],
+    [57,473,100],
+    [58,473,10],
+    [59,726,100],
+    [60,726,10]
+];
+
+
+/* =========================================================
+   CARD HELPERS
+========================================================= */
+
+function createInputQuestion(number,text,answer,hint="") {
+
+    return `
+    <div class="question-card">
+
+        <div class="question-number">${number}</div>
+
+        <div class="question-text">
+            ${text}
+        </div>
+
+        <div class="input-answer">
+
+            <input
+                class="answer-input"
+                id="input-${number}"
+                type="text"
+                inputmode="numeric"
+                placeholder="Type answer"
+            >
+
+            <button
+                class="check-btn"
+                onclick="checkInput(${number}, '${answer}')">
+                Check
+            </button>
+
+        </div>
+
+        <div class="feedback" id="feedback-${number}"></div>
+
+        ${hint ? `
+        <div class="hint" id="hint-${number}">
+            💡 ${hint}
+        </div>` : ""}
+
+    </div>
+    `;
+}
+
+
+function createChoiceQuestion(number,text,choices,answer) {
+
+    return `
+    <div class="question-card">
+
+        <div class="question-number">${number}</div>
+
+        <div class="question-text">
+            ${text}
+        </div>
+
+        <div class="answer-row">
+
+            ${choices.map(choice => `
+                <button
+                    class="answer-btn"
+                    onclick="checkChoice(this,${number},'${choice}','${answer}')">
+                    ${choice}
+                </button>
+            `).join("")}
+
+        </div>
+
+        <div class="feedback" id="feedback-${number}"></div>
+
+    </div>
+    `;
+}
+
+
+/* =========================================================
+   RENDER STANDARD ROUNDING
+========================================================= */
+
+function renderRounding(data, containerId) {
+
+    const container = document.getElementById(containerId);
+
+    container.innerHTML = data.map(q => {
+
+        const number = q[0];
+        const value = q[1];
+        const place = q[2];
+
+        const answer = roundNumber(value,place);
+
+        const placeText = place === 10 ? "nearest 10" : "nearest 100";
+
+        return createInputQuestion(
+            number,
+            `Round <strong>${value.toLocaleString()}</strong> to the ${placeText}.`,
+            answer,
+            `Look at the digit to the right of the place you are rounding to.`
+        );
+
+    }).join("");
+}
+
+
+/* =========================================================
+   PART D
+========================================================= */
+
+function renderPartD() {
+
+    document.getElementById("partD").innerHTML = partD.map(q => {
+
+        const number = q[0];
+        const value = q[1];
+        const place = q[2];
+        const choices = q[3];
+
+        const answer = roundNumber(value,place);
+
+        return createChoiceQuestion(
+            number,
+            `Round <strong>${value}</strong> to the nearest ${place}.`,
+            choices,
+            answer
+        );
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   PART F
+========================================================= */
+
+function renderPartF() {
+
+    document.getElementById("partF").innerHTML = partF.map(q => {
+
+        const number = q[0];
+        const text = q[1];
+        const value = q[2];
+        const place = q[3];
+        const unit = q[4];
+
+        const answer = roundNumber(value,place);
+
+        return createInputQuestion(
+            number,
+            `<div class="story">${text}</div>`,
+            answer,
+            `Nearest ${place}: compare the number with the halfway point.`
+        );
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   PART G
+========================================================= */
+
+function renderPartG() {
+
+    const container = document.getElementById("partG");
+
+    let html = "";
+
+    /* Q51 */
+
+    html += `
+    <div class="question-card">
+
+        <div class="question-number">51</div>
+
+        <div class="question-text">
+            A number rounds to <strong>300</strong> when rounded
+            to the nearest 100.
+            <br><br>
+            Write two possible numbers.
+        </div>
+
+        <div class="input-answer">
+            <input class="answer-input" id="input-51a" placeholder="First number">
+            <input class="answer-input" id="input-51b" placeholder="Second number">
+            <button class="check-btn" onclick="checkTwo(51,250,349)">
+                Check
+            </button>
+        </div>
+
+        <div class="feedback" id="feedback-51"></div>
+
+    </div>
+    `;
+
+
+    /* Q52 */
+
+    html += `
+    <div class="question-card">
+
+        <div class="question-number">52</div>
+
+        <div class="question-text">
+            A number rounds to <strong>70</strong> when rounded
+            to the nearest 10.
+            <br><br>
+            Write two possible numbers.
+        </div>
+
+        <div class="input-answer">
+            <input class="answer-input" id="input-52a" placeholder="First number">
+            <input class="answer-input" id="input-52b" placeholder="Second number">
+            <button class="check-btn" onclick="checkTwo(52,65,74)">
+                Check
+            </button>
+        </div>
+
+        <div class="feedback" id="feedback-52"></div>
+
+    </div>
+    `;
+
+
+    html += createChoiceQuestion(
+        53,
+        "Which is closer to 500?<br><br><strong>451 or 549?</strong>",
+        ["451","549"],
+        "451"
+    );
+
+    html += createChoiceQuestion(
+        54,
+        "Which is closer to 800?<br><br><strong>749 or 851?</strong>",
+        ["749","851"],
+        "749"
+    );
+
+    html += createChoiceQuestion(
+        55,
+        "Can a number round to 500 when rounding to the nearest 100?",
+        ["Yes","No"],
+        "Yes"
+    );
+
+
+    document.getElementById("partG").innerHTML = html;
+
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function renderFinal() {
+
+    const container = document.getElementById("finalQuestions");
+
+    container.innerHTML = finalData.map(q => {
+
+        const number = q[0];
+        const value = q[1];
+        const place = q[2];
+
+        const answer = roundNumber(value,place);
+
+        return createInputQuestion(
+            number,
+            `<strong>${value}</strong> → nearest ${place} = ?`,
+            answer,
+            `Choose the place value first, then check the digit immediately to its right.`
+        );
+
+    }).join("");
+
+
+    document.getElementById("bonus").innerHTML = `
+        <div class="question-card">
+
+            <div class="question-number">⭐</div>
+
+            <div class="question-text">
+
+                A number is between <strong>240 and 260</strong>.
+
+                <div class="story">
+                    • When rounded to the nearest 10, it becomes <strong>250</strong>.<br>
+                    • When rounded to the nearest 100, it becomes <strong>300</strong>.
+                </div>
+
+                Write one possible number.
+
+            </div>
+
+            <div class="input-answer">
+
+                <input
+                    class="answer-input"
+                    id="bonusInput"
+                    placeholder="Your number">
+
+                <button
+                    class="check-btn"
+                    onclick="checkBonus()">
+                    Check
+                </button>
+
+            </div>
+
+            <div class="feedback" id="feedback-bonus"></div>
+
+        </div>
+    `;
+
+}
+
+
+/* =========================================================
+   INPUT CHECK
+========================================================= */
+
+function checkInput(number,answer) {
+
+    if (answered.has(number)) return;
+
+    const input = document.getElementById(`input-${number}`);
+
+    const value = Number(
+        input.value.replace(/,/g,"").trim()
+    );
+
+    const feedback = document.getElementById(`feedback-${number}`);
+
+    if (value === Number(answer)) {
+
+        feedback.className = "feedback show correct";
+        feedback.innerHTML = "✅ Correct! Great rounding!";
+
+        score++;
+        answered.add(number);
+
+        input.disabled = true;
+
+    } else {
+
+        feedback.className = "feedback show wrong";
+        feedback.innerHTML =
+            `❌ Not quite. Try again — remember to check the digit to the right.`;
+
+    }
+
+    updateScore();
+
+}
+
+
+/* =========================================================
+   CHOICE CHECK
+========================================================= */
+
+function checkChoice(button,number,choice,answer) {
+
+    if (answered.has(number)) return;
+
+    const card = button.closest(".question-card");
+    const buttons = card.querySelectorAll(".answer-btn");
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    const feedback = document.getElementById(`feedback-${number}`);
+
+    if (choice === String(answer)) {
+
+        button.classList.add("correct");
+
+        feedback.className = "feedback show correct";
+        feedback.innerHTML = "✅ Correct!";
+
+        score++;
+        answered.add(number);
+
+    } else {
+
+        button.classList.add("wrong");
+
+        buttons.forEach(btn => {
+
+            if (btn.textContent.trim() === String(answer)) {
+                btn.classList.add("correct");
+            }
+
+        });
+
+        feedback.className = "feedback show wrong";
+        feedback.innerHTML =
+            `❌ Not quite. The correct answer is <strong>${answer}</strong>.`;
+
+        answered.add(number);
+
+    }
+
+    updateScore();
+
+}
+
+
+/* =========================================================
+   TWO POSSIBLE ANSWERS
+========================================================= */
+
+function checkTwo(number,min,max) {
+
+    if (answered.has(number)) return;
+
+    const a = Number(document.getElementById(`input-${number}a`).value);
+    const b = Number(document.getElementById(`input-${number}b`).value);
+
+    const feedback = document.getElementById(`feedback-${number}`);
+
+    const validA =
+        Number.isInteger(a) &&
+        a >= min &&
+        a <= max;
+
+    const validB =
+        Number.isInteger(b) &&
+        b >= min &&
+        b <= max;
+
+    if (validA && validB && a !== b) {
+
+        feedback.className = "feedback show correct";
+        feedback.innerHTML =
+            `✅ Excellent! Both numbers round correctly.`;
+
+        score++;
+        answered.add(number);
+
+        document.getElementById(`input-${number}a`).disabled = true;
+        document.getElementById(`input-${number}b`).disabled = true;
+
+    } else {
+
+        feedback.className = "feedback show wrong";
+
+        feedback.innerHTML =
+            `❌ Choose two different whole numbers between <strong>${min}</strong> and <strong>${max}</strong>.`;
+
+    }
+
+    updateScore();
+
+}
+
+
+/* =========================================================
+   BONUS
+========================================================= */
+
+function checkBonus() {
+
+    if (answered.has("bonus")) return;
+
+    const input = document.getElementById("bonusInput");
+
+    const value = Number(input.value);
+
+    const feedback = document.getElementById("feedback-bonus");
+
+    const valid =
+        Number.isInteger(value) &&
+        value >= 250 &&
+        value <= 259;
+
+    if (valid) {
+
+        feedback.className = "feedback show correct";
+
+        feedback.innerHTML =
+            `🎉 Correct! ${value} works because it rounds to 250 to the nearest 10 and 300 to the nearest 100.`;
+
+        score++;
+        answered.add("bonus");
+
+        input.disabled = true;
+
+    } else {
+
+        feedback.className = "feedback show wrong";
+
+        feedback.innerHTML =
+            `❌ Try a whole number from <strong>250 to 259</strong>.`;
+
+    }
+
+    updateScore();
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function updateScore() {
+
+    document.getElementById("score").textContent =
+        `${score} / ${totalQuestions}`;
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showSection(index) {
+
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("active");
+    });
+
+    document.getElementById(`section${index}`)
+        .classList.add("active");
+
+    currentSection = index;
+
+    document.getElementById("sectionLabel").textContent =
+        sections[index];
+
+    document.getElementById("progressText").textContent =
+        `${index + 1} of ${sections.length}`;
+
+    document.getElementById("progressBar").style.width =
+        `${((index + 1) / sections.length) * 100}%`;
+
+    document.getElementById("prevBtn").disabled =
+        index === 0;
+
+    document.getElementById("nextBtn").textContent =
+        index === sections.length - 1
+            ? "🏆 Finish"
+            : "Next →";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function nextSection() {
+
+    if (currentSection < sections.length - 1) {
+
+        showSection(currentSection + 1);
+
+    } else {
+
+        finishQuiz();
+
+    }
+
+}
+
+
+function previousSection() {
+
+    if (currentSection > 0) {
+        showSection(currentSection - 1);
+    }
+
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function finishQuiz() {
+
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("active");
+    });
+
+    document.querySelector(".nav-buttons").style.display = "none";
+
+    document.querySelector(".name-card").style.display = "none";
+
+    document.getElementById("finalScreen")
+        .classList.add("active");
+
+    const name =
+        document.getElementById("studentName").value.trim();
+
+    document.getElementById("studentResult").textContent =
+        name
+            ? `Well done, ${name}!`
+            : "Well done!";
+
+    document.getElementById("finalScore").textContent =
+        `${score} / ${totalQuestions}`;
+
+    let message = "";
+
+    const percentage = (score / totalQuestions) * 100;
+
+    if (percentage === 100) {
+        message = "🌟 Perfect! You are a rounding superstar!";
+    } else if (percentage >= 80) {
+        message = "🎉 Excellent work! You have a strong understanding of rounding.";
+    } else if (percentage >= 60) {
+        message = "👏 Good work! Review the halfway points and try again.";
+    } else {
+        message = "💪 Keep practising! Remember: look at the digit to the right.";
+    }
+
+    document.getElementById("finalMessage").textContent = message;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartQuiz() {
+
+    score = 0;
+
+    answered.clear();
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   KEYBOARD ENTER SUPPORT
+========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        const active =
+            document.activeElement;
+
+        if (
+            active &&
+            active.classList.contains("answer-input")
+        ) {
+
+            const card =
+                active.closest(".question-card");
+
+            if (card) {
+
+                const button =
+                    card.querySelector(".check-btn");
+
+                if (button) {
+                    button.click();
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+renderRounding(partA,"partA");
+
+renderRounding(partB,"partB");
+
+renderRounding(partC,"partC");
+
+renderPartD();
+
+renderRounding(partE,"partE");
+
+renderPartF();
+
+renderPartG();
+
+renderFinal();
+
+showSection(0);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rounding to the Nearest 10 — The Nearest Park Challenge</title>
+<style>
+:root{
+  --green:#2f7d50;--dark:#174d35;--sky:#dff4ff;--blue:#3197c8;
+  --yellow:#ffd95a;--cream:#fffaf0;--coral:#ef765d;--white:#fff;
+  --ink:#18332a;--muted:#61736b;--good:#237a4b;--bad:#bd453d;
+  --shadow:0 12px 30px rgba(24,51,42,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,Verdana,sans-serif;color:var(--ink);background:#dff4ff}
+button,input{font:inherit}
+button{cursor:pointer}
+#app{height:100vh;overflow:hidden;position:relative}
+.slide{display:none;height:100vh;min-height:600px;padding:18px 34px 78px;position:relative;overflow:auto}
+.slide.active{display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-weight:800;color:var(--dark);font-size:14px}
+.progress-wrap{flex:1;max-width:360px;height:9px;background:#c7e3d4;border-radius:99px;overflow:hidden}
+.progress{height:100%;background:var(--green);transition:.3s;width:0}
+.counter{font-weight:800;font-size:14px}
+h1{font-size:clamp(28px,4vw,48px);margin:10px 0 8px;color:var(--dark)}
+h2{font-size:clamp(23px,3vw,34px);margin:5px 0 15px;color:var(--dark)}
+h3{margin:8px 0}
+p{font-size:clamp(17px,2vw,22px);line-height:1.45}
+.content{width:min(1100px,100%);margin:auto;text-align:center}
+.card{background:rgba(255,255,255,.94);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+.story{font-size:clamp(20px,2.5vw,28px);font-weight:700}
+.park-scene{display:flex;justify-content:center;align-items:end;gap:18px;margin:16px auto}
+.tree{font-size:64px}
+.path{height:20px;border-radius:50%;background:#e6c99c;max-width:700px;margin:10px auto}
+.park-options{display:flex;justify-content:center;gap:25px;flex-wrap:wrap}
+.park{border:4px solid transparent;background:#fff;border-radius:22px;padding:18px 35px;min-width:190px;box-shadow:var(--shadow);font-weight:800;font-size:22px;transition:.2s}
+.park:hover,.choice:hover{transform:translateY(-3px)}
+.park.selected,.choice.selected{border-color:var(--blue);background:#eaf8ff}
+.correct{border-color:var(--good)!important;background:#eaf8ef!important}
+.incorrect{border-color:var(--bad)!important;background:#fff0ed!important}
+.feedback{min-height:35px;margin:12px auto;font-size:19px;font-weight:800}
+.good{color:var(--good)}.bad{color:var(--bad)}
+.numberline{margin:20px auto;max-width:900px}
+.nl-labels{display:flex;justify-content:space-between;font-weight:900;font-size:22px}
+.nl-track{height:12px;background:var(--green);border-radius:20px;position:relative;margin:10px 10px 5px}
+.nl-ticks{display:flex;justify-content:space-between}
+.tick{width:26px;text-align:center;font-weight:800}
+.marker{font-size:30px;position:absolute;top:-35px;transform:translateX(-50%);transition:left .35s}
+.distance{display:flex;justify-content:space-between;font-weight:700;margin-top:5px}
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:20px auto;max-width:800px}
+.rule{padding:25px;border-radius:20px;background:#fff;box-shadow:var(--shadow);font-size:22px;font-weight:800}
+.down{border:4px solid var(--blue)}.up{border:4px solid var(--yellow)}
+.table{width:min(800px,100%);margin:auto;border-collapse:collapse;background:white;border-radius:15px;overflow:hidden;box-shadow:var(--shadow)}
+.table th,.table td{padding:13px;border-bottom:1px solid #dbe8e2;font-size:18px}
+.table th{background:#e5f5eb}.table tr:hover{background:#f3fbf6;cursor:pointer}
+.question{font-size:28px;font-weight:800;margin:14px}
+.choices{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.choice{padding:15px 28px;border:3px solid #bdd5ca;border-radius:16px;background:white;font-size:23px;font-weight:800;min-width:120px}
+input.answer{width:150px;padding:12px;border:3px solid #aac8ba;border-radius:13px;text-align:center;font-size:25px;font-weight:800}
+button.action{border:0;border-radius:14px;padding:12px 20px;background:var(--green);color:white;font-weight:800;box-shadow:0 5px 12px rgba(0,0,0,.1)}
+button.secondary{background:white;color:var(--dark);border:2px solid #b7cec3}
+button.warning{background:var(--coral)}
+button:focus,input:focus{outline:4px solid #ffd95a;outline-offset:3px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);display:flex;justify-content:center;gap:10px;padding:10px;box-shadow:0 -5px 20px rgba(0,0,0,.08);z-index:20}
+.nav button{min-width:105px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;max-height:55vh;overflow:auto;margin:20px auto}
+.menu button{padding:11px;border:2px solid #c7ddd2;border-radius:12px;background:white;font-weight:700}
+.menu button.done{background:#e8f7ed;border-color:var(--green)}
+.tip{font-size:16px;color:var(--muted);margin-top:12px}
+.hidden{display:none!important}
+.teacher{position:fixed;right:12px;top:65px;background:white;border-radius:15px;padding:14px;box-shadow:var(--shadow);max-width:330px;z-index:30;font-size:14px}
+.teacher strong{color:var(--dark)}
+.slider{width:min(700px,90%);accent-color:var(--green)}
+.drag-number{font-size:26px;font-weight:900;margin:10px}
+.draggable{font-size:50px;cursor:grab;user-select:none}
+.final-score{font-size:48px;font-weight:900;color:var(--green)}
+.celebrate{font-size:60px}
+@media(max-width:700px){
+ .slide{padding:12px 15px 80px}
+ .rule-grid{grid-template-columns:1fr}
+ .park-options{gap:10px}
+ .park{min-width:145px;padding:14px}
+ .nav button{min-width:auto;padding:10px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div class="nav">
+  <button class="action" onclick="prevSlide()">← Previous</button>
+  <button class="action secondary" onclick="showMenu()">☰ Home</button>
+  <button class="action" onclick="nextSlide()">Next →</button>
+  <button class="action secondary" onclick="toggleTeacher()">Teacher</button>
+</div>
+
+<div id="teacherPanel" class="teacher hidden">
+  <strong>Teacher Panel</strong>
+  <p id="teacherText">Use the prompt shown on the current slide.</p>
+  <button class="action" onclick="revealCurrent()">Reveal Answer</button>
+  <button class="action secondary" onclick="toggleTeacher()">Hide</button>
+</div>
+
+<script>
+const slides = [
+{title:"Mom’s Park Challenge 🌳",type:"park",story:"Your mom says: “You can go and play at the nearby park. Choose the park that is nearest to our house!”",num:47,a:40,b:50,answer:50,teacher:"Ask: Which park is nearest to 47 m?"},
+{title:"Let’s Find the Nearest Park",type:"line",num:47,a:40,b:50,answer:50,teacher:"Ask which park the student would reach first."},
+{title:"What Does Nearest Mean?",type:"explain",teacher:"Emphasise that nearest means closest."},
+{title:"The Number Line Becomes Our Road",type:"line",num:47,a:40,b:50,answer:50,teacher:"Ask: Are you closer to 40 or 50?"},
+{title:"A New Park Visit",type:"line",num:43,a:40,b:50,answer:40,teacher:"Ask students to compare 3 m and 7 m."},
+{title:"The Park in the Middle",type:"line",num:45,a:40,b:50,answer:50,teacher:"Both are 5 m away. The rounding rule chooses 50."},
+{title:"Let’s Discover the Rule",type:"table",teacher:"Ask students what changes at the ones digit 5."},
+{title:"The Park Rule",type:"rules",teacher:"Use the memory sentence: 0–4 go back; 5–9 go forward."},
+{title:"Interactive Park Challenge",type:"park",num:26,a:20,b:30,answer:30,teacher:"26 is closer to 30."},
+{title:"Your Turn",type:"drag",num:64,a:60,b:70,answer:60,teacher:"Let students move the character to 64 and choose 60."},
+{title:"A Park Adventure with 97",type:"line",num:97,a:90,b:100,answer:100,teacher:"97 is only 3 m from 100."},
+{title:"Connect the Story to Mathematics",type:"explain2",teacher:"Stress that rounding gives an estimate and does not change actual distance."},
+{title:"Practice: Choose the Nearest Park",type:"multi",questions:[[32,30],[58,60],[75,80],[91,90]],teacher:"Four practice questions. Track score."},
+{title:"Final Challenge",type:"builder",num:87,a:80,b:90,answer:90,teacher:"Ask students to explain using the ones digit."},
+{title:"Exit Ticket",type:"fillmulti",questions:[[24,20],[35,40],[42,40],[67,70],[89,90]],teacher:"Students complete all five."},
+{title:"The Park in the Middle 🌳",type:"line",num:45,a:40,b:50,answer:45,teacher:"Both parks are equally near."},
+{title:"What Happens When We Are Exactly in the Middle?",type:"middle",num:45,a:40,b:50,answer:50,teacher:"45 is halfway between 40 and 50. Round up."},
+{title:"Let’s Try Another Middle Number",type:"line",num:25,a:20,b:30,answer:30,teacher:"25 rounds to 30."},
+{title:"The Middle Number Rule",type:"middleTable",teacher:"Every number ending in 5 rounds to the next ten."},
+{title:"Interactive: Choose the Park",type:"park",num:35,a:30,b:40,answer:40,teacher:"Both are 5 m away, but rounding chooses 40."},
+{title:"What If the Number Is Just Before the Middle?",type:"line",num:44,a:40,b:50,answer:40,teacher:"44 is not exactly in the middle; it is just before 45."},
+{title:"What If the Number Is Just After the Middle?",type:"line",num:46,a:40,b:50,answer:50,teacher:"45 is the middle. Numbers above it round up."},
+{title:"The Rounding Bridge",type:"bridge",teacher:"Click numbers on the number line and see their destination."},
+{title:"Interactive Practice: The Nearest Park",type:"multi",questions:[[65,70],[75,80],[85,90],[95,100]],teacher:"Every answer ends in 0 after rounding."},
+{title:"Can You Explain Your Choice?",type:"input",num:45,answer:"up",teacher:"45 is exactly halfway. When a number ends in 5, round up."},
+{title:"Challenge: Find the Middle",type:"input",num:75,answer:75,teacher:"75 is exactly halfway between 70 and 80. Then 75 rounds to 80."},
+{title:"Final Challenge: The Park Map",type:"builder",num:87,a:80,b:90,answer:90,teacher:"87 is 7 m from 80 and 3 m from 90."},
+{title:"Exit Ticket",type:"fillmulti",questions:[[45,50],[55,60],[65,70],[75,80],[85,90]],teacher:"Final reminder: when exactly in the middle, round up."}
+];
+
+let current=0,score=0,attempted=0,done=new Set(),teacherVisible=false;
+
+function app(){
+  const root=document.getElementById("app");
+  root.innerHTML=slides.map((s,i)=>`
+  <section class="slide ${i===0?'active':''}" id="slide${i}">
+    <div class="topbar">
+      <div class="brand">🌳 NEAREST PARK CHALLENGE</div>
+      <div class="progress-wrap"><div class="progress" id="progress${i}"></div></div>
+      <div class="counter">Slide ${i+1} of ${slides.length}</div>
+    </div>
+    <div class="content" id="content${i}"></div>
+  </section>`).join("");
+  slides.forEach((s,i)=>renderSlide(i,s));
+  update();
+}
+
+function renderSlide(i,s){
+  const c=document.getElementById("content"+i);
+  let html=`<h1>${s.title}</h1>`;
+  if(s.type==="park") html+=parkHTML(i,s);
+  else if(s.type==="line") html+=lineHTML(i,s);
+  else if(s.type==="explain") html+=explainHTML();
+  else if(s.type==="explain2") html+=explain2HTML();
+  else if(s.type==="rules") html+=rulesHTML();
+  else if(s.type==="table") html+=tableHTML();
+  else if(s.type==="drag") html+=dragHTML(i,s);
+  else if(s.type==="multi") html+=multiHTML(i,s);
+  else if(s.type==="builder") html+=builderHTML(i,s);
+  else if(s.type==="fillmulti") html+=fillMultiHTML(i,s);
+  else if(s.type==="middle") html+=middleHTML(i,s);
+  else if(s.type==="middleTable") html+=middleTableHTML();
+  else if(s.type==="bridge") html+=bridgeHTML(i);
+  else if(s.type==="input") html+=inputHTML(i,s);
+  if(i===27) html+=finalHTML();
+  c.innerHTML=html;
+}
+
+function parkHTML(i,s){
+ return `<div class="card">
+ <p class="story">${s.story||`You are at <b>${s.num} m</b>. Which park is nearest?`}</p>
+ <div class="park-scene"><span class="tree">🌳</span><span class="path"></span><span class="tree">🌳</span></div>
+ <div class="park-options">
+  <button class="park" onclick="choosePark(${i},${s.a},${s.answer},this)">🌳 Park A<br><b>${s.a} m</b></button>
+  <button class="park" onclick="choosePark(${i},${s.b},${s.answer},this)">🌳 Park B<br><b>${s.b} m</b></button>
+ </div>
+ <div id="fb${i}" class="feedback"></div>
+ <button class="action secondary" onclick="resetSlide(${i})">Reset</button>
+ </div>
+ ${numberLineStatic(s.num,s.a,s.b)}`;
+}
+
+function lineHTML(i,s){
+ return `<div class="card">
+ <p class="story">You are at <b>${s.num} m</b>.</p>
+ ${numberLineStatic(s.num,s.a,s.b)}
+ <p>🌳 Park A: <b>${s.a} m</b> &nbsp;&nbsp; 🌳 Park B: <b>${s.b} m</b></p>
+ <div class="choices">
+  <button class="choice" onclick="lineChoice(${i},${s.a},${s.answer},this)">${s.a} m</button>
+  <button class="choice" onclick="lineChoice(${i},${s.b},${s.answer},this)">${s.b} m</button>
+ </div>
+ <div id="fb${i}" class="feedback"></div>
+ </div>`;
+}
+
+function numberLineStatic(num,a,b){
+ const pct=(num-a)/(b-a)*100;
+ let ticks="";
+ for(let n=a;n<=b;n++) ticks+=`<span class="tick">${n}</span>`;
+ return `<div class="numberline">
+ <div class="nl-labels"><span>${a} m</span><span>${b} m</span></div>
+ <div class="nl-track"><span class="marker" style="left:${Math.max(0,Math.min(100,pct))}%">📍</span></div>
+ <div class="nl-ticks">${ticks}</div>
+ <div class="distance"><span>${num-a} metres away</span><span>${b-num} metres away</span></div>
+ </div>`;
+}
+
+function explainHTML(){
+ return `<div class="card">
+ <p class="story">Nearest means <b>closest</b>.</p>
+ <p>When we round a number to the nearest 10, we find the closest multiple of 10.</p>
+ ${numberLineStatic(47,40,50)}
+ <div class="rule-grid"><div class="rule down">40 is a multiple of 10</div><div class="rule up">50 is a multiple of 10</div></div>
+ <h2>47 → 50</h2>
+ <p class="tip">47 is closer to 50 than 40.</p>
+ </div>`;
+}
+
+function explain2HTML(){
+ return `<div class="card">
+ <div class="rule-grid">
+  <div class="rule down">BEFORE<br>47 metres</div>
+  <div class="rule up">AFTER<br>approximately 50 metres</div>
+ </div>
+ <h2>Rounding gives us an estimate.</h2>
+ <p>It does <b>not</b> change the actual distance you walked.</p>
+ <p class="story">“47 metres is approximately 50 metres.”</p>
+ </div>`;
+}
+
+function rulesHTML(){
+ return `<div class="card">
+ <div class="rule-grid">
+  <div class="rule down">🔵 ONES DIGIT 0–4<br><br>Round DOWN<br><small>Move to the previous ten.</small></div>
+  <div class="rule up">🟡 ONES DIGIT 5–9<br><br>Round UP<br><small>Move to the next ten.</small></div>
+ </div>
+ <h2>Memory sentence</h2>
+ <p class="story">“0–4, go back to the previous ten.<br>5–9, go forward to the next ten.”</p>
+ </div>`;
+}
+
+function tableHTML(){
+ const rows=[[42,40],[43,40],[44,40],[45,50],[46,50],[47,50],[48,50],[49,50]];
+ return `<div class="card">
+ <table class="table"><tr><th>Distance</th><th>Nearest park</th><th>Rounded number</th></tr>
+ ${rows.map(r=>`<tr onclick="this.classList.toggle('correct')"><td>${r[0]} m</td><td>${r[1]} m</td><td><b>${r[1]}</b></td></tr>`).join("")}</table>
+ <p class="question">What do you notice?</p>
+ <button class="action" onclick="document.getElementById('tableReveal').classList.toggle('hidden')">Reveal</button>
+ <p id="tableReveal" class="story hidden">0–4 round down. 5–9 round up.</p>
+ </div>`;
+}
+
+function dragHTML(i,s){
+ return `<div class="card">
+ <p class="story">Drag the walking character to <b>${s.num}</b>.</p>
+ <input id="drag${i}" class="slider" type="range" min="${s.a}" max="${s.b}" value="${s.a}" oninput="dragUpdate(${i},this.value)">
+ <div class="drag-number" id="dragValue${i}">${s.a}</div>
+ <div class="draggable">🚶</div>
+ <div class="choices">
+  <button class="choice" onclick="lineChoice(${i},${s.a},${s.answer},this)">${s.a}</button>
+  <button class="choice" onclick="lineChoice(${i},${s.b},${s.answer},this)">${s.b}</button>
+ </div>
+ <div id="fb${i}" class="feedback"></div>
+ <button class="action secondary" onclick="resetSlide(${i})">Reset</button>
+ </div>
+ ${numberLineStatic(s.num,s.a,s.b)}`;
+}
+
+function multiHTML(i,s){
+ return `<div class="card"><div id="multi${i}"></div></div>`;
+}
+
+function renderMulti(i,s){
+ const qs=s.questions;
+ const q=qs[Math.min(window["q"+i]||0,qs.length-1)];
+ const qi=window["q"+i]||0;
+ document.getElementById("multi"+i).innerHTML=`
+ <div class="question">Question ${qi+1} of ${qs.length}</div>
+ <p class="story">You are at <b>${q[0]} m</b>.</p>
+ <p>Choose the nearest ten.</p>
+ <div class="choices">
+ <button class="choice" onclick="multiAnswer(${i},${q[1]},this)">${Math.floor(q[0]/10)*10} m</button>
+ <button class="choice" onclick="multiAnswer(${i},${q[1]},this)">${Math.ceil(q[0]/10)*10} m</button>
+ </div>
+ <div id="mfb${i}" class="feedback"></div>
+ <p>Score: <b>${score}</b></p>
+ <button class="action secondary" onclick="resetSlide(${i})">Reset</button>`;
+}
+
+function builderHTML(i,s){
+ return `<div class="card">
+ <p class="story">You are at <b>${s.num} m</b>.</p>
+ ${numberLineStatic(s.num,s.a,s.b)}
+ <p>1. Find the nearest park.<br>2. Round ${s.num} to the nearest 10.<br>3. Explain why.</p>
+ <div class="choices">
+ <button class="choice" onclick="builderAnswer(${i},${s.a},${s.answer},this)">${s.a} m</button>
+ <button class="choice" onclick="builderAnswer(${i},${s.b},${s.answer},this)">${s.b} m</button>
+ </div>
+ <div id="fb${i}" class="feedback"></div>
+ <button class="action" onclick="document.getElementById('why'+i).classList.toggle('hidden')">Reveal explanation</button>
+ <p id="why${i}" class="hidden">The ones digit is ${s.num%10}. ${s.num%10<5?'It is closer to the previous ten.':'It is closer to the next ten.'}</p>
+ </div>`;
+}
+
+function fillMultiHTML(i,s){
+ return `<div class="card"><p class="story">Round each number to the nearest 10.</p>
+ <div id="fill${i}"></div><button class="action" onclick="checkFill(${i})">Check Answers</button>
+ <button class="action secondary" onclick="resetSlide(${i})">Reset</button>
+ <div id="fillfb${i}" class="feedback"></div></div>`;
+}
+
+function renderFill(i,s){
+ document.getElementById("fill"+i).innerHTML=s.questions.map((q,n)=>
+ `<div style="margin:12px;font-size:22px;font-weight:800">${q[0]} → <input class="answer" id="f${i}_${n}" inputmode="numeric"></div>`).join("");
+}
+
+function middleHTML(){
+ return `<div class="card">
+ <p class="story">When a number is exactly halfway between two tens, we round <b>UP</b>.</p>
+ ${numberLineStatic(45,40,50)}
+ <h2>45 is halfway between 40 and 50.</h2>
+ <div class="rule up">45 → 50</div>
+ <p>Imagine you are standing exactly in the middle. Our rounding rule chooses the park ahead.</p>
+ </div>`;
+}
+
+function middleTableHTML(){
+ const rows=[[15,10,20,20],[25,20,30,30],[35,30,40,40],[45,40,50,50],[55,50,60,60]];
+ return `<div class="card">
+ <table class="table"><tr><th>Number</th><th>Between</th><th>Rounded answer</th></tr>
+ ${rows.map(r=>`<tr onclick="this.classList.toggle('correct')"><td>${r[0]}</td><td>${r[1]} and ${r[2]}</td><td><b>${r[3]}</b></td></tr>`).join("")}</table>
+ <p class="story">Every number ending in 5 rounds up to the next ten.</p>
+ </div>`;
+}
+
+function bridgeHTML(i){
+ return `<div class="card">
+ <p class="story">Click a number on the rounding bridge.</p>
+ <div class="numberline">
+ <div class="nl-labels"><span>40</span><span>50</span></div>
+ <div class="nl-track"></div>
+ <div class="nl-ticks">${[40,41,42,43,44,45,46,47,48,49,50].map(n=>
+ `<button class="choice" style="min-width:50px;padding:8px" onclick="bridgeChoice(${i},${n},this)">${n}</button>`).join("")}</div>
+ </div>
+ <div id="fb${i}" class="feedback"></div>
+ <div class="rule-grid"><div class="rule down">41, 42, 43, 44 → 40</div><div class="rule up">45 → 50<br>46, 47, 48, 49 → 50</div></div>
+ </div>`;
+}
+
+function inputHTML(i,s){
+ if(i===25)return `<div class="card">
+ <p class="story">Which number is exactly halfway between 70 and 80?</p>
+ <div class="choices">${[74,75,76].map(n=>`<button class="choice" onclick="inputChoice(${i},${n},75,this)">${n}</button>`).join("")}</div>
+ <div id="fb${i}" class="feedback"></div>
+ <p id="follow${i}" class="hidden story">Now round 75 to the nearest 10: <b>75 → 80</b></p>
+ </div>`;
+ return `<div class="card">
+ <p class="story">You are at 45 m and choose the park at 50 m. Why?</p>
+ <p>“45 is exactly halfway between 40 and 50. When a number ends in 5, we round ____.”</p>
+ <input class="answer" id="input${i}" placeholder="word">
+ <button class="action" onclick="checkInput(${i})">Check</button>
+ <div id="fb${i}" class="feedback"></div>
+ </div>`;
+}
+
+function finalHTML(){
+ return `<div class="card" style="margin-top:20px">
+ <div class="celebrate">🌳 🎉 🏆 🎉 🌳</div>
+ <div class="final-score" id="finalScore">Score: ${score}</div>
+ <p>Completed slides: <b>${done.size} / ${slides.length}</b></p>
+ <div class="rule-grid">
+  <div class="rule down">0, 1, 2, 3, 4 → ROUND DOWN</div>
+  <div class="rule up">5, 6, 7, 8, 9 → ROUND UP</div>
+ </div>
+ <p class="story">When we are exactly in the middle, we round up!</p>
+ <button class="action" onclick="restart()">▶ Play Again</button>
+ <button class="action secondary" onclick="goTo(22)">Review the Number Line</button>
+ </div>`;
+}
+
+function choosePark(i,value,answer,el){
+ document.querySelectorAll(`#slide${i} .park`).forEach(x=>x.classList.remove("selected","correct","incorrect"));
+ el.classList.add("selected");
+ const fb=document.getElementById("fb"+i);
+ if(value===answer){el.classList.add("correct");fb.innerHTML=`<span class="good">✓ Correct! ${value} m is the nearest park.</span>`;mark(i,true);}
+ else{el.classList.add("incorrect");fb.innerHTML=`<span class="bad">Try again. Compare the distances from ${slides[i].num} m.</span>`;}
+}
+
+function lineChoice(i,value,answer,el){
+ document.querySelectorAll(`#slide${i} .choice`).forEach(x=>x.classList.remove("selected","correct","incorrect"));
+ el.classList.add("selected");
+ const fb=document.getElementById("fb"+i);
+ if(value===answer){el.classList.add("correct");fb.innerHTML=`<span class="good">✓ Correct!</span>`;mark(i,true);}
+ else{el.classList.add("incorrect");fb.innerHTML=`<span class="bad">Not quite. Look at the distances on the number line.</span>`;}
+}
+
+function builderAnswer(i,value,answer,el){
+ lineChoice(i,value,answer,el);
+ if(value===answer) document.getElementById("why"+i)?.classList.remove("hidden");
+}
+
+function multiAnswer(i,answer,el){
+ const s=slides[i], qi=window["q"+i]||0, q=s.questions[qi];
+ const value=Number(el.textContent.replace(" m",""));
+ const fb=document.getElementById("mfb"+i);
+ document.querySelectorAll(`#multi${i} .choice`).forEach(x=>x.classList.remove("correct","incorrect"));
+ if(value===answer){
+  el.classList.add("correct");fb.innerHTML=`<span class="good">✓ Correct! ${q[0]} → ${answer}</span>`;
+  if(!window["answered"+i+qi]){score++;window["answered"+i+qi]=true;}
+  setTimeout(()=>{window["q"+i]=qi+1;if(qi+1<s.questions.length)renderMulti(i,s);else{mark(i,true);document.getElementById("multi"+i).innerHTML=`<h2>🎉 Practice complete!</h2><p class="final-score">Score: ${score}</p>`;}},500);
+ }else{el.classList.add("incorrect");fb.innerHTML=`<span class="bad">Try again!</span>`;}
+}
+
+function checkFill(i){
+ const s=slides[i],inputs=s.questions.map((q,n)=>Number(document.getElementById(`f${i}_${n}`).value));
+ const ok=inputs.every((v,n)=>v===s.questions[n][1]);
+ const fb=document.getElementById("fillfb"+i);
+ if(ok){fb.innerHTML='<span class="good">✓ Fantastic! All answers are correct.</span>';score+=s.questions.length;mark(i,true);}
+ else fb.innerHTML='<span class="bad">Some answers need another look. Remember 0–4 down and 5–9 up.</span>';
+}
+
+function checkInput(i){
+ const v=document.getElementById("input"+i).value.trim().toLowerCase();
+ const fb=document.getElementById("fb"+i);
+ if(v==="up"){fb.innerHTML='<span class="good">✓ Correct! We round UP.</span>';mark(i,true);}
+ else fb.innerHTML='<span class="bad">Try again. What is our rule for a ones digit of 5?</span>';
+}
+
+function inputChoice(i,v,a,el){
+ if(v===a){el.classList.add("correct");document.getElementById("fb"+i).innerHTML='<span class="good">✓ Correct! 75 is halfway between 70 and 80.</span>';document.getElementById("follow"+i).classList.remove("hidden");mark(i,true);}
+ else{el.classList.add("incorrect");document.getElementById("fb"+i).innerHTML='<span class="bad">Not quite. Halfway means equal distances.</span>';}
+}
+
+function bridgeChoice(i,n,el){
+ const rounded=n%10<5?n-n%10:n+(10-n%10);
+ document.querySelectorAll(`#slide${i} .choice`).forEach(x=>x.classList.remove("correct","incorrect"));
+ el.classList.add("correct");
+ document.getElementById("fb"+i).innerHTML=`<span class="good">${n} → ${rounded}</span>`;
+ mark(i,true);
+}
+
+function dragUpdate(i,v){document.getElementById("dragValue"+i).textContent=v;}
+
+function mark(i,correct){
+ done.add(i);
+ if(correct && slides[i].type!=="multi" && slides[i].type!=="fillmulti" && !window["marked"+i]){
+   score++;window["marked"+i]=true;
+ }
+ update();
+}
+
+function resetSlide(i){
+ window["q"+i]=0;
+ window["marked"+i]=false;
+ slides[i].type==="multi"?renderMulti(i,slides[i]):
+ slides[i].type==="fillmulti"?renderFill(i,slides[i]):renderSlide(i,slides[i]);
+}
+function revealCurrent(){
+ const s=slides[current];
+ const p=document.getElementById("teacherText");
+ p.textContent=teacherAnswer(s);
+}
+function teacherAnswer(s){
+ if(s.type==="park"||s.type==="line"||s.type==="drag"||s.type==="builder") return `Answer: ${s.answer} m.`;
+ if(s.type==="multi"||s.type==="fillmulti") return "Use the answers supplied in the activity data.";
+ if(s.type==="input") return s.answer===75?"75; then 75 rounds to 80.":"Up.";
+ return s.teacher||"Review the key rounding rule.";
+}
+function toggleTeacher(){
+ teacherVisible=!teacherVisible;
+ document.getElementById("teacherPanel").classList.toggle("hidden",!teacherVisible);
+ if(teacherVisible)revealCurrent();
+}
+function update(){
+ slides.forEach((_,i)=>document.getElementById("progress"+i).style.width=((current+1)/slides.length*100)+"%");
+ document.querySelectorAll(".slide").forEach((x,i)=>x.classList.toggle("active",i===current));
+ if(slides[current].type==="multi" && !document.getElementById("multi"+current).innerHTML)renderMulti(current,slides[current]);
+ if(slides[current].type==="fillmulti" && !document.getElementById("fill"+current).innerHTML)renderFill(current,slides[current]);
+ document.getElementById("finalScore")?.replaceChildren(document.createTextNode(`Score: ${score}`));
+}
+function nextSlide(){if(current<slides.length-1){current++;update();}}
+function prevSlide(){if(current>0){current--;update();}}
+function goTo(i){current=Math.max(0,Math.min(slides.length-1,i));update();}
+function restart(){score=0;done.clear();Object.keys(window).filter(k=>k.startsWith("marked")||k.startsWith("answered")||k.startsWith("q")).forEach(k=>delete window[k]);current=0;slides.forEach((s,i)=>renderSlide(i,s));update();}
+function showMenu(){
+ const menu=document.createElement("div");
+ menu.className="slide active";
+ menu.innerHTML=`<div class="topbar"><div class="brand">🌳 PARK CHALLENGE</div><div class="counter">Slide Menu</div></div>
+ <div class="content"><h1>Choose a Slide</h1><p>Jump anywhere in the lesson.</p>
+ <div class="menu">${slides.map((s,i)=>`<button class="${done.has(i)?'done':''}" onclick="closeMenu(${i})">${i+1}. ${s.title}</button>`).join("")}</div></div>`;
+ document.getElementById("app").appendChild(menu);
+}
+function closeMenu(i){document.querySelectorAll("#app > .slide").forEach((x,n)=>{if(n>=slides.length)x.remove()});goTo(i);}
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowRight")nextSlide();
+ if(e.key==="ArrowLeft")prevSlide();
+ if(e.key==="Home")goTo(0);
+ if(e.key==="End")goTo(slides.length-1);
+ if(/^[1-9]$/.test(e.key))goTo(Number(e.key)-1);
+});
+
+app();
+</script>
+</body>
+</html>
