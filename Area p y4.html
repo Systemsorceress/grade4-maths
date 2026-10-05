@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry — Kilometres & Metres Adventure</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root{
+    --cheese:#FFCC00;
+    --tom:#5C6B73;
+    --jerry:#8D5524;
+    --sky:#62C6F2;
+    --skyLight:#EAF8FF;
+    --green:#43A047;
+    --greenLight:#DFF5E1;
+    --red:#E53935;
+    --redLight:#FFE1E1;
+    --white:#fff;
+    --cream:#FFFBEA;
+    --black:#000;
+    --shadow:6px 6px 0 #000;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:
+        radial-gradient(circle at 5% 10%,rgba(255,204,0,.3) 0 8px,transparent 9px),
+        radial-gradient(circle at 94% 20%,rgba(98,198,242,.25) 0 8px,transparent 9px),
+        linear-gradient(135deg,#FFFBEA,#EFFAFF);
+    color:#171717;
+    font-family:"Fredoka","Comic Neue",sans-serif;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--cheese);
+    border-bottom:4px solid #000;
+    box-shadow:0 4px 0 rgba(0,0,0,.2);
+}
+
+.header-inner{
+    max-width:1250px;
+    margin:auto;
+    padding:12px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo{
+    width:58px;
+    height:58px;
+    border:4px solid #000;
+    border-radius:50%;
+    background:var(--tom);
+    position:relative;
+    box-shadow:4px 4px 0 #000;
+}
+
+.logo:before,
+.logo:after{
+    content:"";
+    position:absolute;
+    width:27px;
+    height:27px;
+    border:4px solid #000;
+    border-radius:50%;
+    background:#91A0A8;
+    top:-16px;
+}
+
+.logo:before{
+    left:-8px;
+}
+
+.logo:after{
+    right:-8px;
+}
+
+.logo-eye{
+    width:8px;
+    height:11px;
+    background:#000;
+    border-radius:50%;
+    position:absolute;
+    top:23px;
+}
+
+.logo-eye.one{
+    left:15px;
+}
+
+.logo-eye.two{
+    right:15px;
+}
+
+.brand h1{
+    margin:0;
+    font-size:29px;
+}
+
+.brand p{
+    margin:3px 0 0;
+    font-family:"Comic Neue",sans-serif;
+    font-weight:700;
+}
+
+.header-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.score{
+    background:#fff;
+    border:3px solid #000;
+    border-radius:14px;
+    padding:6px 14px;
+    text-align:center;
+    min-width:115px;
+    box-shadow:4px 4px 0 #000;
+}
+
+.score small{
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    font-weight:700;
+}
+
+.score strong{
+    display:block;
+    font-size:23px;
+    color:var(--jerry);
+}
+
+.btn{
+    border:3px solid #000;
+    border-radius:12px;
+    padding:9px 15px;
+    background:var(--cheese);
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:4px 4px 0 #000;
+    transition:.15s;
+}
+
+.btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:6px 6px 0 #000;
+}
+
+.btn:active{
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 #000;
+}
+
+.btn.blue{
+    background:var(--sky);
+}
+
+.btn.red{
+    background:#FF8A8A;
+}
+
+/* ================= MAIN ================= */
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:28px 18px 70px;
+}
+
+.hero{
+    background:#fff;
+    border:4px solid #000;
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:25px;
+    margin-bottom:32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+}
+
+.hero h2{
+    margin:0;
+    font-size:38px;
+    color:var(--tom);
+}
+
+.hero p{
+    margin:8px 0 0;
+    font-family:"Comic Neue",sans-serif;
+    font-size:19px;
+    font-weight:700;
+}
+
+.cheese{
+    width:145px;
+    height:95px;
+    flex-shrink:0;
+    background:var(--cheese);
+    border:5px solid #000;
+    border-radius:22px 40px 27px 30px;
+    transform:rotate(-6deg);
+    position:relative;
+}
+
+.cheese-hole{
+    position:absolute;
+    background:#DCA900;
+    border:3px solid #000;
+    border-radius:50%;
+}
+
+.h1{
+    width:20px;
+    height:20px;
+    top:17px;
+    left:25px;
+}
+
+.h2{
+    width:14px;
+    height:14px;
+    top:27px;
+    right:23px;
+}
+
+.h3{
+    width:25px;
+    height:25px;
+    bottom:11px;
+    left:62px;
+}
+
+/* ================= SECTION ================= */
+
+.section{
+    margin-bottom:38px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.section-number{
+    width:50px;
+    height:50px;
+    display:grid;
+    place-items:center;
+    border:4px solid #000;
+    border-radius:50%;
+    background:var(--cheese);
+    box-shadow:3px 3px 0 #000;
+    font-size:23px;
+    font-weight:700;
+}
+
+.section-title h2{
+    margin:0;
+    font-size:29px;
+}
+
+/* ================= CARDS ================= */
+
+.card{
+    background:#fff;
+    border:4px solid #000;
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:22px;
+    margin-bottom:28px;
+}
+
+.card h3{
+    margin:0 0 8px;
+    color:var(--jerry);
+    font-size:24px;
+}
+
+.intro{
+    font-family:"Comic Neue",sans-serif;
+    font-size:18px;
+    font-weight:700;
+}
+
+.instructions{
+    margin:15px 0;
+    padding:13px 16px;
+    border:3px dashed #000;
+    border-radius:13px;
+    background:#FFF4B2;
+}
+
+.question{
+    background:#FAFAFA;
+    border:3px solid #000;
+    border-radius:13px;
+    padding:14px;
+    margin:11px 0;
+    font-size:19px;
+    line-height:2;
+}
+
+.answer{
+    width:82px;
+    height:40px;
+    border:3px solid #000;
+    border-radius:10px;
+    text-align:center;
+    background:#fff;
+    font-weight:700;
+    font-size:18px;
+    outline:none;
+    vertical-align:middle;
+}
+
+.answer:focus{
+    border-color:var(--sky);
+    box-shadow:0 0 0 3px rgba(98,198,242,.3);
+}
+
+.answer.correct{
+    border-color:#168A35;
+    background:var(--greenLight);
+}
+
+.answer.incorrect{
+    border-color:#D21F1F;
+    background:var(--redLight);
+}
+
+.feedback{
+    min-height:24px;
+    margin:12px 0;
+    font-weight:700;
+}
+
+.feedback.good{
+    color:#168A35;
+}
+
+.feedback.bad{
+    color:#D21F1F;
+}
+
+/* ================= SORTING ================= */
+
+.sort-instructions{
+    background:var(--skyLight);
+    border:3px dashed #000;
+    border-radius:13px;
+    padding:13px;
+    font-family:"Comic Neue",sans-serif;
+    font-weight:700;
+}
+
+.sort-layout{
+    display:grid;
+    grid-template-columns:1fr 1.5fr;
+    gap:20px;
+    margin-top:20px;
+}
+
+.card-bank{
+    background:#FFF8D2;
+    border:3px solid #000;
+    border-radius:14px;
+    padding:15px;
+    min-height:250px;
+}
+
+.card-bank h4,
+.sort-zone h4{
+    margin:0 0 12px;
+    font-size:20px;
+}
+
+.sort-card{
+    background:#fff;
+    border:3px solid #000;
+    border-radius:11px;
+    padding:9px 11px;
+    margin:8px 0;
+    cursor:grab;
+    box-shadow:3px 3px 0 #000;
+    font-weight:700;
+    font-family:"Comic Neue",sans-serif;
+    transition:.15s;
+}
+
+.sort-card:hover{
+    transform:translate(-2px,-2px);
+}
+
+.sort-card.dragging{
+    opacity:.5;
+}
+
+.sort-zones{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.sort-zone{
+    min-height:280px;
+    border:4px dashed #000;
+    border-radius:15px;
+    padding:15px;
+    background:#fff;
+}
+
+.sort-zone.km{
+    background:#E7F7FF;
+}
+
+.sort-zone.m{
+    background:#FFF7D7;
+}
+
+.sort-zone.over{
+    transform:scale(1.02);
+    background:#DFF5E1;
+}
+
+.sort-result{
+    margin-top:12px;
+    font-weight:700;
+}
+
+/* ================= UNIT SENTENCES ================= */
+
+.unit-line{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:7px;
+    line-height:2.4;
+    margin:13px 0;
+    font-family:"Comic Neue",sans-serif;
+    font-size:18px;
+    font-weight:700;
+}
+
+.short-input{
+    width:65px;
+}
+
+.medium-input{
+    width:82px;
+}
+
+/* ================= PART WHOLE ================= */
+
+.partwhole-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.diagram{
+    background:#F2FBFF;
+    border:3px solid #000;
+    border-radius:16px;
+    padding:20px;
+    min-height:270px;
+    position:relative;
+}
+
+.diagram-title{
+    font-weight:700;
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.partwhole{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.whole-node{
+    min-width:180px;
+    background:var(--cheese);
+    border:4px solid #000;
+    border-radius:50%;
+    padding:20px 14px;
+    text-align:center;
+    font-weight:700;
+}
+
+.branches{
+    width:75%;
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+    position:relative;
+}
+
+.branches:before{
+    content:"";
+    position:absolute;
+    left:25%;
+    right:25%;
+    top:0;
+    border-top:4px solid #000;
+}
+
+.branch{
+    position:relative;
+    margin-top:20px;
+    min-width:125px;
+    min-height:70px;
+    background:#fff;
+    border:4px solid #000;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+    text-align:center;
+    font-weight:700;
+}
+
+.branch-input{
+    width:105px;
+}
+
+/* ================= BAR MODELS ================= */
+
+.bar-model{
+    background:#FFF8D8;
+    border:3px solid #000;
+    border-radius:15px;
+    padding:18px;
+    margin:15px 0;
+}
+
+.bar{
+    height:62px;
+    border:4px solid #000;
+    display:flex;
+    border-radius:9px;
+    overflow:hidden;
+    background:#fff;
+}
+
+.bar.top{
+    justify-content:center;
+    align-items:center;
+    background:var(--cheese);
+    font-size:21px;
+    font-weight:700;
+}
+
+.bar.bottom .segment{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-right:4px solid #000;
+    font-weight:700;
+    font-size:18px;
+}
+
+.bar.bottom .segment:last-child{
+    border-right:0;
+}
+
+.segment.missing{
+    background:#EAF8FF;
+}
+
+/* ================= COMPARISON ================= */
+
+.choice-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin:18px 0;
+}
+
+.choice{
+    border:3px solid #000;
+    border-radius:12px;
+    padding:11px 18px;
+    background:#fff;
+    cursor:pointer;
+    font-weight:700;
+    box-shadow:3px 3px 0 #000;
+}
+
+.choice:hover{
+    transform:translate(-2px,-2px);
+}
+
+.choice.selected{
+    background:var(--sky);
+}
+
+.choice.correct{
+    background:var(--greenLight);
+    border-color:#168A35;
+}
+
+.choice.incorrect{
+    background:var(--redLight);
+    border-color:#D21F1F;
+}
+
+.comparison-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin:16px 0;
+    background:#F5FCFF;
+    border:3px solid #000;
+    border-radius:14px;
+    padding:18px;
+    font-size:20px;
+    font-weight:700;
+}
+
+.operator{
+    width:65px;
+    height:46px;
+    text-align:center;
+    border:3px solid #000;
+    border-radius:10px;
+    font-size:23px;
+    font-weight:700;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    z-index:1000;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:min(500px,100%);
+    background:#fff;
+    border:5px solid #000;
+    border-radius:23px;
+    padding:20px;
+    text-align:center;
+    box-shadow:10px 10px 0 #000;
+    position:relative;
+}
+
+.modal-card h2{
+    margin:0;
+    font-size:32px;
+}
+
+.modal-card img{
+    display:block;
+    width:100%;
+    max-width:350px;
+    height:220px;
+    object-fit:contain;
+    margin:15px auto;
+    border:3px solid #000;
+    border-radius:14px;
+    background:#eee;
+}
+
+.modal-card p{
+    font-size:18px;
+    font-weight:700;
+}
+
+.close-modal{
+    position:absolute;
+    right:10px;
+    top:10px;
+    width:38px;
+    height:38px;
+    border:3px solid #000;
+    border-radius:50%;
+    background:#FF8585;
+    font-weight:700;
+    font-size:20px;
+    cursor:pointer;
+}
+
+/* ================= FINISH ================= */
+
+.finish{
+    display:none;
+    background:var(--greenLight);
+    border:4px solid #000;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:var(--shadow);
+    text-align:center;
+}
+
+.finish h2{
+    margin:0;
+    font-size:32px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:850px){
+
+    .header-inner{
+        flex-wrap:wrap;
+    }
+
+    .header-controls{
+        width:100%;
+        justify-content:center;
+    }
+
+    .hero{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .sort-layout{
+        grid-template-columns:1fr;
+    }
+
+    .partwhole-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    main{
+        padding:18px 10px 50px;
+    }
+
+    .brand h1{
+        font-size:22px;
+    }
+
+    .brand p{
+        display:none;
+    }
+
+    .hero h2{
+        font-size:29px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .sort-zones{
+        grid-template-columns:1fr;
+    }
+
+    .question{
+        font-size:17px;
+    }
+
+    .comparison-row{
+        font-size:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header-inner">
+
+    <div class="brand">
+
+        <div class="logo">
+            <span class="logo-eye one"></span>
+            <span class="logo-eye two"></span>
+        </div>
+
+        <div>
+            <h1>Tom & Jerry Math Adventure!</h1>
+            <p>Kilometres • Metres • Part-Whole • Comparison</p>
+        </div>
+
+    </div>
+
+
+    <div class="header-controls">
+
+        <div class="score">
+            <small>Completed</small>
+            <strong id="scoreDisplay">0 / 8</strong>
+        </div>
+
+        <button class="btn blue" onclick="checkAll()">
+            ✓ Check Answers
+        </button>
+
+        <button class="btn red" onclick="resetAll()">
+            ↻ Reset All
+        </button>
+
+    </div>
+
+</div>
+
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div>
+
+        <h2>🧀 Kilometres & Metres Adventure!</h2>
+
+        <p>
+            Help Tom and Jerry choose the right units,
+            build part-whole models, and compare lengths!
+        </p>
+
+    </div>
+
+    <div class="cheese">
+        <div class="cheese-hole h1"></div>
+        <div class="cheese-hole h2"></div>
+        <div class="cheese-hole h3"></div>
+    </div>
+
+</section>
+
+
+<!-- ==========================================================
+     SECTION 1
+=========================================================== -->
+
+<section class="section">
+
+<div class="section-title">
+    <div class="section-number">1</div>
+    <h2>Sorting Units & Abbreviations</h2>
+</div>
+
+
+<!-- ACTIVITY 1 -->
+
+<div class="card activity" id="activity1">
+
+<h3>🚪 1. Sort the Lengths</h3>
+
+<p class="intro">
+    Drag each card into the correct box:
+    <strong>kilometres (km)</strong> or
+    <strong>metres (m)</strong>.
+</p>
+
+<div class="sort-instructions">
+    💡 Remember: kilometres are useful for very long distances.
+    Metres are useful for the lengths and heights of objects and places.
+</div>
+
+
+<div class="sort-layout">
+
+    <div class="card-bank"
+         id="cardBank">
+
+        <h4>🃏 Cards</h4>
+
+    </div>
+
+
+    <div class="sort-zones">
+
+        <div
+            class="sort-zone km"
+            data-unit="km"
+            ondragover="allowDrop(event)"
+            ondrop="dropCard(event)"
+            ondragenter="dragEnter(event)"
+            ondragleave="dragLeave(event)"
+        >
+
+            <h4>🌍 Kilometres (km)</h4>
+
+        </div>
+
+
+        <div
+            class="sort-zone m"
+            data-unit="m"
+            ondragover="allowDrop(event)"
+            ondrop="dropCard(event)"
+            ondragenter="dragEnter(event)"
+            ondragleave="dragLeave(event)"
+        >
+
+            <h4>📏 Metres (m)</h4>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div
+    id="sortResult"
+    class="sort-result"
+></div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity1')"
+>
+    🔎 Check Activity 1
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+
+<!-- ACTIVITY 2 -->
+
+<div class="card activity" id="activity2">
+
+<h3>🔤 2. Kilometres or Metres?</h3>
+
+<p class="intro">
+    Complete each sentence with the correct numbers and abbreviations.
+</p>
+
+
+<div class="question">
+
+    The distance from Rosie's house to school is
+    six kilometres and five hundred metres.
+
+    <div class="unit-line">
+
+        6
+
+        <input
+            class="answer short-input"
+            data-answer="km"
+            aria-label="Rosie kilometres abbreviation"
+        >
+
+        500
+
+        <input
+            class="answer short-input"
+            data-answer="m"
+            aria-label="Rosie metres abbreviation"
+        >
+
+    </div>
+
+</div>
+
+
+<div class="question">
+
+    Jack cycled a total of 8 kilometres and 150 metres to school.
+
+    <div class="unit-line">
+
+        Jack cycled a total of
+
+        <input
+            class="answer short-input"
+            data-answer="8"
+        >
+
+        <strong>km</strong>
+
+        <input
+            class="answer medium-input"
+            data-answer="150"
+        >
+
+        <strong>m</strong>
+
+        to school.
+
+    </div>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity2')"
+>
+    🔎 Check Activity 2
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+</section>
+
+
+<!-- ==========================================================
+     SECTION 2
+=========================================================== -->
+
+<section class="section">
+
+<div class="section-title">
+    <div class="section-number">2</div>
+    <h2>Part-Whole & Bar Models</h2>
+</div>
+
+
+<!-- ACTIVITY 3 -->
+
+<div class="card activity" id="activity3">
+
+<h3>⭕ 3. Part-Whole Circle Diagrams</h3>
+
+<p class="intro">
+    A whole length can be split into kilometres and metres.
+    Complete the missing parts.
+</p>
+
+
+<div class="partwhole-grid">
+
+    <!-- DIAGRAM 1 -->
+
+    <div class="diagram">
+
+        <div class="diagram-title">
+            Model 1
+        </div>
+
+        <div class="partwhole">
+
+            <div class="whole-node">
+                2 km 300 m
+            </div>
+
+            <div class="branches">
+
+                <div class="branch">
+                    2 km
+                </div>
+
+                <div class="branch">
+
+                    <input
+                        class="answer branch-input"
+                        data-answer="300 m"
+                        placeholder="?"
+                        aria-label="300 metres"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DIAGRAM 2 -->
+
+    <div class="diagram">
+
+        <div class="diagram-title">
+            Model 2
+        </div>
+
+        <div class="partwhole">
+
+            <div class="whole-node">
+
+                <input
+                    class="answer"
+                    style="width:155px"
+                    data-answer="6 km 400 m"
+                    placeholder="Whole?"
+                    aria-label="six kilometres four hundred metres"
+                >
+
+            </div>
+
+            <div class="branches">
+
+                <div class="branch">
+                    6 km
+                </div>
+
+                <div class="branch">
+                    400 m
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="instructions">
+
+    💡 You can also write the second whole as
+    <strong>6,400 m</strong>.
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity3')"
+>
+    🔎 Check Activity 3
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+
+<!-- ACTIVITY 4 -->
+
+<div class="card activity" id="activity4">
+
+<h3>📊 4. Bar Models</h3>
+
+<p class="intro">
+    Look at each bar model and find the missing part.
+</p>
+
+
+<!-- MODEL 1 -->
+
+<div class="bar-model">
+
+    <p>
+        <strong>Model 1</strong>
+    </p>
+
+    <div class="bar top">
+        3 km 300 m
+    </div>
+
+    <br>
+
+    <div class="bar bottom">
+
+        <div class="segment missing">
+
+            <input
+                class="answer"
+                data-answer="3"
+                placeholder="?"
+                aria-label="three kilometres"
+            >
+
+            <strong>&nbsp; km</strong>
+
+        </div>
+
+        <div class="segment">
+            300 m
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MODEL 2 -->
+
+<div class="bar-model">
+
+    <p>
+        <strong>Model 2</strong>
+    </p>
+
+    <div class="bar top">
+        1 km 280 m
+    </div>
+
+    <br>
+
+    <div class="bar bottom">
+
+        <div class="segment missing">
+
+            <input
+                class="answer"
+                data-answer="280"
+                placeholder="?"
+                aria-label="280 metres"
+            >
+
+            <strong>&nbsp; m</strong>
+
+        </div>
+
+        <div class="segment">
+            1 km
+        </div>
+
+    </div>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity4')"
+>
+    🔎 Check Activity 4
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+</section>
+
+
+<!-- ==========================================================
+     SECTION 3
+=========================================================== -->
+
+<section class="section">
+
+<div class="section-title">
+    <div class="section-number">3</div>
+    <h2>Metric Comparison Logic</h2>
+</div>
+
+
+<!-- ACTIVITY 5 -->
+
+<div class="card activity" id="activity5">
+
+<h3>⚖️ 5. Which Length Is Greater?</h3>
+
+<div class="question">
+
+    <strong>
+        Which is the greater length, 30 m or 3 km?
+    </strong>
+
+    <p>
+        How do you know?
+    </p>
+
+</div>
+
+
+<div class="instructions">
+
+    💡 Remember:
+    <strong>1 km = 1,000 m</strong>.
+</div>
+
+
+<div class="choice-grid" id="greaterChoices">
+
+    <button
+        class="choice"
+        data-answer="30 m"
+        onclick="selectChoice(this,'greaterChoices')"
+    >
+        30 m
+    </button>
+
+    <button
+        class="choice"
+        data-answer="3 km"
+        onclick="selectChoice(this,'greaterChoices')"
+    >
+        3 km
+    </button>
+
+</div>
+
+
+<input
+    type="hidden"
+    id="greaterAnswer"
+    data-answer="3 km"
+>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity5')"
+>
+    🔎 Check Activity 5
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+
+<!-- ACTIVITY 6 -->
+
+<div class="card activity" id="activity6">
+
+<h3>🔎 6. Compare the Lengths</h3>
+
+<p class="intro">
+    Work out both sides and choose
+    <strong>&lt;</strong>,
+    <strong>&gt;</strong>,
+    or
+    <strong>=</strong>.
+</p>
+
+
+<div class="comparison-row">
+
+    <span>
+        4 km and 300 m
+    </span>
+
+    <input
+        class="operator answer"
+        maxlength="1"
+        data-answer=">"
+        aria-label="first comparison"
+    >
+
+    <span>
+        3 km
+    </span>
+
+</div>
+
+
+<div class="comparison-row">
+
+    <span>
+        9 km and 600 m
+    </span>
+
+    <input
+        class="operator answer"
+        maxlength="1"
+        data-answer=">"
+        aria-label="second comparison"
+    >
+
+    <span>
+        9 km + 60 m
+    </span>
+
+</div>
+
+
+<div class="comparison-row">
+
+    <span>
+        5 km and 500 m
+    </span>
+
+    <input
+        class="operator answer"
+        maxlength="1"
+        data-answer="="
+        aria-label="third comparison"
+    >
+
+    <span>
+        2 km + 3 km + 500 m
+    </span>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity6')"
+>
+    🔎 Check Activity 6
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+
+<!-- EXTRA CONSOLIDATION ACTIVITY 7 -->
+
+<div class="card activity" id="activity7">
+
+<h3>🐭 7. Quick Unit Challenge</h3>
+
+<p class="intro">
+    Decide whether each measurement should normally be described
+    using kilometres or metres.
+</p>
+
+
+<div class="question">
+
+    The length of a classroom is usually measured in:
+
+    <select
+        class="answer"
+        data-answer="m"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="km">km</option>
+        <option value="m">m</option>
+
+    </select>
+
+</div>
+
+
+<div class="question">
+
+    The distance between two cities is usually measured in:
+
+    <select
+        class="answer"
+        data-answer="km"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="km">km</option>
+        <option value="m">m</option>
+
+    </select>
+
+</div>
+
+
+<div class="question">
+
+    The height of a door is usually measured in:
+
+    <select
+        class="answer"
+        data-answer="m"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="km">km</option>
+        <option value="m">m</option>
+
+    </select>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity7')"
+>
+    🔎 Check Activity 7
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+
+<!-- ACTIVITY 8 -->
+
+<div class="card activity" id="activity8">
+
+<h3>🧠 8. Super Challenge — Convert Before Comparing</h3>
+
+<p class="intro">
+    Convert the kilometre measurement into metres,
+    then decide whether the statement is true or false.
+</p>
+
+
+<div class="question">
+
+    <strong>
+        2 km = 2,000 m
+    </strong>
+
+    <select
+        class="answer"
+        data-answer="true"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+
+    </select>
+
+</div>
+
+
+<div class="question">
+
+    <strong>
+        5 km = 500 m
+    </strong>
+
+    <select
+        class="answer"
+        data-answer="false"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+
+    </select>
+
+</div>
+
+
+<div class="question">
+
+    <strong>
+        7 km = 7,000 m
+    </strong>
+
+    <select
+        class="answer"
+        data-answer="true"
+        style="width:130px"
+    >
+
+        <option value="">Choose</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+
+    </select>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="checkActivity('activity8')"
+>
+    🔎 Check Activity 8
+</button>
+
+<div class="feedback"></div>
+
+</div>
+
+</section>
+
+
+<div
+    class="finish"
+    id="finish"
+>
+
+    <h2>🎉 AMAZING WORK! 🧀</h2>
+
+    <p>
+        You completed the entire Kilometres & Metres adventure!
+    </p>
+
+</div>
+
+</main>
+
+
+<!-- ==========================================================
+     MODAL
+=========================================================== -->
+
+<div
+    class="modal"
+    id="feedbackModal"
+>
+
+    <div class="modal-card">
+
+        <button
+            class="close-modal"
+            onclick="closeModal()"
+        >
+            ×
+        </button>
+
+        <h2 id="modalTitle">
+            🎉 Fantastic!
+        </h2>
+
+        <img
+            id="modalGif"
+            src=""
+            alt="Tom and Jerry feedback"
+        >
+
+        <p id="modalMessage">
+            Great work!
+        </p>
+
+        <button
+            class="btn"
+            onclick="closeModal()"
+        >
+            Continue 🧀
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   GIF ARRAYS
+============================================================ */
+
+const happyGifs = [
+    "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+    "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+    "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+];
+
+const wrongGifs = [
+    "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+    "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+    "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+    "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+    "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+];
+
+
+/* ============================================================
+   ACTIVITY STATE
+============================================================ */
+
+const TOTAL_ACTIVITIES = 8;
+
+const completed =
+    new Set();
+
+
+/* ============================================================
+   SORT DATA
+============================================================ */
+
+const sortData = [
+
+    {
+        text:"height of a door frame",
+        unit:"m"
+    },
+
+    {
+        text:"length of a room",
+        unit:"m"
+    },
+
+    {
+        text:"how far a plane travels",
+        unit:"km"
+    },
+
+    {
+        text:"length of a garden",
+        unit:"m"
+    },
+
+    {
+        text:"distance from one city to another",
+        unit:"km"
+    },
+
+    {
+        text:"length of a table",
+        unit:"m"
+    },
+
+    {
+        text:"distance from the bottom to the top of a mountain",
+        unit:"km"
+    }
+
+];
+
+
+/* ============================================================
+   BUILD SORT CARDS
+============================================================ */
+
+function buildSortCards(){
+
+    const bank =
+        document.getElementById(
+            "cardBank"
+        );
+
+
+    sortData.forEach(
+        (item,index)=>{
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "sort-card";
+
+            card.draggable = true;
+
+            card.id =
+                "sort-card-" + index;
+
+            card.dataset.unit =
+                item.unit;
+
+            card.textContent =
+                item.text;
+
+            card.addEventListener(
+                "dragstart",
+                dragStart
+            );
+
+            card.addEventListener(
+                "dragend",
+                dragEnd
+            );
+
+
+            bank.appendChild(card);
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   DRAG & DROP
+============================================================ */
+
+function dragStart(event){
+
+    event.dataTransfer.setData(
+        "text/plain",
+        event.target.id
+    );
+
+    event.target.classList.add(
+        "dragging"
+    );
+
+}
+
+
+function dragEnd(event){
+
+    event.target.classList.remove(
+        "dragging"
+    );
+
+}
+
+
+function allowDrop(event){
+
+    event.preventDefault();
+
+}
+
+
+function dragEnter(event){
+
+    event.preventDefault();
+
+    event.currentTarget.classList.add(
+        "over"
+    );
+
+}
+
+
+function dragLeave(event){
+
+    event.currentTarget.classList.remove(
+        "over"
+    );
+
+}
+
+
+function dropCard(event){
+
+    event.preventDefault();
+
+    const zone =
+        event.currentTarget;
+
+    zone.classList.remove(
+        "over"
+    );
+
+
+    const id =
+        event.dataTransfer.getData(
+            "text/plain"
+        );
+
+    const card =
+        document.getElementById(id);
+
+
+    if(card){
+
+        zone.appendChild(card);
+
+    }
+
+}
+
+
+/* ============================================================
+   RANDOM GIF
+============================================================ */
+
+function randomGif(array){
+
+    return array[
+        Math.floor(
+            Math.random() * array.length
+        )
+    ];
+
+}
+
+
+/* ============================================================
+   NORMALIZE
+============================================================ */
+
+function normalize(value){
+
+    return String(value)
+        .trim()
+        .replace(/\s+/g," ")
+        .replace(/,/g,"")
+        .toLowerCase();
+
+}
+
+
+/* ============================================================
+   CHOICE SELECTION
+============================================================ */
+
+function selectChoice(
+    button,
+    groupId
+){
+
+    const group =
+        document.getElementById(
+            groupId
+        );
+
+
+    group
+        .querySelectorAll(".choice")
+        .forEach(
+            item=>{
+                item.classList.remove(
+                    "selected",
+                    "correct",
+                    "incorrect"
+                );
+            }
+        );
+
+
+    button.classList.add(
+        "selected"
+    );
+
+
+    const hidden =
+        document.getElementById(
+            "greaterAnswer"
+        );
+
+    hidden.value =
+        button.dataset.answer;
+
+}
+
+
+/* ============================================================
+   CHECK ONE ACTIVITY
+   ONLY THIS BLOCK IS CHECKED.
+============================================================ */
+
+function checkActivity(activityId){
+
+    const activity =
+        document.getElementById(
+            activityId
+        );
+
+
+    if(!activity){
+        return;
+    }
+
+
+    let allCorrect = true;
+
+
+    /* SPECIAL CASE: SORTING */
+
+    if(activityId === "activity1"){
+
+        const cards =
+            activity.querySelectorAll(
+                ".sort-card"
+            );
+
+
+        const bank =
+            activity.querySelector(
+                "#cardBank"
+            );
+
+
+        /*
+           Every card must be moved out of the bank.
+        */
+
+        if(
+            cards.length !== sortData.length
+        ){
+
+            allCorrect = false;
+
+        }
+
+
+        cards.forEach(card=>{
+
+            const parent =
+                card.closest(
+                    ".sort-zone"
+                );
+
+
+            if(
+                !parent ||
+                parent.dataset.unit !==
+                card.dataset.unit
+            ){
+
+                allCorrect = false;
+
+            }
+
+        });
+
+
+        const result =
+            document.getElementById(
+                "sortResult"
+            );
+
+
+        if(allCorrect){
+
+            result.textContent =
+                "✓ Perfect sorting! Every card is in the correct unit.";
+
+            result.style.color =
+                "#168A35";
+
+        }else{
+
+            result.textContent =
+                "✗ Move every card into the correct box.";
+
+            result.style.color =
+                "#D21F1F";
+
+        }
+
+    }
+
+
+    /*
+       Normal inputs inside THIS activity only.
+    */
+
+    const inputs =
+        activity.querySelectorAll(
+            "input[data-answer], select[data-answer]"
+        );
+
+
+    inputs.forEach(input=>{
+
+        /*
+           Activity 5 uses a hidden input whose
+           value comes from the selected button.
+        */
+
+        if(
+            activityId === "activity5" &&
+            input.id === "greaterAnswer"
+        ){
+
+            const actual =
+                normalize(input.value);
+
+            const expected =
+                normalize(input.dataset.answer);
+
+            const correct =
+                actual === expected;
+
+
+            if(!correct){
+
+                allCorrect = false;
+
+            }
+
+            return;
+
+        }
+
+
+        const actual =
+            normalize(input.value);
+
+        const expected =
+            normalize(input.dataset.answer);
+
+
+        const correct =
+            actual === expected;
+
+
+        input.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+
+        input.classList.add(
+            correct
+                ? "correct"
+                : "incorrect"
+        );
+
+
+        if(!correct){
+
+            allCorrect = false;
+
+        }
+
+    });
+
+
+    /*
+       Activity 5 choice visual marking.
+    */
+
+    if(activityId === "activity5"){
+
+        const choices =
+            activity.querySelectorAll(
+                ".choice"
+            );
+
+
+        choices.forEach(choice=>{
+
+            choice.classList.remove(
+                "correct",
+                "incorrect"
+            );
+
+
+            if(
+                choice.classList.contains(
+                    "selected"
+                )
+            ){
+
+                if(
+                    normalize(
+                        choice.dataset.answer
+                    ) === "3 km"
+                ){
+
+                    choice.classList.add(
+                        "correct"
+                    );
+
+                }else{
+
+                    choice.classList.add(
+                        "incorrect"
+                    );
+
+                }
+
+            }
+
+        });
+
+
+        const selected =
+            activity.querySelector(
+                ".choice.selected"
+            );
+
+
+        if(
+            !selected ||
+            normalize(
+                selected.dataset.answer
+            ) !== "3 km"
+        ){
+
+            allCorrect = false;
+
+        }
+
+    }
+
+
+    const feedback =
+        activity.querySelector(
+            ".feedback"
+        );
+
+
+    if(allCorrect){
+
+        completed.add(
+            activityId
+        );
+
+
+        feedback.textContent =
+            "✓ Fantastic! This block is completely correct!";
+
+        feedback.className =
+            "feedback good";
+
+
+        updateScore();
+
+
+        showModal(
+            true,
+            "Great job! You solved this activity!"
+        );
+
+    }else{
+
+        completed.delete(
+            activityId
+        );
+
+
+        feedback.textContent =
+            "✗ Not quite yet. Check the red answers and try again.";
+
+        feedback.className =
+            "feedback bad";
+
+
+        updateScore();
+
+
+        showModal(
+            false,
+            "Oops! Tom says: have another look! 😹"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   UPDATE SCORE
+============================================================ */
+
+function updateScore(){
+
+    document.getElementById(
+        "scoreDisplay"
+    ).textContent =
+        completed.size +
+        " / " +
+        TOTAL_ACTIVITIES;
+
+
+    const finish =
+        document.getElementById(
+            "finish"
+        );
+
+
+    finish.style.display =
+        completed.size === TOTAL_ACTIVITIES
+            ? "block"
+            : "none";
+
+}
+
+
+/* ============================================================
+   CHECK ALL
+============================================================ */
+
+function checkAll(){
+
+    /*
+       Check every activity.
+       Individual buttons remain scoped to their
+       own activity.
+    */
+
+    for(
+        let i=1;
+        i<=TOTAL_ACTIVITIES;
+        i++
+    ){
+
+        checkActivity(
+            "activity" + i
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   RESET ALL
+============================================================ */
+
+function resetAll(){
+
+    /*
+       Reset every input.
+    */
+
+    document
+        .querySelectorAll(
+            "input[data-answer], select[data-answer]"
+        )
+        .forEach(
+            input=>{
+
+                input.value = "";
+
+                input.classList.remove(
+                    "correct",
+                    "incorrect"
+                );
+
+            }
+        );
+
+
+    /*
+       Reset choices.
+    */
+
+    document
+        .querySelectorAll(
+            ".choice"
+        )
+        .forEach(
+            choice=>{
+
+                choice.classList.remove(
+                    "selected",
+                    "correct",
+                    "incorrect"
+                );
+
+            }
+        );
+
+
+    /*
+       Reset sorting cards.
+    */
+
+    const bank =
+        document.getElementById(
+            "cardBank"
+        );
+
+
+    document
+        .querySelectorAll(
+            ".sort-card"
+        )
+        .forEach(
+            card=>{
+
+                bank.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    /*
+       Reset feedback.
+    */
+
+    document
+        .querySelectorAll(
+            ".feedback"
+        )
+        .forEach(
+            feedback=>{
+
+                feedback.textContent =
+                    "";
+
+                feedback.className =
+                    "feedback";
+
+            }
+        );
+
+
+    document.getElementById(
+        "sortResult"
+    ).textContent =
+        "";
+
+
+    completed.clear();
+
+    updateScore();
+
+    closeModal();
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+function showModal(
+    correct,
+    message
+){
+
+    const modal =
+        document.getElementById(
+            "feedbackModal"
+        );
+
+    const title =
+        document.getElementById(
+            "modalTitle"
+        );
+
+    const gif =
+        document.getElementById(
+            "modalGif"
+        );
+
+    const modalMessage =
+        document.getElementById(
+            "modalMessage"
+        );
+
+
+    if(correct){
+
+        title.textContent =
+            "🎉 Fantastic!";
+
+        gif.src =
+            randomGif(
+                happyGifs
+            );
+
+    }else{
+
+        title.textContent =
+            "😹 Oops!";
+
+        gif.src =
+            randomGif(
+                wrongGifs
+            );
+
+    }
+
+
+    modalMessage.textContent =
+        message;
+
+
+    modal.classList.add(
+        "show"
+    );
+
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById(
+            "feedbackModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* ============================================================
+   MODAL OUTSIDE CLICK
+============================================================ */
+
+document
+    .getElementById(
+        "feedbackModal"
+    )
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target === this
+            ){
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+/* ============================================================
+   ESCAPE KEY
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+buildSortCards();
+
+updateScore();
+
+</script>
+
+</body>
+</html>

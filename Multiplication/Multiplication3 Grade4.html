@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Multiplication Mission</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap');
+
+:root{
+  --green:#9ed8a3;
+  --green-dark:#4f9b61;
+  --green-light:#eaf7e8;
+  --yellow:#f8dc72;
+  --yellow-light:#fff7ce;
+  --cream:#fffdf5;
+  --ink:#26352b;
+  --muted:#718074;
+  --red:#e87575;
+  --white:#fff;
+  --border:#dfe8dc;
+  --shadow:0 10px 28px rgba(54,83,59,.10);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 5% 5%,#e5f7df 0 11%,transparent 12%),
+    radial-gradient(circle at 95% 3%,#fff0a9 0 10%,transparent 11%),
+    var(--cream);
+  color:var(--ink);
+  font-family:Nunito,sans-serif;
+}
+
+button,input,select{font-family:inherit}
+
+.app{
+  max-width:1450px;
+  margin:auto;
+  padding:20px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(28px,4vw,48px);
+}
+
+.subtitle{
+  color:var(--muted);
+  font-weight:800;
+  margin-top:5px;
+}
+
+.score{
+  background:white;
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:11px 17px;
+  font-weight:900;
+  box-shadow:var(--shadow);
+}
+
+.score span{
+  color:var(--green-dark);
+  font-size:1.3rem;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.card{
+  background:rgba(255,255,255,.96);
+  border:2px solid var(--border);
+  border-radius:23px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.card.full{
+  grid-column:1/-1;
+}
+
+h2{
+  margin:0 0 5px;
+  font-size:22px;
+}
+
+.instructions{
+  color:var(--muted);
+  font-weight:700;
+  margin-bottom:15px;
+}
+
+button{
+  cursor:pointer;
+}
+
+.check{
+  background:var(--green-dark);
+  color:white;
+  border:0;
+  border-radius:12px;
+  padding:10px 16px;
+  font-weight:900;
+  margin-top:12px;
+}
+
+.check:hover{
+  transform:translateY(-1px);
+}
+
+.feedback{
+  min-height:24px;
+  margin-top:8px;
+  font-weight:900;
+}
+
+.good{color:var(--green-dark)}
+.bad{color:var(--red)}
+
+/* INPUTS */
+
+input.answer{
+  width:65px;
+  height:40px;
+  border:2px solid #d5ded1;
+  border-radius:10px;
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  outline:none;
+  background:white;
+}
+
+input.answer:focus{
+  border-color:var(--green-dark);
+}
+
+/* EGG CARTONS */
+
+.eggs{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin:12px 0 18px;
+}
+
+.carton{
+  background:#f5e39a;
+  border:3px solid #d8c36d;
+  border-radius:15px;
+  padding:8px;
+  width:145px;
+}
+
+.egg-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+
+.egg{
+  width:100%;
+  aspect-ratio:1;
+  background:#fff;
+  border-radius:50%;
+  border:2px solid #dedbd1;
+  display:grid;
+  place-items:center;
+  font-size:15px;
+}
+
+.carton-label{
+  text-align:center;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.sentence{
+  line-height:2.4;
+  font-weight:800;
+  background:var(--yellow-light);
+  padding:10px 13px;
+  border-radius:14px;
+}
+
+/* EQUATION */
+
+.equation{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  font-size:23px;
+  font-weight:900;
+  margin:15px 0;
+}
+
+/* DICE */
+
+.dice-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:9px;
+  margin:16px;
+}
+
+.die{
+  width:55px;
+  height:55px;
+  border-radius:12px;
+  background:white;
+  border:3px solid var(--green);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  padding:7px;
+  gap:3px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green-dark);
+  margin:auto;
+}
+
+.center-equation{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  font-size:24px;
+  font-weight:900;
+}
+
+/* FACT FAMILY */
+
+.array{
+  display:grid;
+  grid-template-columns:repeat(6,28px);
+  gap:6px;
+  justify-content:center;
+  margin:15px;
+}
+
+.array-dot{
+  width:28px;
+  height:28px;
+  background:var(--green);
+  border-radius:50%;
+  border:2px solid var(--green-dark);
+}
+
+.fact-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  margin:8px;
+  font-weight:900;
+}
+
+.fact-row input{
+  width:55px;
+}
+
+/* PARTITION */
+
+.partition{
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  gap:3px;
+  margin:18px auto;
+  width:min(390px,100%);
+}
+
+.part{
+  height:90px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  font-weight:900;
+  border:3px solid #74ae79;
+}
+
+.part.large{
+  width:83%;
+  background:#bce7bc;
+}
+
+.part.small{
+  width:17%;
+  background:#ffe58b;
+}
+
+.partition-label{
+  text-align:center;
+  font-weight:900;
+}
+
+/* MATCHING */
+
+.match-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+}
+
+.match-col{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.match-card{
+  border:3px solid var(--border);
+  background:white;
+  padding:13px;
+  border-radius:14px;
+  font-weight:900;
+  font-size:18px;
+  cursor:pointer;
+  text-align:center;
+  transition:.15s;
+}
+
+.match-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--green);
+}
+
+.match-card.selected{
+  background:var(--yellow-light);
+  border-color:#d5b83c;
+}
+
+.match-card.matched{
+  background:var(--green-light);
+  border-color:var(--green-dark);
+  color:var(--green-dark);
+  cursor:default;
+}
+
+/* SCRATCHPAD */
+
+.scratch-toggle{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:100;
+  background:var(--green-dark);
+  color:white;
+  border:0;
+  border-radius:18px;
+  padding:13px 18px;
+  font-weight:900;
+  box-shadow:0 10px 30px rgba(50,90,58,.3);
+}
+
+.scratch{
+  display:none;
+  position:fixed;
+  right:18px;
+  bottom:75px;
+  width:min(450px,calc(100vw - 36px));
+  background:white;
+  border:2px solid var(--border);
+  border-radius:20px;
+  padding:12px;
+  z-index:99;
+  box-shadow:0 20px 50px rgba(30,50,35,.25);
+}
+
+.scratch.open{
+  display:block;
+}
+
+.scratch-title{
+  font-weight:900;
+  margin-bottom:9px;
+}
+
+.tools{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+
+.tools button{
+  border:2px solid #d9e1d5;
+  background:white;
+  border-radius:9px;
+  padding:6px 10px;
+  font-weight:900;
+}
+
+.tools button.active{
+  background:var(--yellow-light);
+  border-color:#d6ba3d;
+}
+
+#colour{
+  width:42px;
+  height:34px;
+  padding:2px;
+  border:2px solid #d9e1d5;
+  border-radius:8px;
+}
+
+#scratchCanvas{
+  display:block;
+  width:100%;
+  height:250px;
+  background:
+    linear-gradient(#edf1e9 1px,transparent 1px),
+    linear-gradient(90deg,#edf1e9 1px,transparent 1px);
+  background-size:25px 25px;
+  border:2px dashed #ccd8c8;
+  border-radius:14px;
+
+  /* CRITICAL FOR TOUCH/STYLUS */
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+
+  cursor:crosshair;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translate(-50%,-150%);
+  background:var(--ink);
+  color:white;
+  padding:12px 20px;
+  border-radius:30px;
+  font-weight:900;
+  z-index:300;
+  transition:.3s;
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+.confetti{
+  position:fixed;
+  top:-20px;
+  width:9px;
+  height:14px;
+  z-index:500;
+  animation:fall 1.4s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(600deg);
+    opacity:0;
+  }
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .card.full{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:550px){
+  .app{
+    padding:12px;
+  }
+
+  header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .match-grid{
+    grid-template-columns:1fr;
+  }
+
+  .sentence{
+    line-height:2.7;
+  }
+
+  .carton{
+    width:125px;
+  }
+
+  .array{
+    grid-template-columns:repeat(6,23px);
+  }
+
+  .array-dot{
+    width:23px;
+    height:23px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+<div>
+<h1>🥚 Multiplication Mission!</h1>
+
+<div class="subtitle">
+Facts • Arrays • Fact Families • Inverse Operations
+</div>
+</div>
+
+<div class="score">
+⭐ Score:
+<span id="score">0</span>
+</div>
+
+</header>
+
+
+<div class="grid">
+
+
+<!-- ======================================================
+TASK 1
+====================================================== -->
+
+<section class="card full">
+
+<h2>🥚 1. Egg Boxes Sentence Completion</h2>
+
+<div class="instructions">
+There are 4 boxes. Each box contains 6 eggs.
+Use the picture to complete the sentences.
+</div>
+
+<div class="eggs" id="eggBoxes"></div>
+
+<div class="sentence">
+
+There are
+<input class="answer" id="eggBoxesAnswer" type="number">
+boxes.
+
+<br>
+
+Each box contains
+<input class="answer" id="eggEachAnswer" type="number">
+eggs.
+
+<br>
+
+There are
+<input class="answer" id="eggTotalAnswer" type="number">
+eggs in total.
+
+</div>
+
+<div class="equation">
+
+<input class="answer" id="eggEq1" type="number">
+
+×
+
+<input class="answer" id="eggEq2" type="number">
+
+=
+
+<input class="answer" id="eggEq3" type="number">
+
+</div>
+
+<button class="check" id="eggCheck">
+Check Answers
+</button>
+
+<div id="eggFeedback" class="feedback"></div>
+
+</section>
+
+
+<!-- ======================================================
+TASK 2
+====================================================== -->
+
+<section class="card">
+
+<h2>🎲 2. Dice Multiplication</h2>
+
+<div class="instructions">
+There are 8 dice. Each die has 6 dots.
+Write the multiplication equation.
+</div>
+
+<div class="dice-row" id="diceRow"></div>
+
+<div class="center-equation">
+
+<input class="answer" id="diceA" type="number">
+
+×
+
+<input class="answer" id="diceB" type="number">
+
+=
+
+<input class="answer" id="diceC" type="number">
+
+</div>
+
+<button class="check" id="diceCheck">
+Check
+</button>
+
+<div id="diceFeedback" class="feedback"></div>
+
+</section>
+
+
+<!-- ======================================================
+TASK 3
+====================================================== -->
+
+<section class="card">
+
+<h2>🟢 3. Fact Family From an Array</h2>
+
+<div class="instructions">
+Look at the array. Write the four related facts.
+</div>
+
+<div class="array">
+
+<script>
+for(let i=0;i<30;i++){
+document.write('<div class="array-dot"></div>');
+}
+</script>
+
+</div>
+
+<div class="fact-row">
+<input class="answer fact" data-answer="5">
+×
+<input class="answer fact" data-answer="6">
+=
+<input class="answer fact" data-answer="30">
+</div>
+
+<div class="fact-row">
+<input class="answer fact" data-answer="6">
+×
+<input class="answer fact" data-answer="5">
+=
+<input class="answer fact" data-answer="30">
+</div>
+
+<div class="fact-row">
+<input class="answer fact" data-answer="30">
+÷
+<input class="answer fact" data-answer="5">
+=
+<input class="answer fact" data-answer="6">
+</div>
+
+<div class="fact-row">
+<input class="answer fact" data-answer="30">
+÷
+<input class="answer fact" data-answer="6">
+=
+<input class="answer fact" data-answer="5">
+</div>
+
+<button class="check" id="factCheck">
+Check Fact Family
+</button>
+
+<div id="factFeedback" class="feedback"></div>
+
+</section>
+
+
+<!-- ======================================================
+TASK 4
+====================================================== -->
+
+<section class="card">
+
+<h2>🧩 4. Split the Array</h2>
+
+<div class="instructions">
+Partition 4 × 6 into 4 × 5 and 4 × 1.
+Then find the total.
+</div>
+
+<div class="partition">
+
+<div class="part large">
+4 × 5
+<br>
+= ?
+</div>
+
+<div class="part small">
+4 × 1
+<br>
+= ?
+</div>
+
+</div>
+
+<div class="equation">
+
+4 × 5 =
+
+<input
+class="answer"
+id="part1"
+type="number"
+>
+
+</div>
+
+<div class="equation">
+
+4 × 1 =
+
+<input
+class="answer"
+id="part2"
+type="number"
+>
+
+</div>
+
+<div class="equation">
+
+4 × 6 =
+
+<input
+class="answer"
+id="partTotal"
+type="number"
+>
+
+</div>
+
+<button class="check" id="partCheck">
+Check
+</button>
+
+<div id="partFeedback" class="feedback"></div>
+
+</section>
+
+
+<!-- ======================================================
+TASK 5
+====================================================== -->
+
+<section class="card full">
+
+<h2>🔄 5. Match the Inverse Operations</h2>
+
+<div class="instructions">
+Click a multiplication fact, then click its matching division fact.
+</div>
+
+<div class="match-grid">
+
+<div class="match-col" id="multiplyColumn"></div>
+
+<div class="match-col" id="divideColumn"></div>
+
+</div>
+
+<div id="matchFeedback" class="feedback"></div>
+
+</section>
+
+</div>
+</div>
+
+
+<!-- ======================================================
+SCRATCHPAD
+====================================================== -->
+
+<button
+class="scratch-toggle"
+id="scratchToggle"
+>
+✏️ Scratchpad
+</button>
+
+
+<div
+class="scratch"
+id="scratch"
+>
+
+<div class="scratch-title">
+📝 Digital Whiteboard
+</div>
+
+<div class="tools">
+
+<button id="pen" class="active">
+✏️ Pen
+</button>
+
+<button id="eraser">
+🧽 Eraser
+</button>
+
+<label>
+🎨
+<input
+type="color"
+id="colour"
+value="#26352b"
+>
+</label>
+
+<button id="clear">
+🗑️ Clear
+</button>
+
+</div>
+
+<canvas id="scratchCanvas"></canvas>
+
+</div>
+
+
+<div class="toast" id="toast">
+Correct! 🎉
+</div>
+
+
+<script>
+
+/* =========================================================
+GLOBAL
+========================================================= */
+
+let score=0;
+
+function addScore(points=1){
+
+score+=points;
+
+document.getElementById("score").textContent=score;
+
+}
+
+function showFeedback(id,text,good){
+
+const el=document.getElementById(id);
+
+el.textContent=text;
+
+el.className=
+"feedback "+
+(good?"good":"bad");
+
+}
+
+function celebrate(message){
+
+const toast=document.getElementById("toast");
+
+toast.textContent=message;
+
+toast.classList.add("show");
+
+const colours=[
+"#9ed8a3",
+"#f8dc72",
+"#78bf82",
+"#ffe994",
+"#c6e9c8"
+];
+
+for(let i=0;i<25;i++){
+
+const piece=document.createElement("div");
+
+piece.className="confetti";
+
+piece.style.left=
+Math.random()*100+"vw";
+
+piece.style.background=
+colours[i%colours.length];
+
+piece.style.animationDelay=
+Math.random()*0.3+"s";
+
+document.body.appendChild(piece);
+
+setTimeout(
+()=>piece.remove(),
+1600
+);
+
+}
+
+setTimeout(
+()=>toast.classList.remove("show"),
+1400
+);
+
+}
+
+
+/* =========================================================
+TASK 1 — EGGS
+========================================================= */
+
+const eggBoxes=
+document.getElementById("eggBoxes");
+
+for(let box=0;box<4;box++){
+
+const carton=
+document.createElement("div");
+
+carton.className="carton";
+
+const grid=
+document.createElement("div");
+
+grid.className="egg-grid";
+
+for(let i=0;i<6;i++){
+
+const egg=
+document.createElement("div");
+
+egg.className="egg";
+
+egg.textContent="🥚";
+
+grid.appendChild(egg);
+
+}
+
+carton.appendChild(grid);
+
+const label=
+document.createElement("div");
+
+label.className="carton-label";
+
+label.textContent=
+"Box "+(box+1);
+
+carton.appendChild(label);
+
+eggBoxes.appendChild(carton);
+
+}
+
+
+document
+.getElementById("eggCheck")
+.onclick=()=>{
+
+const answers=[
+["eggBoxesAnswer",4],
+["eggEachAnswer",6],
+["eggTotalAnswer",24],
+["eggEq1",4],
+["eggEq2",6],
+["eggEq3",24]
+];
+
+let correct=0;
+
+answers.forEach(([id,value])=>{
+
+const input=
+document.getElementById(id);
+
+if(Number(input.value)===value){
+
+input.style.borderColor=
+"var(--green-dark)";
+
+correct++;
+
+}else{
+
+input.style.borderColor=
+"var(--red)";
+
+}
+
+});
+
+showFeedback(
+"eggFeedback",
+`${correct}/6 correct!`,
+correct===6
+);
+
+if(correct===6){
+
+addScore(2);
+
+celebrate(
+"Egg-cellent work! 🥚🎉"
+);
+
+}
+
+};
+
+
+/* =========================================================
+TASK 2 — DICE
+========================================================= */
+
+const diceRow=
+document.getElementById("diceRow");
+
+for(let d=0;d<8;d++){
+
+const die=
+document.createElement("div");
+
+die.className="die";
+
+for(let i=0;i<6;i++){
+
+const dot=
+document.createElement("div");
+
+dot.className="dot";
+
+die.appendChild(dot);
+
+}
+
+diceRow.appendChild(die);
+
+}
+
+
+document
+.getElementById("diceCheck")
+.onclick=()=>{
+
+const answers=[
+["diceA",8],
+["diceB",6],
+["diceC",48]
+];
+
+let correct=0;
+
+answers.forEach(([id,value])=>{
+
+const input=
+document.getElementById(id);
+
+const ok=
+Number(input.value)===value;
+
+input.style.borderColor=
+ok
+?"var(--green-dark)"
+:"var(--red)";
+
+if(ok)correct++;
+
+});
+
+showFeedback(
+"diceFeedback",
+`${correct}/3 correct!`,
+correct===3
+);
+
+if(correct===3){
+
+addScore(1);
+
+celebrate(
+"Dice multiplication mastered! 🎲"
+);
+
+}
+
+};
+
+
+/* =========================================================
+TASK 3 — FACT FAMILY
+========================================================= */
+
+document
+.getElementById("factCheck")
+.onclick=()=>{
+
+const inputs=
+document.querySelectorAll(".fact");
+
+let correct=0;
+
+inputs.forEach(input=>{
+
+const ok=
+Number(input.value)===
+Number(input.dataset.answer);
+
+input.style.borderColor=
+ok
+?"var(--green-dark)"
+:"var(--red)";
+
+if(ok)correct++;
+
+});
+
+showFeedback(
+"factFeedback",
+`${correct}/${inputs.length} correct!`,
+correct===inputs.length
+);
+
+if(correct===inputs.length){
+
+addScore(2);
+
+celebrate(
+"Fact family complete! 🔄"
+);
+
+}
+
+};
+
+
+/* =========================================================
+TASK 4 — PARTITION
+========================================================= */
+
+document
+.getElementById("partCheck")
+.onclick=()=>{
+
+const answers=[
+["part1",20],
+["part2",4],
+["partTotal",24]
+];
+
+let correct=0;
+
+answers.forEach(([id,value])=>{
+
+const input=
+document.getElementById(id);
+
+const ok=
+Number(input.value)===value;
+
+input.style.borderColor=
+ok
+?"var(--green-dark)"
+:"var(--red)";
+
+if(ok)correct++;
+
+});
+
+showFeedback(
+"partFeedback",
+`${correct}/3 correct!`,
+correct===3
+);
+
+if(correct===3){
+
+addScore(2);
+
+celebrate(
+"Great partitioning! 🧩"
+);
+
+}
+
+};
+
+
+/* =========================================================
+TASK 5 — MATCHING GAME
+========================================================= */
+
+const pairs=[
+{
+m:"7 × 6 = 42",
+d:"42 ÷ 6 = 7"
+},
+{
+m:"8 × 5 = 40",
+d:"40 ÷ 5 = 8"
+},
+{
+m:"4 × 9 = 36",
+d:"36 ÷ 9 = 4"
+},
+{
+m:"6 × 7 = 42",
+d:"42 ÷ 7 = 6"
+}
+];
+
+const multiplyColumn=
+document.getElementById(
+"multiplyColumn"
+);
+
+const divideColumn=
+document.getElementById(
+"divideColumn"
+);
+
+let selectedMultiply=null;
+let matchedCount=0;
+
+pairs.forEach((pair,index)=>{
+
+const left=
+document.createElement("button");
+
+left.className="match-card";
+
+left.textContent=
+pair.m;
+
+left.dataset.index=index;
+
+multiplyColumn.appendChild(left);
+
+
+const right=
+document.createElement("button");
+
+right.className="match-card";
+
+right.textContent=
+pair.d;
+
+right.dataset.index=index;
+
+divideColumn.appendChild(right);
+
+});
+
+
+document
+.querySelectorAll(
+"#multiplyColumn .match-card"
+)
+.forEach(card=>{
+
+card.onclick=()=>{
+
+if(card.classList.contains("matched"))
+return;
+
+document
+.querySelectorAll(
+"#multiplyColumn .match-card"
+)
+.forEach(c=>
+c.classList.remove("selected")
+);
+
+card.classList.add("selected");
+
+selectedMultiply=
+Number(card.dataset.index);
+
+};
+
+});
+
+
+document
+.querySelectorAll(
+"#divideColumn .match-card"
+)
+.forEach(card=>{
+
+card.onclick=()=>{
+
+if(
+selectedMultiply===null ||
+card.classList.contains("matched")
+)
+return;
+
+const selectedDivision=
+Number(card.dataset.index);
+
+if(
+selectedMultiply===
+selectedDivision
+){
+
+const left=
+document.querySelector(
+`#multiplyColumn .match-card[data-index="${selectedMultiply}"]`
+);
+
+left.classList.remove("selected");
+
+left.classList.add("matched");
+
+card.classList.add("matched");
+
+matchedCount++;
+
+selectedMultiply=null;
+
+showFeedback(
+"matchFeedback",
+`${matchedCount}/${pairs.length} pairs matched!`,
+true
+);
+
+if(matchedCount===pairs.length){
+
+addScore(3);
+
+celebrate(
+"All inverse pairs matched! 🔄🎉"
+);
+
+}
+
+}else{
+
+showFeedback(
+"matchFeedback",
+"Not this pair. Try again!",
+false
+);
+
+card.classList.add("selected");
+
+setTimeout(
+()=>card.classList.remove("selected"),
+350
+);
+
+}
+
+};
+
+});
+
+
+/* =========================================================
+SCRATCHPAD
+========================================================= */
+
+const scratch=
+document.getElementById("scratch");
+
+const canvas=
+document.getElementById(
+"scratchCanvas"
+);
+
+const ctx=
+canvas.getContext("2d");
+
+
+let drawing=false;
+
+let pointerId=null;
+
+let lastX=0;
+
+let lastY=0;
+
+let tool="pen";
+
+let penColour="#26352b";
+
+
+/*
+IMPORTANT:
+
+Canvas CSS size and internal pixel
+size are kept synchronized.
+
+This prevents the common problem where
+the cursor appears offset from the line.
+*/
+
+function resizeCanvas(){
+
+const rect=
+canvas.getBoundingClientRect();
+
+const dpr=
+window.devicePixelRatio||1;
+
+
+/*
+Save drawing.
+*/
+
+let backup=null;
+
+if(canvas.width && canvas.height){
+
+backup=
+document.createElement("canvas");
+
+backup.width=
+canvas.width;
+
+backup.height=
+canvas.height;
+
+backup
+.getContext("2d")
+.drawImage(
+canvas,
+0,
+0
+);
+
+}
+
+
+canvas.width=
+Math.round(
+rect.width*dpr
+);
+
+canvas.height=
+Math.round(
+rect.height*dpr
+);
+
+
+ctx.setTransform(
+dpr,
+0,
+0,
+dpr,
+0,
+0
+);
+
+ctx.lineCap="round";
+
+ctx.lineJoin="round";
+
+
+if(backup){
+
+ctx.drawImage(
+backup,
+0,
+0,
+backup.width/dpr,
+backup.height/dpr
+);
+
+}
+
+}
+
+
+function position(e){
+
+const rect=
+canvas.getBoundingClientRect();
+
+return{
+
+x:e.clientX-rect.left,
+
+y:e.clientY-rect.top
+
+};
+
+}
+
+
+/*
+THIS IS THE IMPORTANT PART.
+
+Pointer Events work with:
+
+Mouse
+Touch
+Stylus
+Pen tablets
+Touchscreen laptops
+*/
+
+canvas.style.touchAction="none";
+
+
+canvas.addEventListener(
+"pointerdown",
+function(e){
+
+if(
+e.pointerType==="mouse" &&
+e.button!==0
+)return;
+
+
+drawing=true;
+
+pointerId=e.pointerId;
+
+
+/*
+Keep receiving movement even when
+the pointer moves very quickly.
+*/
+
+canvas.setPointerCapture(
+e.pointerId
+);
+
+
+const p=
+position(e);
+
+lastX=p.x;
+
+lastY=p.y;
+
+
+/*
+Draw a tiny dot immediately.
+*/
+
+ctx.beginPath();
+
+ctx.arc(
+p.x,
+p.y,
+tool==="eraser"?10:2,
+0,
+Math.PI*2
+);
+
+ctx.fillStyle=
+tool==="eraser"
+?"#ffffff"
+:penColour;
+
+ctx.fill();
+
+
+e.preventDefault();
+
+},
+{passive:false}
+);
+
+
+canvas.addEventListener(
+"pointermove",
+function(e){
+
+if(!drawing)return;
+
+if(
+e.pointerId!==pointerId
+)return;
+
+
+const p=
+position(e);
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+lastX,
+lastY
+);
+
+ctx.lineTo(
+p.x,
+p.y
+);
+
+
+ctx.strokeStyle=
+tool==="eraser"
+?"#ffffff"
+:penColour;
+
+
+ctx.lineWidth=
+tool==="eraser"
+?24
+:4;
+
+
+ctx.stroke();
+
+
+lastX=p.x;
+
+lastY=p.y;
+
+
+e.preventDefault();
+
+},
+{passive:false}
+);
+
+
+function stopDrawing(e){
+
+if(
+e.pointerId!==pointerId
+)return;
+
+
+drawing=false;
+
+pointerId=null;
+
+
+try{
+
+canvas.releasePointerCapture(
+e.pointerId
+);
+
+}catch(err){}
+
+}
+
+
+canvas.addEventListener(
+"pointerup",
+stopDrawing
+);
+
+canvas.addEventListener(
+"pointercancel",
+stopDrawing
+);
+
+
+/*
+Open scratchpad.
+*/
+
+document
+.getElementById("scratchToggle")
+.onclick=()=>{
+
+scratch.classList.toggle(
+"open"
+);
+
+if(scratch.classList.contains("open")){
+
+setTimeout(
+resizeCanvas,
+30
+);
+
+}
+
+};
+
+
+/*
+Pen.
+*/
+
+document
+.getElementById("pen")
+.onclick=()=>{
+
+tool="pen";
+
+document
+.getElementById("pen")
+.classList.add("active");
+
+document
+.getElementById("eraser")
+.classList.remove("active");
+
+};
+
+
+/*
+Eraser.
+*/
+
+document
+.getElementById("eraser")
+.onclick=()=>{
+
+tool="eraser";
+
+document
+.getElementById("eraser")
+.classList.add("active");
+
+document
+.getElementById("pen")
+.classList.remove("active");
+
+};
+
+
+/*
+Colour picker.
+*/
+
+document
+.getElementById("colour")
+.addEventListener(
+"input",
+function(){
+
+penColour=this.value;
+
+tool="pen";
+
+document
+.getElementById("pen")
+.classList.add("active");
+
+document
+.getElementById("eraser")
+.classList.remove("active");
+
+}
+);
+
+
+/*
+Clear.
+*/
+
+document
+.getElementById("clear")
+.onclick=()=>{
+
+const rect=
+canvas.getBoundingClientRect();
+
+ctx.clearRect(
+0,
+0,
+rect.width,
+rect.height
+);
+
+};
+
+
+/*
+Resize.
+*/
+
+window.addEventListener(
+"resize",
+resizeCanvas
+);
+
+
+/*
+Initial canvas setup.
+*/
+
+window.addEventListener(
+"load",
+()=>{
+
+setTimeout(
+resizeCanvas,
+100
+);
+
+}
+);
+
+</script>
+
+</body>
+</html>

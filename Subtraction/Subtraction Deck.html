@@ -1,0 +1,2388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tom & Jerry — Place Value & Subtraction Adventure</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+:root{
+  --gold:#F59E0B;
+  --cheese:#FACC15;
+  --cream:#FEF3C7;
+  --slate:#334155;
+  --steel:#475569;
+  --light:#E2E8F0;
+  --white:#fff;
+  --purple:#8B5CF6;
+  --green:#10B981;
+  --blue:#3B82F6;
+  --orange:#F97316;
+  --red:#EF4444;
+  --shadow:0 8px 0 rgba(51,65,85,.18),0 14px 28px rgba(51,65,85,.12);
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:'Fredoka','Quicksand',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 15% 15%,#fff7d6 0 8%,transparent 9%),
+    radial-gradient(circle at 85% 80%,#e9edf4 0 9%,transparent 10%),
+    #f7f8fb;
+  color:var(--slate);
+}
+
+button,input{font-family:inherit}
+
+button{
+  cursor:pointer;
+  border:3px solid var(--slate);
+  font-weight:700;
+}
+
+.app{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+
+.presentation{
+  position:relative;
+  width:min(96vw,1400px);
+  aspect-ratio:16/9;
+  max-height:96vh;
+  background:#fff;
+  border:5px solid var(--slate);
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:0 15px 0 rgba(51,65,85,.15),0 25px 50px rgba(15,23,42,.18);
+}
+
+.presentation:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(#d97706 1.5px,transparent 1.5px);
+  background-size:28px 28px;
+  opacity:.035;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  padding:5.5% 6%;
+  display:none;
+  overflow:auto;
+  scrollbar-width:none;
+  background:
+    linear-gradient(135deg,rgba(254,243,199,.65),transparent 35%),
+    linear-gradient(315deg,rgba(226,232,240,.6),transparent 40%),
+    #fff;
+}
+
+.slide::-webkit-scrollbar{display:none}
+.slide.active{display:block;animation:slideIn .35s ease}
+
+@keyframes slideIn{
+  from{opacity:0;transform:translateX(20px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+h1,h2,h3,p{margin-top:0}
+
+h1{
+  font-size:clamp(2rem,5vw,5rem);
+  line-height:1;
+}
+
+h2{
+  font-size:clamp(1.5rem,3vw,3rem);
+  line-height:1.05;
+}
+
+h3{
+  font-size:clamp(1rem,1.7vw,1.7rem);
+}
+
+p{
+  font-size:clamp(.9rem,1.45vw,1.35rem);
+  line-height:1.45;
+}
+
+.title{
+  color:var(--slate);
+  text-shadow:3px 3px 0 var(--cheese);
+}
+
+.subtitle{
+  color:var(--steel);
+  font-size:clamp(1rem,2vw,1.8rem);
+}
+
+.cheese-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--cheese);
+  color:var(--slate);
+  border:3px solid var(--slate);
+  padding:8px 15px;
+  border-radius:999px;
+  box-shadow:4px 4px 0 var(--slate);
+  font-size:clamp(.8rem,1.2vw,1.15rem);
+  margin-bottom:18px;
+}
+
+.cheese-badge:before{
+  content:"🧀";
+}
+
+.hero{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+}
+
+.heroText{width:65%}
+
+.cartoon{
+  width:30%;
+  min-width:180px;
+  aspect-ratio:1;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.tom{
+  width:130px;
+  height:150px;
+  background:#64748B;
+  border:5px solid var(--slate);
+  border-radius:50% 50% 45% 45%;
+  position:relative;
+  transform:rotate(-4deg);
+  box-shadow:8px 8px 0 rgba(51,65,85,.2);
+}
+
+.tom:before,.tom:after{
+  content:"";
+  position:absolute;
+  top:-25px;
+  width:55px;
+  height:65px;
+  background:#64748B;
+  border:5px solid var(--slate);
+  z-index:-1;
+}
+
+.tom:before{
+  left:5px;
+  transform:rotate(-28deg);
+  border-radius:70% 10% 10% 20%;
+}
+
+.tom:after{
+  right:5px;
+  transform:rotate(28deg);
+  border-radius:10% 70% 20% 10%;
+}
+
+.eye{
+  position:absolute;
+  top:48px;
+  width:28px;
+  height:34px;
+  background:#fff;
+  border:4px solid var(--slate);
+  border-radius:50%;
+}
+
+.eye.left{left:32px}
+.eye.right{right:32px}
+
+.eye i{
+  display:block;
+  width:9px;
+  height:12px;
+  background:#111827;
+  border-radius:50%;
+  margin:9px auto;
+}
+
+.nose{
+  position:absolute;
+  left:50%;
+  top:78px;
+  transform:translateX(-50%);
+  width:30px;
+  height:22px;
+  background:#f59e9e;
+  border:4px solid var(--slate);
+  border-radius:50%;
+}
+
+.smile{
+  position:absolute;
+  left:50%;
+  top:94px;
+  transform:translateX(-50%);
+  width:48px;
+  height:24px;
+  border-bottom:4px solid var(--slate);
+  border-radius:50%;
+}
+
+.jerry{
+  position:absolute;
+  right:-25px;
+  bottom:-5px;
+  width:70px;
+  height:92px;
+  background:#b87532;
+  border:4px solid #6b4324;
+  border-radius:48% 48% 42% 42%;
+}
+
+.jerry:before,.jerry:after{
+  content:"";
+  position:absolute;
+  top:-20px;
+  width:30px;
+  height:35px;
+  background:#d08b43;
+  border:4px solid #6b4324;
+  border-radius:50%;
+}
+
+.jerry:before{left:2px}
+.jerry:after{right:2px}
+
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:25px;
+}
+
+.feature{
+  padding:16px;
+  background:#fff;
+  border:3px solid var(--slate);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.feature strong{
+  display:block;
+  font-size:1.8rem;
+  margin-bottom:5px;
+}
+
+.pv-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+
+.pv{
+  padding:15px;
+  border:3px solid var(--slate);
+  border-radius:18px;
+  text-align:center;
+  box-shadow:5px 5px 0 rgba(51,65,85,.13);
+}
+
+.pv.th{background:#ede9fe}
+.pv.h{background:#d1fae5}
+.pv.t{background:#dbeafe}
+.pv.o{background:#ffedd5}
+
+.pv .label{
+  font-weight:700;
+  font-size:clamp(.8rem,1.3vw,1.1rem);
+}
+
+.pv .big{
+  font-size:clamp(2rem,4vw,4rem);
+  font-weight:700;
+}
+
+.info-card{
+  background:#fff;
+  border:3px solid var(--slate);
+  border-radius:22px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin:15px 0;
+}
+
+.two-col{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.center{text-align:center}
+
+.math-demo{
+  width:min(600px,100%);
+  margin:20px auto;
+  background:#fff;
+  border:4px solid var(--slate);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.vertical{
+  width:min(330px,100%);
+  margin:auto;
+  font-family:'Fredoka',sans-serif;
+}
+
+.vrow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  align-items:center;
+  text-align:center;
+  font-size:clamp(1.8rem,4vw,3.5rem);
+  font-weight:700;
+  min-height:52px;
+}
+
+.vrow .th{color:var(--purple)}
+.vrow .h{color:var(--green)}
+.vrow .t{color:var(--blue)}
+.vrow .o{color:var(--orange)}
+
+.vline{
+  height:5px;
+  background:var(--slate);
+  margin:4px 0 7px;
+  border-radius:4px;
+}
+
+.column-labels{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  text-align:center;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.column-labels span:nth-child(1){color:var(--purple)}
+.column-labels span:nth-child(2){color:var(--green)}
+.column-labels span:nth-child(3){color:var(--blue)}
+.column-labels span:nth-child(4){color:var(--orange)}
+
+.highlight{
+  animation:pulse .8s infinite alternate;
+  border-radius:12px;
+  background:rgba(250,204,21,.45);
+}
+
+@keyframes pulse{
+  to{transform:scale(1.07)}
+}
+
+.answer-area{
+  margin:20px auto;
+  width:min(750px,100%);
+}
+
+.question{
+  font-size:clamp(1.2rem,2vw,2rem);
+  font-weight:700;
+  background:var(--cream);
+  border:3px solid var(--gold);
+  padding:15px;
+  border-radius:18px;
+  margin-bottom:15px;
+}
+
+.options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:center;
+}
+
+.choice{
+  background:#fff;
+  padding:12px 22px;
+  border-radius:16px;
+  font-size:1.1rem;
+  transition:.15s;
+}
+
+.choice:hover{
+  transform:translateY(-3px) rotate(-1deg);
+  box-shadow:0 5px 0 var(--slate);
+}
+
+.choice.correct{
+  background:#bbf7d0;
+  border-color:#166534;
+}
+
+.choice.wrong{
+  background:#fecaca;
+  border-color:#991b1b;
+  animation:shake .3s;
+}
+
+@keyframes shake{
+  25%{transform:translateX(-7px)}
+  50%{transform:translateX(7px)}
+  75%{transform:translateX(-4px)}
+}
+
+.feedback{
+  min-height:42px;
+  margin-top:12px;
+  text-align:center;
+  font-size:1.15rem;
+  font-weight:700;
+}
+
+input.answer{
+  width:85px;
+  padding:10px;
+  border:3px solid var(--slate);
+  border-radius:13px;
+  text-align:center;
+  font-size:1.5rem;
+  font-weight:700;
+  outline:none;
+}
+
+input.answer:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 4px rgba(245,158,11,.2);
+}
+
+.btn{
+  padding:11px 18px;
+  border-radius:15px;
+  background:var(--gold);
+  color:var(--slate);
+  box-shadow:0 5px 0 var(--slate);
+  transition:.12s;
+  font-size:1rem;
+}
+
+.btn:hover{transform:translateY(-2px)}
+.btn:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 var(--slate);
+}
+
+.btn.blue{background:var(--blue);color:#fff}
+.btn.green{background:var(--green);color:#fff}
+.btn.red{background:var(--red);color:#fff}
+.btn.dark{background:var(--slate);color:#fff}
+
+.hint{
+  background:#fef3c7;
+  border:3px dashed var(--gold);
+  border-radius:18px;
+  padding:13px;
+  margin-top:12px;
+  display:none;
+}
+
+.hint.show{display:block;animation:pop .3s}
+
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+/* Guided subtraction */
+
+.engine{
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:25px;
+  align-items:center;
+}
+
+.engine-problem{
+  background:#fff;
+  border:4px solid var(--slate);
+  border-radius:25px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.engine-controls{
+  background:#f8fafc;
+  border:3px solid var(--slate);
+  border-radius:22px;
+  padding:18px;
+}
+
+.step-badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  background:var(--cheese);
+  border:2px solid var(--slate);
+  font-weight:700;
+}
+
+.step-prompt{
+  background:#fff;
+  border-left:7px solid var(--gold);
+  padding:14px;
+  margin:14px 0;
+  border-radius:10px;
+  font-size:1.15rem;
+}
+
+.borrow-box{
+  position:relative;
+  min-height:40px;
+  font-size:1.5rem;
+}
+
+.borrow-value{
+  color:var(--red);
+  text-decoration:line-through;
+  text-decoration-thickness:3px;
+  animation:strike .5s ease;
+}
+
+@keyframes strike{
+  from{text-decoration-color:transparent}
+  to{text-decoration-color:var(--red)}
+}
+
+.engine-input{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.result-display{
+  font-size:2.2rem;
+  font-weight:700;
+  text-align:center;
+  margin-top:10px;
+}
+
+.solved{
+  background:#dcfce7;
+  border:3px solid #16a34a;
+  border-radius:16px;
+  padding:12px;
+  text-align:center;
+  font-weight:700;
+}
+
+.progress{
+  position:absolute;
+  top:0;
+  left:0;
+  height:7px;
+  background:var(--gold);
+  width:0%;
+  transition:.4s;
+  z-index:10;
+}
+
+.controls{
+  position:absolute;
+  bottom:13px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(720px,70%);
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:15px;
+  z-index:50;
+}
+
+.nav{
+  width:58px;
+  height:48px;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 4px 0 var(--slate);
+  font-size:1.5rem;
+}
+
+.nav.prev{justify-self:start}
+.nav.next{justify-self:end}
+
+.counter{
+  background:var(--slate);
+  color:#fff;
+  padding:9px 20px;
+  border-radius:999px;
+  font-weight:700;
+  white-space:nowrap;
+  box-shadow:0 4px 0 rgba(0,0,0,.2);
+}
+
+.tools{
+  position:absolute;
+  right:15px;
+  bottom:15px;
+  z-index:60;
+  display:flex;
+  gap:8px;
+}
+
+.tool-btn{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:var(--cheese);
+  box-shadow:0 4px 0 var(--slate);
+}
+
+.scratchpad{
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:min(450px,90%);
+  background:#fffdf2;
+  border-left:5px solid var(--slate);
+  z-index:100;
+  transform:translateX(105%);
+  transition:.35s;
+  box-shadow:-15px 0 30px rgba(0,0,0,.15);
+  display:flex;
+  flex-direction:column;
+}
+
+.scratchpad.open{transform:translateX(0)}
+
+.pad-header{
+  padding:15px;
+  background:var(--cheese);
+  border-bottom:4px solid var(--slate);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.pad-tools{
+  display:flex;
+  gap:7px;
+  padding:10px;
+  flex-wrap:wrap;
+  border-bottom:3px solid var(--light);
+}
+
+.pad-tools button{
+  padding:7px 10px;
+  border-radius:10px;
+  background:#fff;
+}
+
+.color-dot{
+  width:26px!important;
+  height:26px;
+  padding:0!important;
+  border-radius:50%!important;
+}
+
+#drawCanvas{
+  flex:1;
+  width:100%;
+  background:
+    linear-gradient(#f8eec7 1px,transparent 1px),
+    linear-gradient(90deg,#f8eec7 1px,transparent 1px);
+  background-size:25px 25px;
+  touch-action:none;
+}
+
+.ladder{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:min(600px,100%);
+  margin:20px auto;
+}
+
+.ladder div{
+  padding:14px;
+  border:3px solid var(--slate);
+  border-radius:16px;
+  font-size:1.3rem;
+  font-weight:700;
+}
+
+.ladder .thousand{background:#ede9fe}
+.ladder .hundred{background:#d1fae5}
+.ladder .ten{background:#dbeafe}
+.ladder .one{background:#ffedd5}
+
+.confetti{
+  position:fixed;
+  pointer-events:none;
+  z-index:999;
+  font-size:25px;
+  animation:confetti 1.3s forwards;
+}
+
+@keyframes confetti{
+  from{transform:translateY(0) rotate(0);opacity:1}
+  to{transform:translateY(500px) rotate(700deg);opacity:0}
+}
+
+.mini-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.challenge-card{
+  background:#fff;
+  border:3px solid var(--slate);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.challenge-card h3{text-align:center}
+
+.answer-reveal{
+  display:none;
+  margin-top:10px;
+  background:#dcfce7;
+  border:3px solid #16a34a;
+  border-radius:13px;
+  padding:10px;
+  font-weight:700;
+}
+
+.answer-reveal.show{display:block}
+
+@media(max-width:850px){
+  .slide{padding:5% 5% 12%}
+  .engine,.two-col{grid-template-columns:1fr}
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+  .mini-grid{grid-template-columns:1fr}
+  .heroText{width:100%}
+  .cartoon{display:none}
+  .controls{width:65%}
+}
+
+@media(max-height:650px){
+  .slide{padding-top:3%;padding-bottom:12%}
+  h1{font-size:2.3rem}
+  h2{font-size:1.8rem}
+  p{font-size:.95rem}
+  .info-card{padding:12px}
+  .feature{padding:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<div class="presentation">
+
+<div class="progress" id="progress"></div>
+
+<!-- ================= SLIDE 1 ================= -->
+<section class="slide active">
+  <div class="hero">
+    <div class="heroText">
+      <div class="cheese-badge">TOM & JERRY MATH MISSION</div>
+      <h1 class="title">🚀 Mission:<br>Crack the Subtraction Code!</h1>
+      <p class="subtitle">
+        Tom & Jerry's Place Value & Vertical Subtraction Adventure
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <strong>🔢</strong>
+          Place Value
+        </div>
+        <div class="feature">
+          <strong>➖</strong>
+          Subtract
+        </div>
+        <div class="feature">
+          <strong>🧀</strong>
+          Regroup
+        </div>
+        <div class="feature">
+          <strong>🏆</strong>
+          Master It
+        </div>
+      </div>
+    </div>
+
+    <div class="cartoon">
+      <div class="tom">
+        <div class="eye left"><i></i></div>
+        <div class="eye right"><i></i></div>
+        <div class="nose"></div>
+        <div class="smile"></div>
+        <div class="jerry"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 2 ================= -->
+<section class="slide">
+  <div class="cheese-badge">LEVEL 1</div>
+  <h2>🟩 Tens & Ones Recall</h2>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3>Remember!</h3>
+      <p>
+        A <b>ten</b> is made from <b>10 ones</b>.
+      </p>
+      <div class="pv-grid">
+        <div class="pv t">
+          <div class="label">1 TEN</div>
+          <div class="big">10</div>
+        </div>
+        <div class="pv o">
+          <div class="label">ONES</div>
+          <div class="big">••••••••••</div>
+        </div>
+      </div>
+      <p class="center"><b>1 ten = 10 ones</b></p>
+    </div>
+
+    <div class="answer-area">
+      <div class="question">
+        🧀 Quick Check:<br>
+        How many ones make 1 ten?
+      </div>
+      <div class="options">
+        <button class="choice" onclick="choose(this,5,false)">5</button>
+        <button class="choice" onclick="choose(this,10,true)">10</button>
+        <button class="choice" onclick="choose(this,20,false)">20</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 3 ================= -->
+<section class="slide">
+  <div class="cheese-badge">SETUP SKILLS</div>
+  <h2>📝 Vertical Subtraction Setup</h2>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3>Why do we line up the digits?</h3>
+      <p>
+        Each digit must stay in its own place value column.
+      </p>
+
+      <div class="pv-grid">
+        <div class="pv t"><div class="label">TENS</div><div class="big">4</div></div>
+        <div class="pv o"><div class="label">ONES</div><div class="big">7</div></div>
+        <div></div><div></div>
+      </div>
+
+      <p>
+        The <b>larger number goes on top</b>.
+      </p>
+    </div>
+
+    <div class="math-demo">
+      <div class="column-labels">
+        <span>T</span><span>O</span>
+      </div>
+      <div class="vrow">
+        <span class="t">4</span><span class="o">7</span>
+        <span></span><span></span>
+      </div>
+      <div class="vrow">
+        <span class="t">2</span><span class="o">3</span>
+        <span></span><span></span>
+      </div>
+      <div class="vline"></div>
+      <div class="vrow">
+        <span>?</span><span>?</span>
+        <span></span><span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 4 ================= -->
+<section class="slide">
+  <div class="cheese-badge">GUIDED PRACTICE</div>
+  <h2>⚡ Guided Subtraction — No Regrouping</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span>T</span><span>O</span><span></span><span></span>
+        </div>
+        <div class="vrow">
+          <span class="t">4</span><span class="o">7</span><span></span><span></span>
+        </div>
+        <div class="vrow">
+          <span class="t">2</span><span class="o">3</span><span></span><span></span>
+        </div>
+        <div class="vline"></div>
+        <div class="vrow">
+          <span class="t">2</span><span class="o">4</span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge">STEP 1</span>
+      <div class="step-prompt">
+        Add the Ones:<br>
+        <b>7 − 3 = ?</b>
+      </div>
+
+      <div class="engine-input">
+        <input class="answer" id="s4a" maxlength="2">
+        <button class="btn" onclick="checkInput('s4a',4,this)">Check Step</button>
+      </div>
+
+      <div class="hint" id="s4hint">
+        💡 Look at the Ones column. Seven take away three leaves four.
+      </div>
+      <button class="btn dark" onclick="toggleHint('s4hint')">Reveal Hint</button>
+
+      <div class="feedback" id="s4feed"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 5 ================= -->
+<section class="slide">
+  <div class="cheese-badge">LEVEL 2</div>
+  <h2>🧀 The Regrouping Secret!</h2>
+
+  <div class="info-card center">
+    <h3>What if the top digit is smaller?</h3>
+    <p>
+      Imagine you have <b>2 ones</b>, but Jerry needs to take away <b>7 ones</b>.
+    </p>
+
+    <div class="pv-grid">
+      <div class="pv t">
+        <div class="label">1 TEN</div>
+        <div class="big">10</div>
+      </div>
+
+      <div class="pv o">
+        <div class="label">10 ONES</div>
+        <div class="big">••••••••••</div>
+      </div>
+    </div>
+
+    <p>
+      We <b>unbundle</b> one ten into <b>10 ones</b>.
+    </p>
+
+    <h3>1 ten → 10 ones 🔄</h3>
+
+    <button class="btn" onclick="reveal('borrowReveal')">
+      Reveal the Secret
+    </button>
+
+    <div class="answer-reveal" id="borrowReveal">
+      🧀 Borrowing doesn't mean stealing!
+      It means <b>regrouping place value</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 6 ================= -->
+<section class="slide">
+  <div class="cheese-badge">GUIDED REGROUPING</div>
+  <h2>🎯 Step-by-Step Regrouping: 52 − 27</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span></span><span></span><span>T</span><span>O</span>
+        </div>
+
+        <div class="vrow">
+          <span></span><span></span>
+          <span class="t" id="s6t">5</span>
+          <span class="o" id="s6o">2</span>
+        </div>
+
+        <div class="vrow">
+          <span></span><span></span>
+          <span class="t">2</span>
+          <span class="o">7</span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span></span><span></span>
+          <span id="s6rT">?</span>
+          <span id="s6rO">?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge" id="s6badge">STEP 1</span>
+
+      <div class="step-prompt" id="s6prompt">
+        Can you subtract 7 from 2?
+      </div>
+
+      <div id="s6controls"></div>
+
+      <div class="feedback" id="s6feed"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 7 ================= -->
+<section class="slide">
+  <div class="cheese-badge">DETECTIVE MODE</div>
+  <h2>🕵️ Tom's Trap: Spot the Error!</h2>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3>Tom says:</h3>
+      <div class="math-demo">
+        <div class="vrow">
+          <span></span><span>6</span><span>1</span>
+        </div>
+        <div class="vrow">
+          <span></span><span>2</span><span>8</span>
+        </div>
+        <div class="vline"></div>
+        <div class="vrow">
+          <span></span><span>4</span><span>7</span>
+        </div>
+      </div>
+      <p class="center">Tom got <b>47</b>. Is he correct?</p>
+    </div>
+
+    <div class="answer-area">
+      <div class="question">Was Tom's answer correct?</div>
+
+      <div class="options">
+        <button class="choice" onclick="choose(this,1,false)">Yes</button>
+        <button class="choice" onclick="choose(this,0,true)">No</button>
+      </div>
+
+      <div class="feedback"></div>
+
+      <div class="info-card">
+        <p>
+          Since <b>1 &lt; 8</b>, we must borrow:
+        </p>
+        <p class="center">
+          61 → 5 tens + 11 ones
+        </p>
+        <p class="center">
+          11 − 8 = 3<br>
+          5 − 2 = 3
+        </p>
+        <h3 class="center">Answer = 33 🎉</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 8 ================= -->
+<section class="slide">
+  <div class="cheese-badge">LEVEL 3</div>
+  <h2>💯 Entering the Hundreds!</h2>
+
+  <div class="info-card center">
+    <h3>Now we have THREE place value columns!</h3>
+
+    <div class="pv-grid">
+      <div class="pv h">
+        <div class="label">HUNDREDS</div>
+        <div class="big">100</div>
+      </div>
+
+      <div class="pv t">
+        <div class="label">TENS</div>
+        <div class="big">10</div>
+      </div>
+
+      <div class="pv o">
+        <div class="label">ONES</div>
+        <div class="big">1</div>
+      </div>
+
+      <div></div>
+    </div>
+
+    <p>
+      <b>10 tens = 1 hundred</b>
+    </p>
+
+    <div class="math-demo">
+      <div class="column-labels">
+        <span>H</span><span>T</span><span>O</span><span></span>
+      </div>
+      <div class="vrow">
+        <span class="h">3</span>
+        <span class="t">6</span>
+        <span class="o">4</span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 9 ================= -->
+<section class="slide">
+  <div class="cheese-badge">3-DIGIT PRACTICE</div>
+  <h2>🎯 364 − 148</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span>H</span><span>T</span><span>O</span><span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">3</span>
+          <span class="t">6</span>
+          <span class="o">4</span>
+          <span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">1</span>
+          <span class="t">4</span>
+          <span class="o">8</span>
+          <span></span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span class="h">2</span>
+          <span class="t">1</span>
+          <span class="o">6</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge">CHECK</span>
+      <div class="step-prompt">
+        Ones first!<br>
+        Can you subtract <b>8 from 4</b>?
+      </div>
+
+      <div class="options">
+        <button class="choice" onclick="choose(this,1,true)">Yes</button>
+        <button class="choice" onclick="choose(this,0,false)">No — Borrow!</button>
+      </div>
+
+      <div class="hint" id="s9hint">
+        💡 Borrow 1 ten from the 6 tens.
+        The 6 becomes 5 and the 4 ones becomes 14.
+      </div>
+
+      <button class="btn dark" onclick="toggleHint('s9hint')">Reveal Hint</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 10 ================= -->
+<section class="slide">
+  <div class="cheese-badge">CHALLENGE MODE</div>
+  <h2>🔥 Double Borrowing Challenge!</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span>H</span><span>T</span><span>O</span><span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">5</span>
+          <span class="t">3</span>
+          <span class="o">2</span>
+          <span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">2</span>
+          <span class="t">7</span>
+          <span class="o">5</span>
+          <span></span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span>2</span><span>5</span><span>7</span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge">MISSION</span>
+
+      <div class="step-prompt">
+        <b>532 − 275</b><br><br>
+        First borrow from Tens to Ones.<br>
+        Then borrow from Hundreds to Tens.
+      </div>
+
+      <button class="btn" onclick="reveal('s10answer')">
+        Reveal Answer
+      </button>
+
+      <div class="answer-reveal" id="s10answer">
+        532 → 522 → 412 after regrouping.<br>
+        Ones: 12 − 5 = 7<br>
+        Tens: 12 − 7 = 5<br>
+        Hundreds: 4 − 2 = 2<br><br>
+        🏆 <b>Answer = 257</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 11 ================= -->
+<section class="slide">
+  <div class="cheese-badge">LEVEL 4</div>
+  <h2>😈 The Tricky Zero!</h2>
+
+  <div class="two-col">
+    <div class="info-card center">
+      <h3>403 − 168</h3>
+
+      <div class="vertical">
+        <div class="column-labels">
+          <span>H</span><span>T</span><span>O</span><span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">4</span>
+          <span class="t">0</span>
+          <span class="o">3</span>
+          <span></span>
+        </div>
+
+        <div class="vrow">
+          <span class="h">1</span>
+          <span class="t">6</span>
+          <span class="o">8</span>
+          <span></span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span>2</span><span>3</span><span>5</span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer-area">
+      <div class="question">
+        The Tens column is zero.<br>
+        What should we do?
+      </div>
+
+      <div class="options">
+        <button class="choice" onclick="choose(this,1,true)">
+          Borrow through the zero
+        </button>
+
+        <button class="choice" onclick="choose(this,0,false)">
+          Ignore it
+        </button>
+      </div>
+
+      <div class="feedback"></div>
+
+      <button class="btn" onclick="reveal('zeroSteps')">
+        Reveal Steps
+      </button>
+
+      <div class="answer-reveal" id="zeroSteps">
+        4 hundreds → 3 hundreds<br>
+        0 tens → 10 tens<br>
+        10 tens → 9 tens + 10 ones<br>
+        3 ones → 13 ones<br><br>
+        13 − 8 = 5<br>
+        9 − 6 = 3<br>
+        3 − 1 = 2<br><br>
+        🏆 <b>235</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 12 ================= -->
+<section class="slide">
+  <div class="cheese-badge">⚡ SPEED ROUND</div>
+  <h2>Quick Subtraction Check</h2>
+
+  <div class="mini-grid">
+
+    <div class="challenge-card">
+      <h3>73 − 39</h3>
+      <input class="answer" id="q12a">
+      <button class="btn" onclick="checkInput('q12a',34,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>254 − 127</h3>
+      <input class="answer" id="q12b">
+      <button class="btn" onclick="checkInput('q12b',127,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>500 − 142</h3>
+      <input class="answer" id="q12c">
+      <button class="btn" onclick="checkInput('q12c',358,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= SLIDE 13 ================= -->
+<section class="slide">
+  <div class="cheese-badge">LEVEL 5</div>
+  <h2>🔓 Unlocking 1,000!</h2>
+
+  <div class="info-card center">
+    <h3>Meet the Thousands Place!</h3>
+
+    <div class="pv-grid">
+      <div class="pv th">
+        <div class="label">THOUSANDS</div>
+        <div class="big">1,000</div>
+      </div>
+
+      <div class="pv h">
+        <div class="label">HUNDREDS</div>
+        <div class="big">100</div>
+      </div>
+
+      <div class="pv t">
+        <div class="label">TENS</div>
+        <div class="big">10</div>
+      </div>
+
+      <div class="pv o">
+        <div class="label">ONES</div>
+        <div class="big">1</div>
+      </div>
+    </div>
+
+    <h3>10 Hundreds = 1 Thousand</h3>
+
+    <p>
+      Now subtraction can travel all the way from
+      <b>Thousands → Hundreds → Tens → Ones</b>.
+    </p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 14 ================= -->
+<section class="slide">
+  <div class="cheese-badge">BIG REGROUP</div>
+  <h2>🏗️ 1,000 − 436</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span>Th</span><span>H</span><span>T</span><span>O</span>
+        </div>
+
+        <div class="vrow">
+          <span class="th">1</span>
+          <span class="h">0</span>
+          <span class="t">0</span>
+          <span class="o">0</span>
+        </div>
+
+        <div class="vrow">
+          <span></span>
+          <span class="h">4</span>
+          <span class="t">3</span>
+          <span class="o">6</span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span></span>
+          <span>5</span>
+          <span>6</span>
+          <span>4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge">ZERO CHAIN</span>
+
+      <div class="step-prompt">
+        You cannot borrow from the Ones directly.
+        Travel through the zeroes!
+      </div>
+
+      <button class="btn" onclick="reveal('s14')">
+        Reveal Borrowing Chain
+      </button>
+
+      <div class="answer-reveal" id="s14">
+        1 thousand → 10 hundreds<br>
+        1 hundred → 10 tens<br>
+        1 ten → 10 ones<br><br>
+        10 − 6 = 4<br>
+        9 − 3 = 6<br>
+        9 − 4 = 5<br><br>
+        🏆 <b>564</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 15 ================= -->
+<section class="slide">
+  <div class="cheese-badge">🚨 BOSS BATTLE 1</div>
+  <h2>4-Digit Vertical Challenge</h2>
+
+  <div class="engine">
+    <div class="engine-problem">
+      <div class="vertical">
+        <div class="column-labels">
+          <span>Th</span><span>H</span><span>T</span><span>O</span>
+        </div>
+
+        <div class="vrow">
+          <span class="th">1</span>
+          <span class="h">4</span>
+          <span class="t">2</span>
+          <span class="o">5</span>
+        </div>
+
+        <div class="vrow">
+          <span></span>
+          <span class="h">6</span>
+          <span class="t">7</span>
+          <span class="o">8</span>
+        </div>
+
+        <div class="vline"></div>
+
+        <div class="vrow">
+          <span>0</span>
+          <span>7</span>
+          <span>4</span>
+          <span>7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="engine-controls">
+      <span class="step-badge">MISSION</span>
+
+      <div class="step-prompt">
+        <b>1,425 − 678</b><br><br>
+        Which column do you start with?
+      </div>
+
+      <div class="options">
+        <button class="choice" onclick="choose(this,1,true)">Ones</button>
+        <button class="choice" onclick="choose(this,0,false)">Thousands</button>
+        <button class="choice" onclick="choose(this,0,false)">Hundreds</button>
+      </div>
+
+      <div class="feedback"></div>
+
+      <button class="btn" onclick="reveal('s15answer')">
+        Reveal Solution
+      </button>
+
+      <div class="answer-reveal" id="s15answer">
+        Ones: 15 − 8 = 7<br>
+        Tens: 1 − 7 → borrow → 11 − 7 = 4<br>
+        Hundreds: 3 − 6 → borrow → 13 − 6 = 7<br>
+        Thousands: 0 − 0 = 0<br><br>
+        🏆 <b>747</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 16 ================= -->
+<section class="slide">
+  <div class="cheese-badge">DETECTIVE CHALLENGE</div>
+  <h2>🧩 Missing Digit Detective</h2>
+
+  <div class="info-card center">
+    <h3>5□4 − 27□ = 265</h3>
+
+    <p>
+      Find both missing digits.
+    </p>
+
+    <div class="math-demo">
+      <div class="vrow">
+        <span>5</span>
+        <span>□</span>
+        <span>4</span>
+        <span></span>
+      </div>
+
+      <div class="vrow">
+        <span></span>
+        <span>2</span>
+        <span>7</span>
+        <span></span>
+      </div>
+
+      <div class="vline"></div>
+
+      <div class="vrow">
+        <span>2</span>
+        <span>6</span>
+        <span>5</span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="engine-input">
+      Tens digit:
+      <input class="answer" id="s16a">
+      Ones digit:
+      <input class="answer" id="s16b">
+      <button class="btn" onclick="checkMissing16()">Check</button>
+    </div>
+
+    <div class="feedback" id="s16feed"></div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 17 ================= -->
+<section class="slide">
+  <div class="cheese-badge">🧀 CHEESE CHASE</div>
+  <h2>🏃 Jerry's Cheese Chase</h2>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3>Story Mission</h3>
+      <p>
+        Tom had <b>650g</b> of cheese.
+      </p>
+      <p>
+        Jerry snuck away with <b>285g</b>.
+      </p>
+      <p>
+        How much cheese does Tom have left?
+      </p>
+
+      <div class="math-demo">
+        <div class="vrow">
+          <span>6</span><span>5</span><span>0</span><span></span>
+        </div>
+        <div class="vrow">
+          <span>2</span><span>8</span><span>5</span><span></span>
+        </div>
+        <div class="vline"></div>
+        <div class="vrow">
+          <span>3</span><span>6</span><span>5</span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer-area">
+      <div class="question">
+        How much cheese is left?
+      </div>
+
+      <input class="answer" id="s17ans">
+      <button class="btn" onclick="checkInput('s17ans',365,this)">
+        Check Answer
+      </button>
+
+      <div class="feedback" id="s17feed"></div>
+
+      <div class="hint" id="s17hint">
+        💡 650 − 285<br>
+        You will need to regroup from Tens and Hundreds.
+      </div>
+
+      <button class="btn dark" onclick="toggleHint('s17hint')">
+        Reveal Hint
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 18 ================= -->
+<section class="slide">
+  <div class="cheese-badge">👑 FINAL BOSS</div>
+  <h2>Place Value Subtraction Battle</h2>
+
+  <div class="mini-grid">
+
+    <div class="challenge-card">
+      <h3>1️⃣ 84 − 37</h3>
+      <input class="answer" id="s18a">
+      <button class="btn" onclick="checkInput('s18a',47,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>2️⃣ 426 − 189</h3>
+      <input class="answer" id="s18b">
+      <button class="btn" onclick="checkInput('s18b',237,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>3️⃣ 703 − 268</h3>
+      <input class="answer" id="s18c">
+      <button class="btn" onclick="checkInput('s18c',435,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <div class="center" style="margin-top:25px">
+    <button class="btn" onclick="celebrate()">
+      🧀 DEFEAT THE BOSS!
+    </button>
+  </div>
+</section>
+
+<!-- ================= SLIDE 19 ================= -->
+<section class="slide">
+  <div class="cheese-badge">🏆 MASTER CHALLENGE</div>
+  <h2>Can You Beat All Four?</h2>
+
+  <div class="mini-grid">
+
+    <div class="challenge-card">
+      <h3>1. Expanded Form</h3>
+      <p>3,452 − 1,200 = ?</p>
+      <input class="answer" id="s19a">
+      <button class="btn" onclick="checkInput('s19a',2252,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>2. Regrouping</h3>
+      <p>1,004 − 587 = ?</p>
+      <input class="answer" id="s19b">
+      <button class="btn" onclick="checkInput('s19b',417,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>3. Big Challenge</h3>
+      <p>2,500 − 1,376 = ?</p>
+      <input class="answer" id="s19c">
+      <button class="btn" onclick="checkInput('s19c',1124,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="challenge-card">
+      <h3>4. Final Test</h3>
+      <p>1,735 − 968 = ?</p>
+      <input class="answer" id="s19d">
+      <button class="btn" onclick="checkInput('s19d',767,this)">Check</button>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= SLIDE 20 ================= -->
+<section class="slide">
+  <div class="center">
+    <div class="cheese-badge">MISSION COMPLETE!</div>
+
+    <h1 class="title">🎉 Place Value &<br>Subtraction Master!</h1>
+
+    <p class="subtitle">
+      You survived Tom's traps, Jerry's cheese chase,
+      and the zero-regrouping challenge!
+    </p>
+
+    <div class="ladder">
+      <div class="thousand">🟣 Thousands → 1,000</div>
+      <div class="hundred">🟢 Hundreds → 100</div>
+      <div class="ten">🔵 Tens → 10</div>
+      <div class="one">🟠 Ones → 1</div>
+    </div>
+
+    <div class="info-card">
+      <h3>🏆 FINAL QUESTION</h3>
+      <p>
+        In <b>3,482</b>, which digit has the greatest value?
+      </p>
+
+      <div class="options">
+        <button class="choice" onclick="choose(this,3,true)">3 → 3,000</button>
+        <button class="choice" onclick="choose(this,4,false)">4 → 400</button>
+        <button class="choice" onclick="choose(this,8,false)">8 → 80</button>
+        <button class="choice" onclick="choose(this,2,false)">2 → 2</button>
+      </div>
+
+      <div class="feedback"></div>
+    </div>
+
+    <button class="btn" onclick="celebrate()">
+      🧀 CELEBRATE!
+    </button>
+  </div>
+</section>
+
+<!-- NAVIGATION -->
+<div class="controls">
+  <button class="nav prev" id="prevBtn" onclick="prevSlide()">←</button>
+
+  <div class="counter">
+    <span id="counter">Slide 1 / 20</span>
+  </div>
+
+  <button class="nav next" id="nextBtn" onclick="nextSlide()">→</button>
+</div>
+
+<!-- SCRATCHPAD BUTTON -->
+<div class="tools">
+  <button class="tool-btn" onclick="togglePad()" title="Scratchpad">✏️</button>
+</div>
+
+<!-- SCRATCHPAD -->
+<aside class="scratchpad" id="scratchpad">
+
+  <div class="pad-header">
+    <strong>🧀 Jerry's Cheese Scratchpad</strong>
+    <button onclick="togglePad()">✕</button>
+  </div>
+
+  <div class="pad-tools">
+    <button onclick="setTool('pencil')">✏️ Pencil</button>
+    <button onclick="setTool('eraser')">🧽 Eraser</button>
+    <button onclick="clearCanvas()">🗑️ Clear</button>
+
+    <button
+      class="color-dot"
+      style="background:#111827"
+      onclick="setColor('#111827')">
+    </button>
+
+    <button
+      class="color-dot"
+      style="background:#2563EB"
+      onclick="setColor('#2563EB')">
+    </button>
+
+    <button
+      class="color-dot"
+      style="background:#DC2626"
+      onclick="setColor('#DC2626')">
+    </button>
+
+    <button
+      class="color-dot"
+      style="background:#FACC15"
+      onclick="setColor('#FACC15')">
+    </button>
+  </div>
+
+  <canvas id="drawCanvas"></canvas>
+
+</aside>
+
+</div>
+</div>
+
+<script>
+/* =========================================================
+   SLIDE ENGINE
+========================================================= */
+
+const slides = [...document.querySelectorAll('.slide')];
+let currentSlide = 0;
+
+function showSlide(index){
+  if(index < 0) index = 0;
+  if(index >= slides.length) index = slides.length - 1;
+
+  currentSlide = index;
+
+  slides.forEach((slide,i)=>{
+    slide.classList.toggle('active',i === currentSlide);
+  });
+
+  document.getElementById('counter').textContent =
+    `Slide ${currentSlide + 1} / ${slides.length}`;
+
+  document.getElementById('progress').style.width =
+    `${((currentSlide + 1) / slides.length) * 100}%`;
+
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled =
+    currentSlide === slides.length - 1;
+
+  window.speechSynthesis?.cancel();
+}
+
+function nextSlide(){
+  showSlide(currentSlide + 1);
+}
+
+function prevSlide(){
+  showSlide(currentSlide - 1);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key === 'ArrowRight'){
+    e.preventDefault();
+    nextSlide();
+  }
+
+  if(e.key === 'ArrowLeft'){
+    e.preventDefault();
+    prevSlide();
+  }
+
+  if(e.key === 'Escape'){
+    document.getElementById('scratchpad').classList.remove('open');
+  }
+});
+
+/* =========================================================
+   ANSWER SYSTEM
+========================================================= */
+
+function choose(button,value,correct){
+  const container = button.closest('.answer-area') ||
+                    button.parentElement.parentElement;
+
+  const choices = container.querySelectorAll('.choice');
+  choices.forEach(c=>c.disabled=true);
+
+  const feedback = container.querySelector('.feedback');
+
+  if(correct){
+    button.classList.add('correct');
+
+    if(feedback){
+      feedback.textContent = '🎉 Correct! Great detective work!';
+      feedback.style.color = '#15803d';
+    }
+
+    celebrateSmall();
+  }else{
+    button.classList.add('wrong');
+
+    if(feedback){
+      feedback.textContent =
+        '🐭 Not quite! Think about the place value and try again.';
+      feedback.style.color = '#b91c1c';
+    }
+
+    setTimeout(()=>{
+      button.classList.remove('wrong');
+      choices.forEach(c=>c.disabled=false);
+    },900);
+  }
+}
+
+function checkInput(id,expected,button){
+  const input = document.getElementById(id);
+  const value = Number(input.value.trim());
+
+  const parent =
+    input.closest('.challenge-card') ||
+    input.closest('.engine-controls') ||
+    input.parentElement.parentElement;
+
+  const feedback = parent.querySelector('.feedback');
+
+  if(value === expected){
+    input.style.borderColor='#16a34a';
+
+    if(feedback){
+      feedback.textContent='🎉 Correct! You nailed it!';
+      feedback.style.color='#15803d';
+    }
+
+    if(button){
+      button.textContent='✓ Correct!';
+      button.classList.add('green');
+    }
+
+    celebrateSmall();
+
+  }else{
+    input.style.borderColor='#dc2626';
+
+    if(feedback){
+      feedback.textContent='🧐 Not yet. Check your place value and regrouping.';
+      feedback.style.color='#b91c1c';
+    }
+
+    input.animate([
+      {transform:'translateX(-5px)'},
+      {transform:'translateX(5px)'},
+      {transform:'translateX(-4px)'},
+      {transform:'translateX(0)'}
+    ],300);
+  }
+}
+
+function toggleHint(id){
+  document.getElementById(id).classList.toggle('show');
+}
+
+function reveal(id){
+  document.getElementById(id).classList.add('show');
+  celebrateSmall();
+}
+
+/* =========================================================
+   SLIDE 6 — FULL INTERACTIVE REGROUPING
+========================================================= */
+
+let s6step = 1;
+
+function renderS6(){
+  const badge = document.getElementById('s6badge');
+  const prompt = document.getElementById('s6prompt');
+  const controls = document.getElementById('s6controls');
+  const feed = document.getElementById('s6feed');
+
+  controls.innerHTML='';
+
+  if(s6step === 1){
+
+    badge.textContent='STEP 1 — CHECK ONES';
+
+    prompt.innerHTML=
+      'Can you subtract <b>7 from 2</b>?<br><br>' +
+      '2 &lt; 7, so what do we need?';
+
+    controls.innerHTML=`
+      <div class="options">
+        <button class="choice" onclick="s6Choice(false)">No, just subtract</button>
+        <button class="choice" onclick="s6Choice(true)">No! Need to Borrow</button>
+      </div>
+    `;
+
+  }else if(s6step === 2){
+
+    badge.textContent='STEP 2 — BORROW';
+
+    prompt.innerHTML=
+      'Click the <b>Tens digit</b> to borrow 1 ten.';
+
+    controls.innerHTML=`
+      <div class="center">
+        <button class="btn" onclick="s6Borrow()">
+          🖐️ Borrow 1 Ten from 5
+        </button>
+      </div>
+    `;
+
+  }else if(s6step === 3){
+
+    badge.textContent='STEP 3 — UPDATE';
+
+    prompt.innerHTML=
+      'The 5 Tens becomes 4 Tens.<br>' +
+      'The 2 Ones becomes 12 Ones.<br><br>' +
+      'Verify the new Ones value:';
+
+    controls.innerHTML=`
+      <div class="engine-input">
+        <input class="answer" id="s6input" maxlength="2">
+        <button class="btn" onclick="s6VerifyUpdate()">Check</button>
+      </div>
+    `;
+
+  }else if(s6step === 4){
+
+    badge.textContent='STEP 4 — SUBTRACT ONES';
+
+    prompt.innerHTML=
+      '<b>12 − 7 = ?</b>';
+
+    controls.innerHTML=`
+      <div class="engine-input">
+        <input class="answer" id="s6input" maxlength="2">
+        <button class="btn" onclick="s6VerifyOnes()">Check</button>
+      </div>
+    `;
+
+  }else if(s6step === 5){
+
+    badge.textContent='STEP 5 — SUBTRACT TENS';
+
+    prompt.innerHTML=
+      '<b>4 − 2 = ?</b>';
+
+    controls.innerHTML=`
+      <div class="engine-input">
+        <input class="answer" id="s6input" maxlength="2">
+        <button class="btn" onclick="s6Finish()">Check</button>
+      </div>
+    `;
+  }
+}
+
+function s6Choice(correct){
+  const feed=document.getElementById('s6feed');
+
+  if(correct){
+    feed.textContent='🎉 Correct! We need to regroup!';
+    feed.style.color='#15803d';
+    s6step=2;
+    renderS6();
+  }else{
+    feed.textContent='🐭 Look carefully: 2 is smaller than 7!';
+    feed.style.color='#b91c1c';
+  }
+}
+
+function s6Borrow(){
+  document.getElementById('s6t').classList.add('borrow-value');
+  document.getElementById('s6t').textContent='4';
+  document.getElementById('s6o').textContent='12';
+
+  document.getElementById('s6feed').textContent=
+    '🧀 1 ten was regrouped into 10 ones!';
+
+  s6step=3;
+  renderS6();
+}
+
+function s6VerifyUpdate(){
+  const value=Number(document.getElementById('s6input').value);
+
+  if(value===12){
+    document.getElementById('s6feed').textContent=
+      '🎉 Perfect! The Ones place is now 12.';
+    document.getElementById('s6feed').style.color='#15803d';
+
+    s6step=4;
+    renderS6();
+  }else{
+    document.getElementById('s6feed').textContent=
+      '🧐 After borrowing 1 ten, 2 ones become 12 ones.';
+    document.getElementById('s6feed').style.color='#b91c1c';
+  }
+}
+
+function s6VerifyOnes(){
+  const value=Number(document.getElementById('s6input').value);
+
+  if(value===5){
+    document.getElementById('s6rO').textContent='5';
+    document.getElementById('s6feed').textContent=
+      '🎉 12 − 7 = 5!';
+    document.getElementById('s6feed').style.color='#15803d';
+
+    s6step=5;
+    renderS6();
+  }else{
+    document.getElementById('s6feed').textContent=
+      'Try again. Count back 7 from 12.';
+    document.getElementById('s6feed').style.color='#b91c1c';
+  }
+}
+
+function s6Finish(){
+  const value=Number(document.getElementById('s6input').value);
+
+  if(value===2){
+    document.getElementById('s6rT').textContent='2';
+    document.getElementById('s6feed').innerHTML=
+      '🏆 <b>Mission Complete!</b><br>52 − 27 = 25';
+    document.getElementById('s6feed').style.color='#15803d';
+
+    celebrate();
+  }else{
+    document.getElementById('s6feed').textContent=
+      'Try again: 4 − 2 = 2.';
+    document.getElementById('s6feed').style.color='#b91c1c';
+  }
+}
+
+renderS6();
+
+/* =========================================================
+   MISSING DIGIT SLIDE
+========================================================= */
+
+function checkMissing16(){
+
+  const a=Number(document.getElementById('s16a').value);
+  const b=Number(document.getElementById('s16b').value);
+  const feed=document.getElementById('s16feed');
+
+  /*
+    5?4 - 27? = 265
+
+    Ones:
+    4 - ? = 5
+    Requires borrow:
+    14 - ? = 5
+    ? = 9
+
+    Tens:
+    after borrowing:
+    ? - 1 - 7 = 6
+    ? - 8 = 6
+    ? = 14 impossible for digit.
+
+    Therefore the supplied example has no valid digit solution.
+    We deliberately validate this and explain it instead of
+    pretending there is a mathematically valid answer.
+  */
+
+  feed.innerHTML=
+    '🧐 This particular missing-digit equation has <b>no valid digit solution</b>.'+
+    '<br>The ones place forces 9, but then the tens place would require 14.'+
+    '<br>That means the puzzle itself needs correcting.';
+
+  feed.style.color='#b45309';
+}
+
+/* =========================================================
+   CELEBRATION
+========================================================= */
+
+function celebrateSmall(){
+
+  const emojis=['🧀','⭐','🎉','✨','🐭'];
+
+  for(let i=0;i<7;i++){
+
+    const el=document.createElement('div');
+
+    el.className='confetti';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+
+    el.style.left=(30+Math.random()*40)+'vw';
+    el.style.top=(20+Math.random()*20)+'vh';
+    el.style.animationDelay=(Math.random()*.2)+'s';
+
+    document.body.appendChild(el);
+
+    setTimeout(()=>el.remove(),1500);
+  }
+}
+
+function celebrate(){
+
+  for(let i=0;i<30;i++){
+
+    const el=document.createElement('div');
+
+    el.className='confetti';
+
+    const emojis=['🧀','⭐','🎉','✨','🏆','🐭','😺'];
+
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+
+    el.style.left=Math.random()*100+'vw';
+    el.style.top=Math.random()*35+'vh';
+
+    el.style.animationDuration=(1+Math.random()*1.5)+'s';
+    el.style.animationDelay=(Math.random()*.4)+'s';
+
+    document.body.appendChild(el);
+
+    setTimeout(()=>el.remove(),2500);
+  }
+
+  try{
+    const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const oscillator=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+
+    oscillator.frequency.value=660;
+    oscillator.type='sine';
+
+    gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.15,audioCtx.currentTime+.03);
+    gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.5);
+
+    oscillator.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime+.5);
+  }catch(e){}
+}
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+const pad=document.getElementById('scratchpad');
+const canvas=document.getElementById('drawCanvas');
+const ctx=canvas.getContext('2d');
+
+let drawing=false;
+let tool='pencil';
+let drawColor='#111827';
+let lastX=0;
+let lastY=0;
+
+function resizeCanvas(){
+
+  const rect=canvas.getBoundingClientRect();
+
+  const old=canvas.toDataURL();
+
+  canvas.width=rect.width;
+  canvas.height=rect.height;
+
+  const img=new Image();
+
+  img.onload=()=>{
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  };
+
+  img.src=old;
+}
+
+window.addEventListener('resize',resizeCanvas);
+
+setTimeout(resizeCanvas,100);
+
+function togglePad(){
+  pad.classList.toggle('open');
+
+  if(pad.classList.contains('open')){
+    setTimeout(resizeCanvas,350);
+  }
+}
+
+function setTool(newTool){
+  tool=newTool;
+}
+
+function setColor(color){
+  drawColor=color;
+  tool='pencil';
+}
+
+function getPos(e){
+
+  const rect=canvas.getBoundingClientRect();
+
+  return {
+    x:e.clientX-rect.left,
+    y:e.clientY-rect.top
+  };
+}
+
+canvas.addEventListener('pointerdown',e=>{
+
+  drawing=true;
+
+  const pos=getPos(e);
+
+  lastX=pos.x;
+  lastY=pos.y;
+
+  canvas.setPointerCapture(e.pointerId);
+});
+
+canvas.addEventListener('pointermove',e=>{
+
+  if(!drawing)return;
+
+  const pos=getPos(e);
+
+  ctx.lineWidth=tool==='eraser'?24:4;
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+
+  if(tool==='eraser'){
+    ctx.globalCompositeOperation='destination-out';
+  }else{
+    ctx.globalCompositeOperation='source-over';
+    ctx.strokeStyle=drawColor;
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(lastX,lastY);
+  ctx.lineTo(pos.x,pos.y);
+  ctx.stroke();
+
+  lastX=pos.x;
+  lastY=pos.y;
+});
+
+canvas.addEventListener('pointerup',()=>{
+  drawing=false;
+  ctx.globalCompositeOperation='source-over';
+});
+
+canvas.addEventListener('pointercancel',()=>{
+  drawing=false;
+});
+
+function clearCanvas(){
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+showSlide(0);
+
+</script>
+
+</body>
+</html>

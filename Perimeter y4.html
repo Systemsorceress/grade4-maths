@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry - Perimeter Adventure</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --cheese:#FFCC00;
+    --tom:#5C6B73;
+    --jerry:#8D5524;
+    --sky:#67C5E8;
+    --blue:#55A9E8;
+    --green:#69C96B;
+    --purple:#A875D8;
+    --orange:#F59B45;
+    --pink:#F38BA8;
+    --yellow:#FFE66D;
+    --red:#E94B4B;
+    --black:#000;
+    --white:#fff;
+    --paper:#FFFDF5;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(255,204,0,.18) 0 70px, transparent 71px),
+        radial-gradient(circle at 90% 25%, rgba(103,197,232,.16) 0 100px, transparent 101px),
+        #f4ead4;
+    font-family:"Comic Neue", sans-serif;
+    color:#111;
+}
+
+button,input,select{
+    font-family:inherit;
+}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--cheese);
+    border-bottom:5px solid #000;
+    box-shadow:0 5px 0 #000;
+}
+
+.header-inner{
+    max-width:1250px;
+    margin:auto;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.mouse-logo{
+    width:58px;
+    height:58px;
+    background:var(--tom);
+    border:4px solid #000;
+    border-radius:50%;
+    position:relative;
+    flex:none;
+}
+
+.mouse-logo:before,
+.mouse-logo:after{
+    content:"";
+    position:absolute;
+    width:25px;
+    height:25px;
+    background:var(--tom);
+    border:4px solid #000;
+    border-radius:50%;
+    top:-14px;
+}
+
+.mouse-logo:before{left:-5px;}
+.mouse-logo:after{right:-5px;}
+
+.mouse-logo span{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:#000;
+    border-radius:50%;
+    top:20px;
+    left:13px;
+    box-shadow:20px 0 #000;
+}
+
+h1{
+    margin:0;
+    font-family:"Fredoka",sans-serif;
+    font-size:clamp(22px,4vw,38px);
+    letter-spacing:.5px;
+}
+
+.subtitle{
+    font-weight:700;
+    font-size:15px;
+}
+
+.header-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.score{
+    background:white;
+    border:4px solid #000;
+    border-radius:14px;
+    padding:9px 15px;
+    font-family:"Fredoka",sans-serif;
+    font-size:18px;
+    box-shadow:4px 4px 0 #000;
+}
+
+.top-btn,
+.check-btn,
+.reset-btn{
+    border:4px solid #000;
+    border-radius:13px;
+    background:white;
+    padding:9px 15px;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:4px 4px 0 #000;
+    transition:.12s;
+}
+
+.top-btn:hover,
+.check-btn:hover,
+.reset-btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:6px 6px 0 #000;
+}
+
+.reset-btn{
+    background:#F06D6D;
+    color:white;
+}
+
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:30px 18px 70px;
+}
+
+.hero{
+    background:white;
+    border:4px solid #000;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:8px 8px 0 #000;
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.hero-character{
+    width:110px;
+    height:110px;
+    background:var(--tom);
+    border:4px solid #000;
+    border-radius:50%;
+    position:relative;
+    flex:none;
+}
+
+.hero-character:before,
+.hero-character:after{
+    content:"";
+    position:absolute;
+    width:45px;
+    height:45px;
+    border:4px solid #000;
+    background:#74838b;
+    border-radius:50%;
+    top:-25px;
+}
+
+.hero-character:before{left:-8px;}
+.hero-character:after{right:-8px;}
+
+.hero-character .eyes{
+    position:absolute;
+    top:40px;
+    left:28px;
+    width:14px;
+    height:18px;
+    border-radius:50%;
+    background:white;
+    border:3px solid #000;
+    box-shadow:31px 0 white;
+}
+
+.hero-character .eyes:after{
+    content:"";
+    position:absolute;
+    width:6px;
+    height:8px;
+    background:#000;
+    border-radius:50%;
+    left:3px;
+    top:4px;
+    box-shadow:31px 0 #000;
+}
+
+.hero-character .nose{
+    position:absolute;
+    width:20px;
+    height:14px;
+    background:#f49bb4;
+    border:3px solid #000;
+    border-radius:50%;
+    left:41px;
+    top:66px;
+}
+
+.hero h2{
+    margin:0 0 7px;
+    font-family:"Fredoka",sans-serif;
+    font-size:28px;
+}
+
+.hero p{
+    margin:0;
+    font-size:18px;
+}
+
+.section-title{
+    margin:35px 0 15px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.section-title span{
+    background:var(--cheese);
+    border:4px solid #000;
+    border-radius:12px;
+    padding:7px 13px;
+    font-family:"Fredoka",sans-serif;
+    box-shadow:4px 4px 0 #000;
+}
+
+.section-title h2{
+    margin:0;
+    font-family:"Fredoka",sans-serif;
+    font-size:25px;
+}
+
+.activity{
+    background:var(--paper);
+    border:4px solid #000;
+    border-radius:16px;
+    padding:22px;
+    margin:18px 0;
+    box-shadow:7px 7px 0 #000;
+}
+
+.activity-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.activity-number{
+    background:var(--tom);
+    color:white;
+    border:3px solid #000;
+    border-radius:50%;
+    width:45px;
+    height:45px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Fredoka",sans-serif;
+    font-size:21px;
+    flex:none;
+}
+
+.activity h3{
+    margin:0;
+    font-family:"Fredoka",sans-serif;
+    font-size:23px;
+}
+
+.activity-description{
+    margin:4px 0 0;
+    font-size:17px;
+}
+
+.diagram-area{
+    margin:18px 0;
+    padding:18px;
+    background:#eaf8ff;
+    border:3px dashed #000;
+    border-radius:14px;
+    overflow:auto;
+}
+
+.questions{
+    display:grid;
+    gap:13px;
+}
+
+.question-line{
+    background:white;
+    border:3px solid #000;
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:19px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.answer{
+    width:90px;
+    height:42px;
+    border:3px solid #000;
+    border-radius:9px;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    background:#fff;
+    outline:none;
+}
+
+.answer:focus{
+    box-shadow:0 0 0 3px rgba(103,197,232,.5);
+}
+
+.answer.correct{
+    border-color:#16A34A;
+    background:#E9FBEF;
+}
+
+.answer.incorrect{
+    border-color:#DC2626;
+    background:#FFF0F0;
+}
+
+.check-area{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:18px;
+}
+
+.check-btn{
+    background:var(--cheese);
+    font-family:"Fredoka",sans-serif;
+}
+
+.block-result{
+    margin-top:12px;
+    font-weight:700;
+    font-size:18px;
+    min-height:25px;
+}
+
+/* =========================
+   REAL GRID SHAPES
+========================= */
+
+.grid-shape-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-start;
+    gap:30px;
+}
+
+.grid-card{
+    background:white;
+    border:3px solid #000;
+    border-radius:12px;
+    padding:14px;
+    box-shadow:4px 4px 0 rgba(0,0,0,.3);
+}
+
+.grid-card h4{
+    text-align:center;
+    margin:0 0 10px;
+    font-family:"Fredoka",sans-serif;
+    font-size:19px;
+}
+
+.grid{
+    display:grid;
+    gap:0;
+    background:white;
+    border:3px solid #000;
+    width:max-content;
+}
+
+.cell{
+    width:32px;
+    height:32px;
+    border-right:1px solid rgba(0,0,0,.45);
+    border-bottom:1px solid rgba(0,0,0,.45);
+}
+
+.cell.blue{background:#5AA9E6;}
+.cell.green{background:#68C96B;}
+.cell.purple{background:#AA78D6;}
+.cell.orange{background:#F49A43;}
+.cell.pink{background:#F28DA9;}
+.cell.yellow{background:#FFE266;}
+
+.shape-note{
+    text-align:center;
+    margin-top:8px;
+    font-weight:700;
+}
+
+/* outer-edge emphasis */
+.grid-cell-container{
+    position:relative;
+}
+
+/* =========================
+   BAR MODELS
+========================= */
+
+.bar-model{
+    max-width:700px;
+    margin:auto;
+}
+
+.bar-row{
+    display:flex;
+    justify-content:center;
+}
+
+.bar-box{
+    min-width:120px;
+    min-height:58px;
+    padding:12px;
+    border:4px solid #000;
+    background:#FFDD63;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+}
+
+.bar-box + .bar-box{
+    border-left-width:2px;
+}
+
+.bar-row.whole .bar-box{
+    width:100%;
+    background:#fff;
+}
+
+.bar-row.parts{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}
+
+.bar-row.parts .bar-box{
+    width:100%;
+}
+
+.bar-row.parts .bar-box:first-child{
+    background:#BDE8FF;
+}
+
+.bar-row.parts .bar-box:last-child{
+    background:#FFC77D;
+}
+
+/* =========================
+   RECTANGLE DIMENSIONS
+========================= */
+
+.dimension-box{
+    position:relative;
+    width:360px;
+    max-width:100%;
+    height:210px;
+    margin:auto;
+}
+
+.rectangle{
+    position:absolute;
+    left:65px;
+    top:45px;
+    width:230px;
+    height:115px;
+    background:#F49AB1;
+    border:4px solid #000;
+}
+
+.dim-top{
+    position:absolute;
+    top:5px;
+    left:65px;
+    width:230px;
+    text-align:center;
+    font-weight:700;
+    font-size:19px;
+}
+
+.dim-left{
+    position:absolute;
+    left:5px;
+    top:88px;
+    transform:rotate(-90deg);
+    font-weight:700;
+    font-size:19px;
+}
+
+/* =========================
+   METHOD CARDS
+========================= */
+
+.methods{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.method{
+    border:3px solid #000;
+    border-radius:12px;
+    padding:15px;
+    background:#fff;
+}
+
+.method:first-child{
+    background:#FFD99B;
+}
+
+.method:nth-child(2){
+    background:#DDF5FF;
+}
+
+.method h4{
+    margin:0 0 7px;
+    font-family:"Fredoka",sans-serif;
+}
+
+/* =========================
+   COMPARISON
+========================= */
+
+.choice-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.choice{
+    border:3px solid #000;
+    border-radius:11px;
+    padding:9px 17px;
+    background:white;
+    font-size:19px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.choice.selected{
+    background:var(--cheese);
+    box-shadow:3px 3px 0 #000;
+}
+
+.choice.correct-choice{
+    background:#8BE28E;
+}
+
+.choice.wrong-choice{
+    background:#FF9999;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:min(470px,95vw);
+    background:white;
+    border:5px solid #000;
+    border-radius:22px;
+    padding:22px;
+    text-align:center;
+    box-shadow:10px 10px 0 #000;
+    animation:pop .2s ease-out;
+}
+
+@keyframes pop{
+    from{transform:scale(.75);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+.modal-card h2{
+    margin:0 0 10px;
+    font-family:"Fredoka",sans-serif;
+    font-size:30px;
+}
+
+.modal-card img{
+    width:280px;
+    height:190px;
+    object-fit:contain;
+    max-width:100%;
+    border:3px solid #000;
+    border-radius:12px;
+    background:#eee;
+}
+
+.close-modal{
+    margin-top:15px;
+    border:4px solid #000;
+    border-radius:11px;
+    padding:9px 25px;
+    background:var(--cheese);
+    font-weight:700;
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:750px){
+    .header-inner{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .header-controls{
+        width:100%;
+        justify-content:flex-start;
+    }
+
+    .hero{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .methods{
+        grid-template-columns:1fr;
+    }
+
+    .cell{
+        width:27px;
+        height:27px;
+    }
+
+    .question-line{
+        font-size:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-inner">
+
+        <div class="brand">
+            <div class="mouse-logo"><span></span></div>
+            <div>
+                <h1>Tom & Jerry Math Adventure!</h1>
+                <div class="subtitle">Perimeter Detective 🧀📏</div>
+            </div>
+        </div>
+
+        <div class="header-controls">
+            <div class="score">
+                ⭐ <span id="score">0</span> / <span id="total">0</span>
+            </div>
+            <button class="top-btn" onclick="checkAll()">Check Answers</button>
+            <button class="reset-btn" onclick="resetAll()">Reset All</button>
+        </div>
+
+    </div>
+</header>
+
+<main class="container">
+
+<section class="hero">
+    <div class="hero-character">
+        <div class="eyes"></div>
+        <div class="nose"></div>
+    </div>
+
+    <div>
+        <h2>Welcome, Perimeter Detective! 🕵️‍♀️</h2>
+        <p>
+            Help Tom find the perimeter of each shape.
+            Remember: <strong>perimeter means the distance all the way around!</strong>
+        </p>
+    </div>
+</section>
+
+
+<!-- =====================================================
+SECTION 1
+===================================================== -->
+
+<div class="section-title">
+    <span>WORKSHEET 1</span>
+    <h2>Perimeters on Grid Paper</h2>
+</div>
+
+
+<!-- ACTIVITY 1 -->
+<section class="activity" data-block="1">
+
+    <div class="activity-head">
+        <div>
+            <h3>1. Basic Grid Rectangles</h3>
+            <p class="activity-description">
+                Each little square is <strong>1 cm × 1 cm</strong>.
+                Count the outside edges to find the perimeter.
+            </p>
+        </div>
+        <div class="activity-number">1</div>
+    </div>
+
+    <div class="diagram-area">
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🔵 Blue Square</h4>
+                <div id="shape-square"></div>
+                <div class="shape-note">2 × 2</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟢 Green Rectangle</h4>
+                <div id="shape-green"></div>
+                <div class="shape-note">2 × 5</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟣 Purple Rectangle</h4>
+                <div id="shape-purple"></div>
+                <div class="shape-note">5 × 4</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            🔵 Blue Square perimeter =
+            <input class="answer" data-answer="8"> cm
+        </div>
+
+        <div class="question-line">
+            🟢 Green Rectangle perimeter =
+            <input class="answer" data-answer="14"> cm
+        </div>
+
+        <div class="question-line">
+            🟣 Purple Rectangle perimeter =
+            <input class="answer" data-answer="18"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(1)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 2 -->
+<section class="activity" data-block="2">
+
+    <div class="activity-head">
+        <div>
+            <h3>2. Irregular Rectilinear Shapes</h3>
+            <p class="activity-description">
+                The shapes are made from real 1 cm grid squares.
+                Trace around the outside boundary.
+            </p>
+        </div>
+        <div class="activity-number">2</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🔵 Blue Step Shape</h4>
+                <div id="irregular-blue"></div>
+                <div class="shape-note">Count every outside edge!</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟢 Green T Shape</h4>
+                <div id="irregular-green"></div>
+                <div class="shape-note">Every little square is 1 cm²</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            🔵 Blue Shape perimeter =
+            <input class="answer" data-answer="12"> cm
+        </div>
+
+        <div class="question-line">
+            🟢 Green T Shape perimeter =
+            <input class="answer" data-answer="14"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(2)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 3 -->
+<section class="activity" data-block="3">
+
+    <div class="activity-head">
+        <div>
+            <h3>3. Compare Two Rectilinear Shapes</h3>
+            <p class="activity-description">
+                Look carefully at both grid shapes.
+                Are their perimeters the same or different?
+            </p>
+        </div>
+        <div class="activity-number">3</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🟠 Orange Shape</h4>
+                <div id="orange-shape"></div>
+                <div class="shape-note">Perimeter = 16 cm</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🌸 Pink Shape</h4>
+                <div id="pink-shape"></div>
+                <div class="shape-note">Perimeter = 16 cm</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            Are the perimeters:
+            <div class="choice-row">
+                <button class="choice" data-choice="same"
+                        onclick="selectChoice(this,3)">Same</button>
+
+                <button class="choice" data-choice="different"
+                        onclick="selectChoice(this,3)">Different</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(3)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 4 -->
+<section class="activity" data-block="4">
+
+    <div class="activity-head">
+        <div>
+            <h3>4. Shape A, Shape B & Shape C</h3>
+            <p class="activity-description">
+                These are built from 1 cm grid squares.
+                Count around the boundary of each shape.
+            </p>
+        </div>
+        <div class="activity-number">4</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🟡 Shape A</h4>
+                <div id="shape-a"></div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🔵 Shape B</h4>
+                <div id="shape-b"></div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟣 Shape C</h4>
+                <div id="shape-c"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            Shape A perimeter =
+            <input class="answer" data-answer="16"> cm
+        </div>
+
+        <div class="question-line">
+            Shape B perimeter =
+            <input class="answer" data-answer="16"> cm
+        </div>
+
+        <div class="question-line">
+            Shape C perimeter =
+            <input class="answer" data-answer="20"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(4)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- =====================================================
+SECTION 2
+===================================================== -->
+
+<div class="section-title">
+    <span>WORKSHEET 2</span>
+    <h2>Perimeter of Rectangles</h2>
+</div>
+
+
+<!-- ACTIVITY 5 -->
+<section class="activity" data-block="5">
+
+    <div class="activity-head">
+        <div>
+            <h3>5. Grid Rectangle Challenge</h3>
+            <p class="activity-description">
+                Use the grid to work out each perimeter.
+            </p>
+        </div>
+        <div class="activity-number">5</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🟣 Purple</h4>
+                <div id="rect-purple"></div>
+                <div class="shape-note">6 × 5</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟠 Orange</h4>
+                <div id="rect-orange"></div>
+                <div class="shape-note">6 × 2</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🟡 Yellow</h4>
+                <div id="rect-yellow"></div>
+                <div class="shape-note">4 × 2</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🔵 Blue</h4>
+                <div id="rect-blue"></div>
+                <div class="shape-note">7 × 3</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            🟣 Purple perimeter =
+            <input class="answer" data-answer="22"> cm
+        </div>
+
+        <div class="question-line">
+            🟠 Orange perimeter =
+            <input class="answer" data-answer="16"> cm
+        </div>
+
+        <div class="question-line">
+            🟡 Yellow perimeter =
+            <input class="answer" data-answer="12"> cm
+        </div>
+
+        <div class="question-line">
+            🔵 Blue perimeter =
+            <input class="answer" data-answer="20"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(5)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 6 -->
+<section class="activity" data-block="6">
+
+    <div class="activity-head">
+        <div>
+            <h3>6. The 8 cm × 3 cm Rectangle</h3>
+            <p class="activity-description">
+                Remember: P = 2 × (length + width).
+            </p>
+        </div>
+        <div class="activity-number">6</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="dimension-box">
+            <div class="dim-top">8 cm</div>
+            <div class="dim-left">3 cm</div>
+            <div class="rectangle"></div>
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            What is the perimeter?
+            <input class="answer" data-answer="22"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(6)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 7 -->
+<section class="activity" data-block="7">
+
+    <div class="activity-head">
+        <div>
+            <h3>7. Mo & Eva's Methods</h3>
+            <p class="activity-description">
+                Both children are calculating the same rectangle.
+            </p>
+        </div>
+        <div class="activity-number">7</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="dimension-box">
+            <div class="dim-top">11 cm</div>
+            <div class="dim-left">5 cm</div>
+            <div class="rectangle" style="background:#F6A14A;"></div>
+        </div>
+
+        <div class="methods">
+
+            <div class="method">
+                <h4>🟠 Mo's Method</h4>
+                <div>(5 + 11) × 2</div>
+                <strong>= 32 cm</strong>
+            </div>
+
+            <div class="method">
+                <h4>🔵 Eva's Method</h4>
+                <div>(5 + 5) + (11 + 11)</div>
+                <strong>= 32 cm</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            What is the perimeter?
+            <input class="answer" data-answer="32"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(7)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 8 -->
+<section class="activity" data-block="8">
+
+    <div class="activity-head">
+        <div>
+            <h3>8. Calculate the Perimeters</h3>
+        </div>
+        <div class="activity-number">8</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="grid-shape-wrap">
+
+            <div class="grid-card">
+                <h4>🟡 Rectangle 1</h4>
+                <div id="rect-eight-six"></div>
+                <div class="shape-note">8 cm × 6 cm</div>
+            </div>
+
+            <div class="grid-card">
+                <h4>🔵 Rectangle 2</h4>
+                <div id="rect-eighteen-two"></div>
+                <div class="shape-note">18 cm × 2 cm</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            Rectangle 1 perimeter =
+            <input class="answer" data-answer="28"> cm
+        </div>
+
+        <div class="question-line">
+            Rectangle 2 perimeter =
+            <input class="answer" data-answer="40"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(8)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+
+<!-- ACTIVITY 9 -->
+<section class="activity" data-block="9">
+
+    <div class="activity-head">
+        <div>
+            <h3>9. Reverse Perimeter Challenge</h3>
+            <p class="activity-description">
+                The perimeter is 30 cm and the length is 11 cm.
+                Find the missing width.
+            </p>
+        </div>
+        <div class="activity-number">9</div>
+    </div>
+
+    <div class="diagram-area">
+
+        <div class="dimension-box">
+            <div class="dim-top">11 cm</div>
+            <div class="dim-left">? cm</div>
+            <div class="rectangle" style="background:#BFE9FF;"></div>
+        </div>
+
+        <div style="text-align:center;font-size:18px;font-weight:700;">
+            30 − 11 − 11 = 8<br>
+            8 ÷ 2 = 4
+        </div>
+
+    </div>
+
+    <div class="questions">
+
+        <div class="question-line">
+            Width =
+            <input class="answer" data-answer="4"> cm
+        </div>
+
+    </div>
+
+    <div class="check-area">
+        <button class="check-btn" onclick="checkBlock(9)">✓ Check This Block</button>
+    </div>
+
+    <div class="block-result"></div>
+</section>
+
+</main>
+
+
+<!-- FEEDBACK MODAL -->
+
+<div class="modal" id="feedbackModal">
+
+    <div class="modal-card">
+
+        <h2 id="modalTitle">Great Job!</h2>
+
+        <img id="feedbackGif"
+             src=""
+             alt="Tom and Jerry feedback">
+
+        <p id="modalMessage"
+           style="font-size:19px;font-weight:700;">
+        </p>
+
+        <button class="close-modal"
+                onclick="closeModal()">
+            Continue 🧀
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   TOM & JERRY GIF ARRAYS
+========================================================= */
+
+const happyGifs = [
+  "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+  "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+  "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+  "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+  "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+];
+
+const wrongGifs = [
+  "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+  "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+  "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+  "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+  "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+  "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+];
+
+
+/* =========================================================
+   GRID SHAPE ENGINE
+   Creates REAL 1x1 grid cells.
+========================================================= */
+
+function createGrid(elementId, rows, cols, cells, color){
+
+    const holder = document.getElementById(elementId);
+
+    const grid = document.createElement("div");
+    grid.className = "grid";
+
+    grid.style.gridTemplateColumns =
+        `repeat(${cols}, 32px)`;
+
+    grid.style.gridTemplateRows =
+        `repeat(${rows}, 32px)`;
+
+    const cellSet = new Set(
+        cells.map(c => `${c[0]}-${c[1]}`)
+    );
+
+    for(let r=0; r<rows; r++){
+
+        for(let c=0; c<cols; c++){
+
+            const cell = document.createElement("div");
+            cell.className = "cell";
+
+            if(cellSet.has(`${r}-${c}`)){
+                cell.classList.add(color);
+            }
+
+            grid.appendChild(cell);
+        }
+    }
+
+    holder.appendChild(grid);
+}
+
+
+/* =========================================================
+   RECTANGLE GENERATOR
+========================================================= */
+
+function rectangleCells(rows, cols){
+
+    const cells=[];
+
+    for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+            cells.push([r,c]);
+        }
+    }
+
+    return cells;
+}
+
+
+/* =========================================================
+   IRREGULAR SHAPE HELPERS
+========================================================= */
+
+/*
+   Blue shape:
+       ██
+       ██
+     ████
+
+   Perimeter = 12
+*/
+
+const blueIrregular = [
+    [0,0],
+    [1,0],
+    [2,0],
+    [2,1],
+    [2,2],
+    [2,3]
+];
+
+
+/*
+   Green T-like shape:
+       ███
+        █
+        █
+        █
+        █
+
+   Perimeter = 14
+*/
+
+const greenIrregular = [
+    [0,0],
+    [0,1],
+    [0,2],
+    [1,1],
+    [2,1],
+    [3,1],
+    [4,1]
+];
+
+
+/*
+   Orange shape.
+   Constructed from real squares.
+*/
+
+const orangeShape = [
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1],
+    [1,2],
+    [1,3],
+    [2,0],
+    [2,1],
+    [2,2],
+    [2,3],
+    [2,4]
+];
+
+
+/*
+   Pink shape.
+*/
+
+const pinkShape = [
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1],
+    [1,2],
+    [1,3],
+    [1,4],
+    [2,0],
+    [2,1],
+    [2,2],
+    [2,3],
+    [2,4],
+    [2,5]
+];
+
+
+/*
+   Shape A staircase.
+   Perimeter deliberately shown using unit grid cells.
+*/
+
+const shapeA = [
+    [0,0],
+    [1,0],[1,1],
+    [2,0],[2,1],[2,2],
+    [3,0],[3,1],[3,2],[3,3]
+];
+
+
+/*
+   Shape B pyramid-like.
+*/
+
+const shapeB = [
+    [0,1],
+    [1,0],[1,1],[1,2],
+    [2,0],[2,1],[2,2],
+    [3,0],[3,1],[3,2]
+];
+
+
+/*
+   Shape C L-block.
+*/
+
+const shapeC = [
+    [0,0],
+    [1,0],
+    [2,0],
+    [3,0],
+    [3,1],
+    [3,2],
+    [3,3]
+];
+
+
+/* =========================================================
+   BUILD ALL GRID ILLUSTRATIONS
+========================================================= */
+
+createGrid(
+    "shape-square",
+    2,2,
+    rectangleCells(2,2),
+    "blue"
+);
+
+createGrid(
+    "shape-green",
+    2,5,
+    rectangleCells(2,5),
+    "green"
+);
+
+createGrid(
+    "shape-purple",
+    5,4,
+    rectangleCells(5,4),
+    "purple"
+);
+
+createGrid(
+    "irregular-blue",
+    3,4,
+    blueIrregular,
+    "blue"
+);
+
+createGrid(
+    "irregular-green",
+    5,3,
+    greenIrregular,
+    "green"
+);
+
+createGrid(
+    "orange-shape",
+    3,5,
+    orangeShape,
+    "orange"
+);
+
+createGrid(
+    "pink-shape",
+    3,6,
+    pinkShape,
+    "pink"
+);
+
+createGrid(
+    "shape-a",
+    4,4,
+    shapeA,
+    "yellow"
+);
+
+createGrid(
+    "shape-b",
+    4,3,
+    shapeB,
+    "blue"
+);
+
+createGrid(
+    "shape-c",
+    4,4,
+    shapeC,
+    "purple"
+);
+
+
+/* Rectangle activity */
+
+createGrid(
+    "rect-purple",
+    5,6,
+    rectangleCells(5,6),
+    "purple"
+);
+
+createGrid(
+    "rect-orange",
+    2,6,
+    rectangleCells(2,6),
+    "orange"
+);
+
+createGrid(
+    "rect-yellow",
+    2,4,
+    rectangleCells(2,4),
+    "yellow"
+);
+
+createGrid(
+    "rect-blue",
+    3,7,
+    rectangleCells(3,7),
+    "blue"
+);
+
+
+/*
+   Large rectangles are displayed at a reduced
+   visual scale to remain kid-friendly.
+*/
+
+function createScaledRectangle(
+    elementId,
+    rows,
+    cols,
+    color
+){
+
+    const holder =
+        document.getElementById(elementId);
+
+    const grid =
+        document.createElement("div");
+
+    grid.className="grid";
+
+    const maxCell = 27;
+
+    grid.style.gridTemplateColumns =
+        `repeat(${cols}, ${maxCell}px)`;
+
+    grid.style.gridTemplateRows =
+        `repeat(${rows}, ${maxCell}px)`;
+
+    for(let r=0;r<rows;r++){
+
+        for(let c=0;c<cols;c++){
+
+            const cell =
+                document.createElement("div");
+
+            cell.className =
+                `cell ${color}`;
+
+            cell.style.width =
+                maxCell+"px";
+
+            cell.style.height =
+                maxCell+"px";
+
+            grid.appendChild(cell);
+        }
+    }
+
+    holder.appendChild(grid);
+}
+
+createScaledRectangle(
+    "rect-eight-six",
+    6,8,
+    "yellow"
+);
+
+createScaledRectangle(
+    "rect-eighteen-two",
+    2,18,
+    "blue"
+);
+
+
+/* =========================================================
+   SCORE SYSTEM
+========================================================= */
+
+const blocks = document.querySelectorAll(".activity");
+
+let totalQuestions = 0;
+
+blocks.forEach(block => {
+
+    totalQuestions +=
+        block.querySelectorAll(
+            ".answer"
+        ).length;
+
+    /*
+       Choice questions count as one question.
+    */
+
+    if(block.querySelector(".choice")){
+        totalQuestions++;
+    }
+
+});
+
+document.getElementById("total").textContent =
+    totalQuestions;
+
+
+let answeredQuestions = new Set();
+
+
+function updateScore(){
+
+    document.getElementById("score").textContent =
+        answeredQuestions.size;
+}
+
+
+/* =========================================================
+   CHOICE SELECTION
+========================================================= */
+
+const selectedChoices = {};
+
+function selectChoice(button, blockId){
+
+    const block =
+        document.querySelector(
+            `[data-block="${blockId}"]`
+        );
+
+    block.querySelectorAll(".choice")
+        .forEach(btn => {
+            btn.classList.remove(
+                "selected",
+                "correct-choice",
+                "wrong-choice"
+            );
+        });
+
+    button.classList.add("selected");
+
+    selectedChoices[blockId] =
+        button.dataset.choice;
+}
+
+
+/* =========================================================
+   NORMALIZE INPUT
+========================================================= */
+
+function normalize(value){
+
+    return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/,/g,"")
+        .replace(/\s+/g,"");
+}
+
+
+/* =========================================================
+   CHECK ONE PARTICULAR BLOCK
+========================================================= */
+
+function checkBlock(blockId){
+
+    const block =
+        document.querySelector(
+            `[data-block="${blockId}"]`
+        );
+
+    if(!block) return;
+
+    const inputs =
+        [...block.querySelectorAll(".answer")];
+
+    let correctCount = 0;
+    let answeredCount = 0;
+
+    /*
+       Check only inputs in THIS block.
+    */
+
+    inputs.forEach((input,index)=>{
+
+        const value =
+            normalize(input.value);
+
+        const expected =
+            normalize(input.dataset.answer);
+
+        input.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if(value !== ""){
+
+            answeredCount++;
+
+            if(value === expected){
+
+                input.classList.add("correct");
+                correctCount++;
+
+                answeredQuestions.add(
+                    `${blockId}-input-${index}`
+                );
+
+            }else{
+
+                input.classList.add("incorrect");
+
+                answeredQuestions.delete(
+                    `${blockId}-input-${index}`
+                );
+            }
+
+        }else{
+
+            input.classList.add("incorrect");
+
+            answeredQuestions.delete(
+                `${blockId}-input-${index}`
+            );
+        }
+
+    });
+
+
+    /*
+       Handle choice question in Block 3.
+    */
+
+    if(blockId === 3){
+
+        const choice =
+            selectedChoices[3];
+
+        const buttons =
+            block.querySelectorAll(".choice");
+
+        buttons.forEach(btn=>{
+            btn.classList.remove(
+                "correct-choice",
+                "wrong-choice"
+            );
+        });
+
+        if(choice){
+
+            answeredCount++;
+
+            if(choice === "same"){
+
+                correctCount++;
+
+                answeredQuestions.add(
+                    "3-choice"
+                );
+
+                buttons.forEach(btn=>{
+                    if(btn.dataset.choice==="same"){
+                        btn.classList.add(
+                            "correct-choice"
+                        );
+                    }
+                });
+
+            }else{
+
+                answeredQuestions.delete(
+                    "3-choice"
+                );
+
+                buttons.forEach(btn=>{
+                    if(btn.dataset.choice==="different"){
+                        btn.classList.add(
+                            "wrong-choice"
+                        );
+                    }
+                });
+            }
+
+        }else{
+
+            answeredQuestions.delete(
+                "3-choice"
+            );
+
+        }
+
+    }
+
+
+    updateScore();
+
+
+    const allQuestions =
+        inputs.length +
+        (blockId === 3 ? 1 : 0);
+
+    const result =
+        block.querySelector(".block-result");
+
+
+    if(correctCount === allQuestions){
+
+        result.textContent =
+            `🎉 Perfect! ${correctCount}/${allQuestions} correct!`;
+
+        result.style.color="#15803D";
+
+        showFeedback(
+            true,
+            correctCount,
+            allQuestions
+        );
+
+    }else{
+
+        result.textContent =
+            `🧐 You got ${correctCount}/${allQuestions}. Check the red answers and try again!`;
+
+        result.style.color="#B91C1C";
+
+        showFeedback(
+            false,
+            correctCount,
+            allQuestions
+        );
+    }
+
+}
+
+
+/* =========================================================
+   CHECK ALL BUTTON
+   Checks each block individually, but feedback is shown
+   once at the end.
+========================================================= */
+
+function checkAll(){
+
+    let totalCorrect=0;
+    let totalAvailable=0;
+
+    blocks.forEach(block=>{
+
+        const blockId =
+            Number(block.dataset.block);
+
+        const inputs =
+            [...block.querySelectorAll(".answer")];
+
+        inputs.forEach((input,index)=>{
+
+            const value =
+                normalize(input.value);
+
+            const expected =
+                normalize(input.dataset.answer);
+
+            input.classList.remove(
+                "correct",
+                "incorrect"
+            );
+
+            if(value !== "" &&
+               value === expected){
+
+                input.classList.add("correct");
+
+                answeredQuestions.add(
+                    `${blockId}-input-${index}`
+                );
+
+                totalCorrect++;
+
+            }else{
+
+                input.classList.add("incorrect");
+
+                answeredQuestions.delete(
+                    `${blockId}-input-${index}`
+                );
+            }
+
+            totalAvailable++;
+
+        });
+
+        if(blockId===3){
+
+            totalAvailable++;
+
+            const choice =
+                selectedChoices[3];
+
+            block.querySelectorAll(".choice")
+                .forEach(btn=>{
+                    btn.classList.remove(
+                        "correct-choice",
+                        "wrong-choice"
+                    );
+                });
+
+            if(choice==="same"){
+
+                totalCorrect++;
+
+                answeredQuestions.add(
+                    "3-choice"
+                );
+
+                block.querySelectorAll(".choice")
+                    .forEach(btn=>{
+                        if(btn.dataset.choice==="same"){
+                            btn.classList.add(
+                                "correct-choice"
+                            );
+                        }
+                    });
+
+            }else{
+
+                answeredQuestions.delete(
+                    "3-choice"
+                );
+
+                if(choice){
+
+                    block.querySelectorAll(".choice")
+                        .forEach(btn=>{
+                            if(btn.dataset.choice===choice){
+                                btn.classList.add(
+                                    "wrong-choice"
+                                );
+                            }
+                        });
+                }
+            }
+
+        }
+
+    });
+
+    updateScore();
+
+    showFeedback(
+        totalCorrect === totalAvailable,
+        totalCorrect,
+        totalAvailable
+    );
+}
+
+
+/* =========================================================
+   FEEDBACK MODAL
+========================================================= */
+
+function randomItem(array){
+
+    return array[
+        Math.floor(
+            Math.random()*array.length
+        )
+    ];
+}
+
+function showFeedback(
+    correct,
+    score,
+    total
+){
+
+    const modal =
+        document.getElementById(
+            "feedbackModal"
+        );
+
+    const title =
+        document.getElementById(
+            "modalTitle"
+        );
+
+    const message =
+        document.getElementById(
+            "modalMessage"
+        );
+
+    const gif =
+        document.getElementById(
+            "feedbackGif"
+        );
+
+
+    if(correct){
+
+        title.textContent =
+            "🎉 SUPER JOB!";
+
+        message.textContent =
+            `Amazing! You got ${score}/${total}! Tom is impressed! 🐭⭐`;
+
+        gif.src =
+            randomItem(happyGifs);
+
+    }else{
+
+        title.textContent =
+            "🐱 Almost There!";
+
+        message.textContent =
+            `You got ${score}/${total}. Have another look at the grid and try again!`;
+
+        gif.src =
+            randomItem(wrongGifs);
+    }
+
+    modal.classList.add("show");
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("feedbackModal")
+        .classList.remove("show");
+}
+
+
+/* Close modal by clicking outside */
+
+document
+    .getElementById("feedbackModal")
+    .addEventListener(
+        "click",
+        function(e){
+
+            if(e.target === this){
+                closeModal();
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   RESET EVERYTHING
+========================================================= */
+
+function resetAll(){
+
+    document
+        .querySelectorAll(".answer")
+        .forEach(input=>{
+
+            input.value="";
+
+            input.classList.remove(
+                "correct",
+                "incorrect"
+            );
+        });
+
+
+    document
+        .querySelectorAll(".choice")
+        .forEach(button=>{
+
+            button.classList.remove(
+                "selected",
+                "correct-choice",
+                "wrong-choice"
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".block-result")
+        .forEach(result=>{
+
+            result.textContent="";
+
+        });
+
+
+    Object.keys(selectedChoices)
+        .forEach(key=>{
+            delete selectedChoices[key];
+        });
+
+
+    answeredQuestions.clear();
+
+    updateScore();
+
+    closeModal();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   ESCAPE KEY CLOSES MODAL
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key==="Escape"){
+            closeModal();
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roman Numeral Quest 🏛️</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+        color: #25253a;
+        min-height: 100vh;
+    }
+
+    .game {
+        width: min(950px, 94%);
+        margin: auto;
+        padding: 25px 0 50px;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: clamp(30px, 6vw, 50px);
+        margin: 5px 0;
+    }
+
+    header p {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .stat {
+        background: white;
+        border-radius: 18px;
+        padding: 14px;
+        text-align: center;
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 24px;
+        margin-top: 3px;
+    }
+
+    .progress-box {
+        background: white;
+        border-radius: 15px;
+        height: 14px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: inset 0 1px 5px rgba(0,0,0,.12);
+    }
+
+    .progress {
+        height: 100%;
+        width: 0%;
+        background: #6366f1;
+        transition: .4s;
+    }
+
+    .screen {
+        display: none;
+        background: white;
+        border-radius: 28px;
+        padding: clamp(22px, 5vw, 45px);
+        box-shadow: 0 12px 35px rgba(0,0,0,.1);
+        text-align: center;
+        animation: appear .35s ease;
+    }
+
+    .screen.active {
+        display: block;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .emoji {
+        font-size: 70px;
+    }
+
+    h2 {
+        font-size: clamp(25px, 5vw, 38px);
+        margin: 10px 0;
+    }
+
+    .lesson {
+        font-size: 20px;
+        line-height: 1.6;
+        max-width: 700px;
+        margin: auto;
+    }
+
+    .roman-table {
+        width: 100%;
+        max-width: 650px;
+        margin: 25px auto;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+
+    .roman-table th,
+    .roman-table td {
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        font-size: 19px;
+    }
+
+    .roman-table th {
+        background: #6366f1;
+        color: white;
+    }
+
+    .roman {
+        font-size: clamp(55px, 12vw, 90px);
+        font-weight: bold;
+        margin: 15px;
+        color: #4f46e5;
+    }
+
+    .question {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+
+    .choices {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(120px, 250px));
+        justify-content: center;
+        gap: 14px;
+        margin-top: 25px;
+    }
+
+    button {
+        border: none;
+        border-radius: 16px;
+        padding: 15px 22px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        background: #6366f1;
+        color: white;
+        transition: transform .15s, box-shadow .15s, background .15s;
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 15px rgba(0,0,0,.15);
+    }
+
+    button:active {
+        transform: scale(.97);
+    }
+
+    .main-btn {
+        margin-top: 20px;
+        background: #10b981;
+        padding: 17px 35px;
+    }
+
+    .choice.correct {
+        background: #16a34a;
+    }
+
+    .choice.wrong {
+        background: #dc2626;
+        animation: shake .3s;
+    }
+
+    @keyframes shake {
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+    }
+
+    .feedback {
+        min-height: 45px;
+        margin-top: 20px;
+        font-size: 21px;
+        font-weight: bold;
+    }
+
+    .rule-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        max-width: 700px;
+        margin: 25px auto;
+    }
+
+    .rule {
+        padding: 20px;
+        border-radius: 20px;
+        background: #f8fafc;
+        border: 3px solid #e2e8f0;
+    }
+
+    .rule .big {
+        font-size: 35px;
+        font-weight: bold;
+        color: #4f46e5;
+    }
+
+    .memory {
+        background: #fff7ed;
+        border-radius: 20px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 650px;
+        font-size: 20px;
+    }
+
+    .answer-box {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    input {
+        width: 180px;
+        padding: 15px;
+        border: 3px solid #cbd5e1;
+        border-radius: 15px;
+        font-size: 22px;
+        text-align: center;
+        outline: none;
+        text-transform: uppercase;
+    }
+
+    input:focus {
+        border-color: #6366f1;
+    }
+
+    .result-icon {
+        font-size: 80px;
+    }
+
+    .final-score {
+        font-size: 45px;
+        font-weight: bold;
+        color: #4f46e5;
+        margin: 15px;
+    }
+
+    .badge {
+        display: inline-block;
+        background: #fef3c7;
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-weight: bold;
+        margin: 8px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    @media (max-width: 600px) {
+        .stats {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .stat {
+            padding: 10px 5px;
+        }
+
+        .stat strong {
+            font-size: 20px;
+        }
+
+        .choices {
+            grid-template-columns: 1fr;
+        }
+
+        .rule-card {
+            grid-template-columns: 1fr;
+        }
+
+        .roman-table th,
+        .roman-table td {
+            padding: 9px;
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<header>
+    <div style="font-size:45px;">🏛️</div>
+    <h1>Roman Numeral Quest</h1>
+    <p>Become a Roman Numeral Master!</p>
+</header>
+
+<div class="stats">
+    <div class="stat">
+        ⭐ Score
+        <strong id="score">0</strong>
+    </div>
+
+    <div class="stat">
+        ❤️ Lives
+        <strong id="lives">3</strong>
+    </div>
+
+    <div class="stat">
+        🏆 Level
+        <strong id="level">1</strong>
+    </div>
+</div>
+
+<div class="progress-box">
+    <div class="progress" id="progress"></div>
+</div>
+
+
+<!-- INTRO -->
+<section class="screen active" id="intro">
+
+    <div class="emoji">🕵️‍♀️</div>
+
+    <h2>Welcome, Number Detective!</h2>
+
+    <div class="lesson">
+        <p>
+            Roman Numerals are an ancient way of writing numbers.
+        </p>
+
+        <p>
+            Your mission is to learn the secret symbols,
+            solve puzzles, and become a
+            <strong>Roman Numeral Master!</strong> 🏆
+        </p>
+    </div>
+
+    <button class="main-btn" onclick="showScreen('symbols')">
+        🚀 Start Quest
+    </button>
+
+</section>
+
+
+<!-- SYMBOLS -->
+<section class="screen" id="symbols">
+
+    <div class="emoji">🏛️</div>
+
+    <h2>Meet the Roman Numeral Team!</h2>
+
+    <p class="lesson">
+        These special letters have number powers.
+    </p>
+
+    <table class="roman-table">
+        <tr>
+            <th>Roman Symbol</th>
+            <th>Number</th>
+        </tr>
+        <tr>
+            <td><strong>I</strong></td>
+            <td>1 ☝️</td>
+        </tr>
+        <tr>
+            <td><strong>V</strong></td>
+            <td>5 ✋</td>
+        </tr>
+        <tr>
+            <td><strong>X</strong></td>
+            <td>10 👐</td>
+        </tr>
+        <tr>
+            <td><strong>L</strong></td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <td><strong>C</strong></td>
+            <td>100</td>
+        </tr>
+        <tr>
+            <td><strong>D</strong></td>
+            <td>500</td>
+        </tr>
+        <tr>
+            <td><strong>M</strong></td>
+            <td>1000</td>
+        </tr>
+    </table>
+
+    <button class="main-btn" onclick="showScreen('addRule')">
+        ➡️ I Know My Symbols!
+    </button>
+
+</section>
+
+
+<!-- ADDITION -->
+<section class="screen" id="addRule">
+
+    <div class="emoji">➕</div>
+
+    <h2>Rule #1: Add!</h2>
+
+    <p class="lesson">
+        When a smaller numeral comes <strong>after</strong>
+        a bigger numeral, we add them.
+    </p>
+
+    <div class="rule-card">
+
+        <div class="rule">
+            <div class="big">VI</div>
+            <p>V = 5</p>
+            <p>I = 1</p>
+            <strong>5 + 1 = 6</strong>
+        </div>
+
+        <div class="rule">
+            <div class="big">XI</div>
+            <p>X = 10</p>
+            <p>I = 1</p>
+            <strong>10 + 1 = 11</strong>
+        </div>
+
+    </div>
+
+    <div class="memory">
+        🧠 <strong>Remember:</strong><br>
+        Smaller AFTER bigger → ADD ➕
+    </div>
+
+    <button class="main-btn" onclick="startQuiz1()">
+        🎮 Let's Play!
+    </button>
+
+</section>
+
+
+<!-- SUBTRACTION -->
+<section class="screen" id="subtractRule">
+
+    <div class="emoji">➖</div>
+
+    <h2>Rule #2: Subtract!</h2>
+
+    <p class="lesson">
+        When a smaller numeral comes <strong>before</strong>
+        a bigger numeral, we subtract it.
+    </p>
+
+    <div class="rule-card">
+
+        <div class="rule">
+            <div class="big">IV</div>
+            <p>I = 1</p>
+            <p>V = 5</p>
+            <strong>5 − 1 = 4</strong>
+        </div>
+
+        <div class="rule">
+            <div class="big">IX</div>
+            <p>I = 1</p>
+            <p>X = 10</p>
+            <strong>10 − 1 = 9</strong>
+        </div>
+
+    </div>
+
+    <div class="memory">
+        🧠 <strong>Remember:</strong><br>
+        Smaller BEFORE bigger → SUBTRACT ➖
+    </div>
+
+    <button class="main-btn" onclick="startQuiz2()">
+        🎮 Continue Quest!
+    </button>
+
+</section>
+
+
+<!-- QUIZ -->
+<section class="screen" id="quiz">
+
+    <div class="emoji">🎯</div>
+
+    <h2 id="quizTitle">Roman Numeral Challenge</h2>
+
+    <div class="question" id="question"></div>
+
+    <div class="roman" id="romanQuestion"></div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+</section>
+
+
+<!-- INPUT CHALLENGE -->
+<section class="screen" id="inputQuiz">
+
+    <div class="emoji">🧠</div>
+
+    <h2>Become the Teacher!</h2>
+
+    <p class="question" id="inputQuestion"></p>
+
+    <div class="answer-box">
+
+        <input
+            id="answerInput"
+            maxlength="8"
+            placeholder="Type answer"
+            autocomplete="off"
+        >
+
+        <button onclick="checkInput()">
+            ✅ Check
+        </button>
+
+    </div>
+
+    <div class="feedback" id="inputFeedback"></div>
+
+</section>
+
+
+<!-- FINAL -->
+<section class="screen" id="final">
+
+    <div class="result-icon">🏆</div>
+
+    <h2>Quest Complete!</h2>
+
+    <p>You survived the Roman Numeral Quest!</p>
+
+    <div class="final-score">
+        <span id="finalScore">0</span> ⭐
+    </div>
+
+    <div id="badge"></div>
+
+    <p id="finalMessage" class="lesson"></p>
+
+    <button class="main-btn" onclick="restartGame()">
+        🔄 Play Again
+    </button>
+
+</section>
+
+</div>
+
+
+<script>
+
+let score = 0;
+let lives = 3;
+let level = 1;
+let questionIndex = 0;
+let currentQuestions = [];
+let inputIndex = 0;
+
+
+/* ---------- SCREEN ---------- */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* ---------- SCORE ---------- */
+
+function updateStats() {
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("lives").textContent = lives;
+    document.getElementById("level").textContent = level;
+
+    let total = currentQuestions.length || 5;
+
+    let progress = Math.min(
+        ((questionIndex) / total) * 100,
+        100
+    );
+
+    document.getElementById("progress").style.width =
+        progress + "%";
+}
+
+
+/* ---------- QUIZ 1 ---------- */
+
+function startQuiz1() {
+
+    level = 2;
+
+    currentQuestions = [
+        {
+            roman: "I",
+            answer: "1",
+            options: ["1", "2", "5", "10"]
+        },
+        {
+            roman: "II",
+            answer: "2",
+            options: ["1", "2", "3", "5"]
+        },
+        {
+            roman: "III",
+            answer: "3",
+            options: ["2", "3", "4", "6"]
+        },
+        {
+            roman: "IV",
+            answer: "4",
+            options: ["3", "4", "5", "6"]
+        },
+        {
+            roman: "V",
+            answer: "5",
+            options: ["4", "5", "6", "10"]
+        },
+        {
+            roman: "VI",
+            answer: "6",
+            options: ["5", "6", "7", "8"]
+        }
+    ];
+
+    questionIndex = 0;
+
+    showScreen("quiz");
+    loadQuestion();
+}
+
+
+/* ---------- QUIZ 2 ---------- */
+
+function startQuiz2() {
+
+    level = 3;
+
+    currentQuestions = [
+        {
+            roman: "VII",
+            answer: "7",
+            options: ["6", "7", "8", "9"]
+        },
+        {
+            roman: "VIII",
+            answer: "8",
+            options: ["6", "7", "8", "9"]
+        },
+        {
+            roman: "IX",
+            answer: "9",
+            options: ["7", "8", "9", "10"]
+        },
+        {
+            roman: "X",
+            answer: "10",
+            options: ["5", "9", "10", "11"]
+        },
+        {
+            roman: "XI",
+            answer: "11",
+            options: ["10", "11", "12", "15"]
+        },
+        {
+            roman: "XIV",
+            answer: "14",
+            options: ["12", "13", "14", "15"]
+        },
+        {
+            roman: "XIX",
+            answer: "19",
+            options: ["17", "18", "19", "20"]
+        }
+    ];
+
+    questionIndex = 0;
+
+    showScreen("quiz");
+    loadQuestion();
+}
+
+
+/* ---------- LOAD QUESTION ---------- */
+
+function loadQuestion() {
+
+    if (questionIndex >= currentQuestions.length) {
+
+        if (level === 2) {
+
+            showScreen("subtractRule");
+
+        } else {
+
+            startInputChallenge();
+
+        }
+
+        return;
+    }
+
+    let q = currentQuestions[questionIndex];
+
+    document.getElementById("question").textContent =
+        "What number is this?";
+
+    document.getElementById("romanQuestion").textContent =
+        q.roman;
+
+    document.getElementById("feedback").textContent = "";
+
+    let choices = document.getElementById("choices");
+
+    choices.innerHTML = "";
+
+    let shuffled = [...q.options].sort(
+        () => Math.random() - 0.5
+    );
+
+    shuffled.forEach(option => {
+
+        let button = document.createElement("button");
+
+        button.className = "choice";
+        button.textContent = option;
+
+        button.onclick = () =>
+            checkAnswer(button, option, q.answer);
+
+        choices.appendChild(button);
+    });
+
+    updateStats();
+}
+
+
+/* ---------- CHECK ANSWER ---------- */
+
+function checkAnswer(button, selected, correct) {
+
+    let allButtons =
+        document.querySelectorAll(".choice");
+
+    allButtons.forEach(btn => {
+        btn.disabled = true;
+    });
+
+    if (selected === correct) {
+
+        button.classList.add("correct");
+
+        score += 10;
+
+        document.getElementById("feedback").innerHTML =
+            "🎉 Correct! Amazing! +10 ⭐";
+
+    } else {
+
+        button.classList.add("wrong");
+
+        lives--;
+
+        document.getElementById("feedback").innerHTML =
+            `❌ Not quite! The answer is <strong>${correct}</strong>.`;
+
+        if (lives <= 0) {
+
+            setTimeout(() => finishGame(), 1100);
+            return;
+        }
+    }
+
+    questionIndex++;
+
+    updateStats();
+
+    setTimeout(loadQuestion, 1000);
+}
+
+
+/* ---------- INPUT CHALLENGE ---------- */
+
+function startInputChallenge() {
+
+    level = 4;
+
+    inputIndex = 0;
+
+    inputQuestions = [
+        {
+            number: "2",
+            answer: "II"
+        },
+        {
+            number: "4",
+            answer: "IV"
+        },
+        {
+            number: "6",
+            answer: "VI"
+        },
+        {
+            number: "8",
+            answer: "VIII"
+        },
+        {
+            number: "9",
+            answer: "IX"
+        },
+        {
+            number: "10",
+            answer: "X"
+        },
+        {
+            number: "14",
+            answer: "XIV"
+        },
+        {
+            number: "15",
+            answer: "XV"
+        },
+        {
+            number: "19",
+            answer: "XIX"
+        },
+        {
+            number: "20",
+            answer: "XX"
+        }
+    ];
+
+    showScreen("inputQuiz");
+
+    loadInputQuestion();
+}
+
+
+let inputQuestions = [];
+
+
+function loadInputQuestion() {
+
+    if (inputIndex >= inputQuestions.length) {
+
+        finishGame();
+        return;
+    }
+
+    let q = inputQuestions[inputIndex];
+
+    document.getElementById("inputQuestion").innerHTML =
+        `Write <strong>${q.number}</strong> as a Roman Numeral.`;
+
+    document.getElementById("answerInput").value = "";
+
+    document.getElementById("inputFeedback").textContent = "";
+
+    document.getElementById("answerInput").focus();
+
+    updateStats();
+}
+
+
+/* ---------- CHECK INPUT ---------- */
+
+function checkInput() {
+
+    let input =
+        document.getElementById("answerInput");
+
+    let answer =
+        input.value.trim().toUpperCase();
+
+    let correct =
+        inputQuestions[inputIndex].answer;
+
+    let feedback =
+        document.getElementById("inputFeedback");
+
+    if (!answer) {
+
+        feedback.textContent =
+            "🤔 Type an answer first!";
+
+        return;
+    }
+
+    if (answer === correct) {
+
+        score += 15;
+
+        feedback.innerHTML =
+            "🎉 Fantastic! +15 ⭐";
+
+        inputIndex++;
+
+        updateStats();
+
+        setTimeout(loadInputQuestion, 900);
+
+    } else {
+
+        lives--;
+
+        feedback.innerHTML =
+            `❌ Almost! Try again.`;
+
+        input.value = "";
+
+        if (lives <= 0) {
+
+            setTimeout(finishGame, 800);
+        }
+    }
+}
+
+
+/* ---------- ENTER KEY ---------- */
+
+document.addEventListener("keydown", function(event) {
+
+    if (
+        event.key === "Enter" &&
+        document.getElementById("inputQuiz")
+            .classList.contains("active")
+    ) {
+        checkInput();
+    }
+
+});
+
+
+/* ---------- FINISH ---------- */
+
+function finishGame() {
+
+    showScreen("final");
+
+    document.getElementById("finalScore").textContent =
+        score;
+
+    let badge = document.getElementById("badge");
+    let message = document.getElementById("finalMessage");
+
+    if (score >= 180) {
+
+        badge.innerHTML =
+            '<span class="badge">👑 ROMAN NUMERAL MASTER</span>';
+
+        message.textContent =
+            "Incredible! You have mastered Roman Numerals! 🏛️";
+
+    } else if (score >= 120) {
+
+        badge.innerHTML =
+            '<span class="badge">🥇 NUMBER HERO</span>';
+
+        message.textContent =
+            "Great work! You understand Roman Numerals really well! 🌟";
+
+    } else if (score >= 70) {
+
+        badge.innerHTML =
+            '<span class="badge">🥈 NUMBER EXPLORER</span>';
+
+        message.textContent =
+            "Well done! Keep practising and you will become a Roman Numeral Master! 💪";
+
+    } else {
+
+        badge.innerHTML =
+            '<span class="badge">🌱 BRAVE LEARNER</span>';
+
+        message.textContent =
+            "Good effort! Every mistake helps your brain learn. Try the quest again! 🚀";
+    }
+
+    document.getElementById("progress").style.width = "100%";
+}
+
+
+/* ---------- RESTART ---------- */
+
+function restartGame() {
+
+    score = 0;
+    lives = 3;
+    level = 1;
+    questionIndex = 0;
+    inputIndex = 0;
+
+    updateStats();
+
+    showScreen("intro");
+}
+
+
+/* ---------- INITIAL ---------- */
+
+updateStats();
+
+</script>
+
+</body>
+</html>

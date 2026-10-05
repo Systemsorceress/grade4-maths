@@ -790,3 +790,32 @@ function resetAnimation() {
 showStep(1);
 
 </script>
+
+<!-- ===== PRINT TO PDF ===== -->
+<style>
+.print-pdf-btn {
+    position: fixed;
+    bottom: 18px;
+    left: 18px;
+    z-index: 9999;
+    padding: 8px 14px;
+    border: 3px solid #1e293b;
+    border-radius: 14px;
+    background: #fde68a;
+    color: #1e293b;
+    font-family: "Fredoka", "Quicksand", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #1e293b;
+}
+.print-pdf-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #1e293b;
+}
+@media print {
+    .print-pdf-btn { display: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+<button class="print-pdf-btn" onclick="window.print()" title="Print or save as PDF">🖨️ Print / PDF</button>

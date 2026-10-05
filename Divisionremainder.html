@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry Long Division Adventure</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --yellow: #ffcc00;
+    --yellow-light: #ffe66d;
+    --orange: #f39c12;
+    --tom-blue: #4a6572;
+    --tom-dark: #344955;
+    --jerry-brown: #8d5524;
+    --cream: #fff8df;
+    --white: #ffffff;
+    --gray: #d9d9d9;
+    --black: #171717;
+    --green: #38b000;
+    --red: #e63946;
+    --blue: #3a86ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Fredoka', sans-serif;
+    background:
+        radial-gradient(circle at 20px 20px, rgba(255,204,0,.35) 4px, transparent 5px),
+        radial-gradient(circle at 60px 60px, rgba(141,85,36,.18) 5px, transparent 6px),
+        #fff3c4;
+    background-size: 80px 80px;
+    color: var(--black);
+}
+
+/* MAIN CONTAINER */
+
+.app {
+    max-width: 1250px;
+    margin: auto;
+}
+
+.header {
+    background: var(--tom-blue);
+    border: 5px solid #000;
+    border-radius: 22px;
+    padding: 22px;
+    text-align: center;
+    color: white;
+    box-shadow: 8px 8px 0 #000;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: "🐱";
+    position: absolute;
+    left: 25px;
+    bottom: -15px;
+    font-size: 75px;
+    transform: rotate(-8deg);
+}
+
+.header::after {
+    content: "🐭";
+    position: absolute;
+    right: 30px;
+    bottom: -10px;
+    font-size: 60px;
+    transform: rotate(8deg);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 3rem);
+    color: var(--yellow);
+    text-shadow: 4px 4px 0 #000;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.scorebar {
+    margin: 18px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.score-box {
+    background: white;
+    border: 4px solid #000;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-weight: 700;
+    box-shadow: 4px 4px 0 #000;
+}
+
+.score-box span {
+    color: var(--jerry-brown);
+    font-size: 1.2rem;
+}
+
+/* MAIN GRID */
+
+.main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 20px;
+    align-items: start;
+}
+
+.panel {
+    background: var(--cream);
+    border: 5px solid #000;
+    border-radius: 20px;
+    box-shadow: 7px 7px 0 #000;
+    padding: 20px;
+}
+
+/* QUESTION */
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.question-number {
+    background: var(--yellow);
+    border: 3px solid #000;
+    border-radius: 12px;
+    padding: 8px 13px;
+    font-weight: 700;
+}
+
+.question-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.problem-display {
+    margin: 18px auto;
+    width: fit-content;
+    background: white;
+    border: 4px solid #000;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    box-shadow: 4px 4px 0 var(--orange);
+}
+
+.instructions {
+    background: #fff;
+    border: 3px dashed var(--tom-blue);
+    border-radius: 14px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    font-size: .95rem;
+    line-height: 1.5;
+}
+
+/* DIVISION BOARD */
+
+.division-wrapper {
+    overflow-x: auto;
+    padding: 20px 10px;
+}
+
+.division-board {
+    display: flex;
+    justify-content: center;
+    min-width: max-content;
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.divisor {
+    min-width: 60px;
+    padding-right: 12px;
+    padding-top: 52px;
+    text-align: right;
+    font-size: 1.6rem;
+}
+
+.bracket {
+    border-left: 4px solid #000;
+}
+
+.row {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+}
+
+.quotient-row {
+    border-bottom: 4px solid #000;
+}
+
+.cell {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.dividend-cell {
+    font-size: 1.5rem;
+    background: rgba(255,204,0,.2);
+}
+
+.input-cell {
+    width: 42px;
+    height: 42px;
+    border: 3px solid #000;
+    border-radius: 8px;
+    background: var(--yellow);
+    text-align: center;
+    font-size: 1.25rem;
+    font-family: 'Fredoka';
+    font-weight: 700;
+    outline: none;
+}
+
+.input-cell:focus {
+    box-shadow: 0 0 0 4px rgba(58,134,255,.35);
+}
+
+.input-cell.correct {
+    background: #b7f7a0;
+    border-color: var(--green);
+}
+
+.input-cell.wrong {
+    background: #ffb3b8;
+    border-color: var(--red);
+}
+
+.step-label {
+    font-size: .72rem;
+    color: var(--tom-blue);
+    font-weight: 700;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.minus {
+    position: absolute;
+    left: -12px;
+    font-size: 1.5rem;
+}
+
+.line-cell {
+    border-bottom: 3px solid #000;
+}
+
+.bring-down {
+    color: var(--blue);
+    font-size: 1.6rem;
+    animation: bounce .7s infinite alternate;
+}
+
+.remainder-row {
+    margin-top: 8px;
+    border-top: 4px solid #000;
+    padding-top: 8px;
+}
+
+.remainder-label {
+    font-weight: 700;
+    color: var(--jerry-brown);
+}
+
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+button {
+    border: 4px solid #000;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-family: 'Fredoka';
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--yellow);
+    box-shadow: 4px 4px 0 #000;
+    transition: .15s;
+}
+
+button:hover {
+    transform: translate(-2px,-2px);
+    box-shadow: 6px 6px 0 #000;
+}
+
+button:active {
+    transform: translate(3px,3px);
+    box-shadow: 1px 1px 0 #000;
+}
+
+.next-btn {
+    background: var(--tom-blue);
+    color: white;
+}
+
+.reset-btn {
+    background: var(--jerry-brown);
+    color: white;
+}
+
+.check-btn {
+    background: var(--yellow);
+}
+
+/* SCRATCHPAD */
+
+.scratch-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.scratch-subtitle {
+    font-size: .9rem;
+    margin-bottom: 12px;
+}
+
+.scratchpad {
+    background: white;
+    border: 4px solid #000;
+    border-radius: 14px;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#scratchCanvas {
+    width: 100%;
+    height: 360px;
+    display: block;
+    cursor: crosshair;
+    background:
+        linear-gradient(#e9e9e9 1px, transparent 1px),
+        linear-gradient(90deg, #e9e9e9 1px, transparent 1px);
+    background-size: 25px 25px;
+}
+
+.scratch-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.tool-btn {
+    padding: 7px 10px;
+    font-size: .82rem;
+    box-shadow: 2px 2px 0 #000;
+}
+
+.tool-btn.active {
+    outline: 4px solid var(--orange);
+}
+
+.clear-btn {
+    background: var(--red);
+    color: white;
+}
+
+/* FEEDBACK MODAL */
+
+.feedback-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.feedback-overlay.show {
+    display: flex;
+}
+
+.feedback-card {
+    width: min(450px, 95vw);
+    background: var(--cream);
+    border: 6px solid #000;
+    border-radius: 25px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 10px 10px 0 #000;
+    animation: pop .3s ease-out;
+}
+
+.feedback-card img {
+    width: min(330px, 90%);
+    height: 210px;
+    object-fit: contain;
+    background: white;
+    border: 4px solid #000;
+    border-radius: 15px;
+}
+
+.feedback-card h2 {
+    margin: 10px 0 5px;
+    font-size: 1.8rem;
+}
+
+.feedback-card p {
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.close-feedback {
+    background: var(--tom-blue);
+    color: white;
+}
+
+/* COMPLETION */
+
+.complete {
+    display: none;
+    margin-top: 20px;
+    background: #a8e890;
+    border: 4px solid #000;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* ANIMATIONS */
+
+@keyframes pop {
+    from {
+        opacity: 0;
+        transform: scale(.6) rotate(-4deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(6px); }
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .header::before,
+    .header::after {
+        display: none;
+    }
+
+    #scratchCanvas {
+        height: 300px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <h1>🐱 TOM & JERRY DIVISION 🐭</h1>
+        <p>Long Division Adventure — Grade 4</p>
+    </header>
+
+    <div class="scorebar">
+        <div class="score-box">
+            Problem: <span id="problemCounter">1 / 10</span>
+        </div>
+
+        <div class="score-box">
+            Score: <span id="score">0</span>
+        </div>
+
+        <div class="score-box">
+            Completed: <span id="completed">0</span>
+        </div>
+    </div>
+
+    <div class="main-layout">
+
+        <!-- DIVISION AREA -->
+
+        <section class="panel">
+
+            <div class="question-header">
+                <div class="question-number" id="questionNumber">
+                    QUESTION 1
+                </div>
+
+                <div class="question-title">
+                    Solve the long division!
+                </div>
+            </div>
+
+            <div class="problem-display" id="problemDisplay">
+                48 ÷ 6
+            </div>
+
+            <div class="instructions">
+                <strong>🐭 Your Mission:</strong><br>
+                Work through the division one step at a time.
+                Type the answer in each yellow box.
+                <br><br>
+                <strong>Remember:</strong>
+                <br>
+                1️⃣ Divide → 2️⃣ Multiply → 3️⃣ Subtract →
+                4️⃣ Bring Down → 5️⃣ Repeat → 6️⃣ Find the Remainder.
+            </div>
+
+            <div class="division-wrapper">
+                <div class="division-board">
+
+                    <div class="divisor" id="divisor">
+                        6
+                    </div>
+
+                    <div class="bracket" id="divisionGrid"></div>
+
+                </div>
+            </div>
+
+            <div class="complete" id="completeMessage">
+                🎉 AMAZING! You completed this division problem!
+            </div>
+
+            <div class="controls">
+                <button class="reset-btn" onclick="resetProblem()">
+                    🔄 Reset Board
+                </button>
+
+                <button class="next-btn" onclick="nextProblem()">
+                    ➡️ Next Problem
+                </button>
+            </div>
+
+        </section>
+
+
+        <!-- SCRATCHPAD -->
+
+        <aside class="panel">
+
+            <div class="scratch-title">
+                ✏️ Rough Work Scratchpad
+            </div>
+
+            <div class="scratch-subtitle">
+                Use this space to work things out!
+            </div>
+
+            <div class="scratchpad">
+                <canvas id="scratchCanvas"></canvas>
+            </div>
+
+            <div class="scratch-controls">
+
+                <button class="tool-btn active" onclick="setPen('#171717',this)">
+                    ⚫ Black
+                </button>
+
+                <button class="tool-btn" onclick="setPen('#2563eb',this)">
+                    🔵 Blue
+                </button>
+
+                <button class="tool-btn" onclick="setPen('#dc2626',this)">
+                    🔴 Red
+                </button>
+
+                <button class="tool-btn" onclick="setWidth(2,this)">
+                    Thin
+                </button>
+
+                <button class="tool-btn" onclick="setWidth(5,this)">
+                    Medium
+                </button>
+
+                <button class="tool-btn" onclick="setWidth(9,this)">
+                    Thick
+                </button>
+
+                <button class="tool-btn" onclick="eraser(this)">
+                    🧽 Eraser
+                </button>
+
+                <button class="tool-btn clear-btn" onclick="clearCanvas()">
+                    🗑️ Clear
+                </button>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<!-- FEEDBACK -->
+
+<div class="feedback-overlay" id="feedbackOverlay">
+
+    <div class="feedback-card">
+
+        <img id="feedbackGif" src="" alt="Tom and Jerry feedback">
+
+        <h2 id="feedbackTitle"></h2>
+
+        <p id="feedbackText"></p>
+
+        <button class="close-feedback" onclick="closeFeedback()">
+            👍 Continue
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   GIF ARRAYS
+========================================================= */
+
+const happyGifs = [
+    "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+    "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+    "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+];
+
+const wrongGifs = [
+    "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+    "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+    "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+    "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+    "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+];
+
+
+/* =========================================================
+   10 GRADE 4 QUESTIONS
+   1-DIGIT DIVISORS
+   MIX OF EXACT ANSWERS AND REMAINDERS
+========================================================= */
+
+const questions = [
+    { dividend: 49, divisor: 6 },
+    { dividend: 79, divisor: 8 },
+    { dividend: 56, divisor: 5 },
+    { dividend: 85, divisor: 9 },
+    { dividend: 39, divisor: 4 },
+
+    { dividend: 144, divisor: 4 },
+    { dividend: 256, divisor: 8 },
+    { dividend: 437, divisor: 5 },
+    { dividend: 689, divisor: 7 },
+    { dividend: 952, divisor: 3 }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let completed = 0;
+
+
+/* =========================================================
+   LONG DIVISION ENGINE
+========================================================= */
+
+let state = {
+    dividend: 0,
+    divisor: 0,
+    dividendStr: "",
+    steps: [],
+    currentStep: 0,
+    remainder: 0,
+    finished: false
+};
+
+
+function calculateDivision(dividend, divisor) {
+
+    const digits = dividend.toString().split('').map(Number);
+
+    let steps = [];
+    let current = 0;
+    let started = false;
+
+    for(let i = 0; i < digits.length; i++) {
+
+        current = current * 10 + digits[i];
+
+        if(!started && current < divisor) {
+
+            if(i < digits.length - 1) {
+                continue;
+            }
+        }
+
+        started = true;
+
+        const q = Math.floor(current / divisor);
+        const product = q * divisor;
+        const remainder = current - product;
+
+        steps.push({
+            col: i,
+            working: current,
+            quotient: q,
+            product: product,
+            remainder: remainder,
+            bringDown:
+                i < digits.length - 1
+                ? digits[i + 1]
+                : null
+        });
+
+        current = remainder;
+    }
+
+    return {
+        steps,
+        remainder: current
+    };
+}
+
+
+/* =========================================================
+   INITIALISE PROBLEM
+========================================================= */
+
+function loadQuestion() {
+
+    const q = questions[currentQuestion];
+
+    state.dividend = q.dividend;
+    state.divisor = q.divisor;
+    state.dividendStr = String(q.dividend);
+
+    const result = calculateDivision(
+        q.dividend,
+        q.divisor
+    );
+
+    state.steps = result.steps;
+    state.remainder = result.remainder;
+    state.currentStep = 0;
+    state.finished = false;
+
+    document.getElementById("problemCounter").textContent =
+        `${currentQuestion + 1} / ${questions.length}`;
+
+    document.getElementById("questionNumber").textContent =
+        `QUESTION ${currentQuestion + 1}`;
+
+    document.getElementById("problemDisplay").textContent =
+        `${q.dividend} ÷ ${q.divisor}`;
+
+    document.getElementById("divisor").textContent =
+        q.divisor;
+
+    document.getElementById("completeMessage").style.display =
+        "none";
+
+    renderBoard();
+
+    processNextStep();
+}
+
+
+/* =========================================================
+   RENDER BASIC BOARD
+========================================================= */
+
+function renderBoard() {
+
+    const grid = document.getElementById("divisionGrid");
+
+    grid.innerHTML = "";
+
+    /* QUOTIENT */
+
+    const quotientRow = document.createElement("div");
+    quotientRow.className = "row quotient-row";
+    quotientRow.id = "quotientRow";
+
+    for(let i = 0; i < state.dividendStr.length; i++) {
+
+        const cell = document.createElement("div");
+
+        cell.className = "cell";
+        cell.id = `q-${i}`;
+
+        quotientRow.appendChild(cell);
+    }
+
+    grid.appendChild(quotientRow);
+
+
+    /* DIVIDEND */
+
+    const dividendRow = document.createElement("div");
+    dividendRow.className = "row";
+
+    for(let i = 0; i < state.dividendStr.length; i++) {
+
+        const cell = document.createElement("div");
+
+        cell.className = "cell dividend-cell";
+        cell.textContent = state.dividendStr[i];
+
+        dividendRow.appendChild(cell);
+    }
+
+    grid.appendChild(dividendRow);
+}
+
+
+/* =========================================================
+   PROCESS STEP
+========================================================= */
+
+function processNextStep() {
+
+    const total = state.steps.length;
+
+    if(state.currentStep >= total) {
+
+        showRemainderStep();
+        return;
+    }
+
+    const step = state.steps[state.currentStep];
+
+    showDivideStep(step);
+}
+
+
+/* =========================================================
+   DIVIDE STEP
+========================================================= */
+
+function showDivideStep(step) {
+
+    const qCell = document.getElementById(
+        `q-${step.col}`
+    );
+
+    qCell.innerHTML = "";
+
+    createInput(
+        qCell,
+        step.quotient.toString(),
+        "divide"
+    );
+}
+
+
+/* =========================================================
+   CREATE INPUT
+========================================================= */
+
+function createInput(cell, expected, type) {
+
+    const input = document.createElement("input");
+
+    input.type = "text";
+    input.inputMode = "numeric";
+    input.className = "input-cell";
+
+    input.maxLength = expected.length;
+
+    cell.appendChild(input);
+
+    input.focus();
+
+    input.addEventListener("keydown", function(e) {
+
+        if(e.key === "Enter") {
+
+            validateInput(
+                input,
+                expected,
+                type
+            );
+        }
+    });
+
+    input.addEventListener("blur", function() {
+
+        if(input.value !== "") {
+
+            validateInput(
+                input,
+                expected,
+                type
+            );
+        }
+    });
+}
+
+
+/* =========================================================
+   VALIDATE INPUT
+========================================================= */
+
+function validateInput(input, expected, type) {
+
+    if(input.dataset.checked === "true") {
+        return;
+    }
+
+    const answer =
+        input.value.trim();
+
+    if(answer === expected) {
+
+        input.dataset.checked = "true";
+
+        input.classList.remove("wrong");
+        input.classList.add("correct");
+
+        input.disabled = true;
+
+        setTimeout(() => {
+
+            if(type === "divide") {
+
+                showMultiplyStep(
+                    state.steps[state.currentStep]
+                );
+
+            } else if(type === "multiply") {
+
+                showSubtractStep(
+                    state.steps[state.currentStep]
+                );
+
+            } else if(type === "subtract") {
+
+                showBringDown(
+                    state.steps[state.currentStep]
+                );
+            }
+
+        }, 350);
+
+    } else {
+
+        input.classList.add("wrong");
+
+        input.value = "";
+
+        showFeedback(
+            false,
+            "Oops! Not quite!",
+            "Let's try that step again. Use your scratchpad to work it out!"
+        );
+    }
+}
+
+
+/* =========================================================
+   MULTIPLICATION STEP
+========================================================= */
+
+function showMultiplyStep(step) {
+
+    const grid =
+        document.getElementById("divisionGrid");
+
+    const row =
+        document.createElement("div");
+
+    row.className = "row";
+    row.id = "multiply-row-" + state.currentStep;
+
+    for(let i = 0; i < state.dividendStr.length; i++) {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className = "cell";
+
+        row.appendChild(cell);
+    }
+
+    grid.appendChild(row);
+
+    const target =
+        row.children[step.col];
+
+    const product =
+        step.product.toString();
+
+    const start =
+        step.col - product.length + 1;
+
+    for(let i = start; i <= step.col; i++) {
+
+        row.children[i].classList.add(
+            "line-cell"
+        );
+    }
+
+    if(start >= 0) {
+
+        const minus =
+            document.createElement("span");
+
+        minus.className = "minus";
+        minus.textContent = "−";
+
+        row.children[start].appendChild(
+            minus
+        );
+    }
+
+    createInput(
+        target,
+        product,
+        "multiply"
+    );
+}
+
+
+/* =========================================================
+   SUBTRACTION STEP
+========================================================= */
+
+function showSubtractStep(step) {
+
+    const grid =
+        document.getElementById("divisionGrid");
+
+    const row =
+        document.createElement("div");
+
+    row.className = "row";
+
+    row.id =
+        "subtract-row-" +
+        state.currentStep;
+
+    for(let i = 0; i < state.dividendStr.length; i++) {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className = "cell";
+
+        row.appendChild(cell);
+    }
+
+    grid.appendChild(row);
+
+    const target =
+        row.children[step.col];
+
+    createInput(
+        target,
+        step.remainder.toString(),
+        "subtract"
+    );
+}
+
+
+/* =========================================================
+   BRING DOWN
+========================================================= */
+
+function showBringDown(step) {
+
+    if(step.bringDown === null) {
+
+        state.currentStep++;
+
+        processNextStep();
+
+        return;
+    }
+
+    const row =
+        document.createElement("div");
+
+    row.className = "row";
+
+    for(let i = 0; i < state.dividendStr.length; i++) {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className = "cell";
+
+        row.appendChild(cell);
+    }
+
+    const target =
+        row.children[step.col + 1];
+
+    const arrow =
+        document.createElement("div");
+
+    arrow.className =
+        "bring-down";
+
+    arrow.innerHTML =
+        "↓";
+
+    target.appendChild(arrow);
+
+    document
+        .getElementById("divisionGrid")
+        .appendChild(row);
+
+    setTimeout(() => {
+
+        target.innerHTML =
+            `<strong>${step.bringDown}</strong>`;
+
+        setTimeout(() => {
+
+            state.currentStep++;
+
+            processNextStep();
+
+        }, 400);
+
+    }, 600);
+}
+
+
+/* =========================================================
+   FINAL REMAINDER
+========================================================= */
+
+function showRemainderStep() {
+
+    if(state.finished) {
+        return;
+    }
+
+    const grid =
+        document.getElementById("divisionGrid");
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "row remainder-row";
+
+    const label =
+        document.createElement("div");
+
+    label.className =
+        "remainder-label";
+
+    label.textContent =
+        "R =";
+
+    row.appendChild(label);
+
+    const cell =
+        document.createElement("div");
+
+    cell.className =
+        "cell";
+
+    row.appendChild(cell);
+
+    grid.appendChild(row);
+
+    createInput(
+        cell,
+        state.remainder.toString(),
+        "remainder"
+    );
+
+    const input =
+        cell.querySelector("input");
+
+    input.addEventListener(
+        "input",
+        function() {
+
+            if(input.value.trim() ===
+               state.remainder.toString()) {
+
+                input.classList.add(
+                    "correct"
+                );
+
+                input.disabled = true;
+
+                finishProblem();
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function finishProblem() {
+
+    if(state.finished) return;
+
+    state.finished = true;
+
+    completed++;
+    score += 10;
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.getElementById("completed")
+        .textContent = completed;
+
+    document.getElementById(
+        "completeMessage"
+    ).style.display = "block";
+
+    showFeedback(
+        true,
+        "🎉 AMAZING!",
+        `You solved ${state.dividend} ÷ ${state.divisor}!`
+    );
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function showFeedback(correct, title, text) {
+
+    const overlay =
+        document.getElementById(
+            "feedbackOverlay"
+        );
+
+    const gif =
+        correct
+        ? happyGifs[
+            Math.floor(
+                Math.random() *
+                happyGifs.length
+            )
+          ]
+        : wrongGifs[
+            Math.floor(
+                Math.random() *
+                wrongGifs.length
+            )
+          ];
+
+    document.getElementById(
+        "feedbackGif"
+    ).src = gif;
+
+    document.getElementById(
+        "feedbackTitle"
+    ).textContent = title;
+
+    document.getElementById(
+        "feedbackText"
+    ).textContent = text;
+
+    overlay.classList.add("show");
+}
+
+
+function closeFeedback() {
+
+    document
+        .getElementById(
+            "feedbackOverlay"
+        )
+        .classList.remove("show");
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetProblem() {
+
+    closeFeedback();
+
+    loadQuestion();
+}
+
+
+/* =========================================================
+   NEXT PROBLEM
+========================================================= */
+
+function nextProblem() {
+
+    closeFeedback();
+
+    if(currentQuestion <
+       questions.length - 1) {
+
+        currentQuestion++;
+
+        loadQuestion();
+
+    } else {
+
+        showFeedback(
+            true,
+            "🏆 QUIZ COMPLETE!",
+            `You finished all ${questions.length} problems! Your score is ${score}.`
+        );
+    }
+}
+
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+const canvas =
+    document.getElementById(
+        "scratchCanvas"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+let drawing = false;
+let penColor = "#171717";
+let lineWidth = 2;
+let erasing = false;
+
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const oldCanvas =
+        document.createElement("canvas");
+
+    oldCanvas.width =
+        canvas.width;
+
+    oldCanvas.height =
+        canvas.height;
+
+    if(canvas.width > 0) {
+
+        oldCanvas
+            .getContext("2d")
+            .drawImage(
+                canvas,
+                0,
+                0
+            );
+    }
+
+    canvas.width =
+        rect.width * window.devicePixelRatio;
+
+    canvas.height =
+        rect.height * window.devicePixelRatio;
+
+    ctx.setTransform(
+        window.devicePixelRatio,
+        0,
+        0,
+        window.devicePixelRatio,
+        0,
+        0
+    );
+
+    if(oldCanvas.width > 0) {
+
+        ctx.drawImage(
+            oldCanvas,
+            0,
+            0,
+            oldCanvas.width /
+                window.devicePixelRatio,
+            oldCanvas.height /
+                window.devicePixelRatio
+        );
+    }
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+resizeCanvas();
+
+
+function getPosition(e) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    if(e.touches) {
+
+        return {
+            x: e.touches[0].clientX -
+               rect.left,
+
+            y: e.touches[0].clientY -
+               rect.top
+        };
+
+    }
+
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+
+function startDrawing(e) {
+
+    e.preventDefault();
+
+    drawing = true;
+
+    const pos =
+        getPosition(e);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+}
+
+
+function draw(e) {
+
+    if(!drawing) return;
+
+    e.preventDefault();
+
+    const pos =
+        getPosition(e);
+
+    ctx.lineWidth =
+        lineWidth;
+
+    ctx.strokeStyle =
+        erasing
+        ? "#ffffff"
+        : penColor;
+
+    ctx.globalCompositeOperation =
+        erasing
+        ? "destination-out"
+        : "source-over";
+
+    ctx.lineTo(
+        pos.x,
+        pos.y
+    );
+
+    ctx.stroke();
+}
+
+
+function stopDrawing() {
+
+    drawing = false;
+
+    ctx.closePath();
+}
+
+
+canvas.addEventListener(
+    "mousedown",
+    startDrawing
+);
+
+canvas.addEventListener(
+    "mousemove",
+    draw
+);
+
+canvas.addEventListener(
+    "mouseup",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "mouseleave",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "touchstart",
+    startDrawing,
+    {passive:false}
+);
+
+canvas.addEventListener(
+    "touchmove",
+    draw,
+    {passive:false}
+);
+
+canvas.addEventListener(
+    "touchend",
+    stopDrawing
+);
+
+
+function setPen(color, button) {
+
+    penColor = color;
+    erasing = false;
+
+    document
+        .querySelectorAll(".tool-btn")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+    button.classList.add("active");
+}
+
+
+function setWidth(width, button) {
+
+    lineWidth = width;
+    erasing = false;
+
+    document
+        .querySelectorAll(".tool-btn")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+    button.classList.add("active");
+}
+
+
+function eraser(button) {
+
+    erasing = true;
+
+    document
+        .querySelectorAll(".tool-btn")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+    button.classList.add("active");
+}
+
+
+function clearCanvas() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>

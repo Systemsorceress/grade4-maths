@@ -1,0 +1,2679 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hareem & Husnain — Subtraction & Bar Models</title>
+
+<style>
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #d85b9c;
+    --primary-dark: #b83f7e;
+    --secondary: #f5d9ea;
+    --accent: #9b6bc4;
+
+    --bg: #fff5fa;
+    --card: #ffffff;
+    --soft-card: #fffafd;
+
+    --text: #3c3040;
+    --muted: #806f80;
+    --border: #ead6e3;
+
+    --success: #2eaa65;
+    --success-bg: #eaf9f0;
+
+    --error: #dc5656;
+    --error-bg: #fff0f0;
+
+    --shadow: 0 8px 28px rgba(70, 30, 60, .08);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.95), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(245,217,234,.75), transparent 30%),
+        var(--bg);
+    color: var(--text);
+}
+
+
+/* =========================================================
+   HAREEM THEME
+========================================================= */
+
+body.hareem {
+    --primary: #d85b9c;
+    --primary-dark: #b83f7e;
+    --secondary: #f5d9ea;
+    --accent: #9b6bc4;
+    --bg: #fff5fa;
+    --card: #ffffff;
+    --soft-card: #fffafd;
+    --text: #3c3040;
+    --muted: #806f80;
+    --border: #ead6e3;
+}
+
+
+/* =========================================================
+   HUSNAIN THEME
+========================================================= */
+
+body.husnain {
+    --primary: #2685c7;
+    --primary-dark: #145d91;
+    --secondary: #d8ecfb;
+    --accent: #36a89e;
+    --bg: #f0f8fd;
+    --card: #ffffff;
+    --soft-card: #fafdff;
+    --text: #263844;
+    --muted: #657985;
+    --border: #d1e2ec;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+    padding: 15px 22px;
+
+    background: rgba(255,255,255,.94);
+    border-bottom: 2px solid var(--border);
+
+    backdrop-filter: blur(12px);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.brand-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 15px;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--accent)
+        );
+
+    color: white;
+    font-size: 25px;
+
+    box-shadow:
+        0 6px 16px rgba(100,70,130,.18);
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 21px;
+    color: var(--primary-dark);
+}
+
+.brand p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   STUDENT SWITCHER
+========================================================= */
+
+.student-switcher {
+    display: flex;
+    gap: 5px;
+
+    padding: 4px;
+
+    background: var(--secondary);
+    border-radius: 14px;
+}
+
+.student-btn {
+    border: none;
+    padding: 9px 15px;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-weight: 800;
+
+    transition: .2s;
+}
+
+.student-btn:hover {
+    transform: translateY(-1px);
+}
+
+.student-btn.active {
+    background: white;
+    color: var(--primary-dark);
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08);
+}
+
+
+/* =========================================================
+   MAIN APP
+========================================================= */
+
+.app {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(320px, .85fr);
+
+    gap: 18px;
+
+    max-width: 1550px;
+
+    margin: auto;
+
+    padding: 18px;
+}
+
+
+/* =========================================================
+   WORKSHEET
+========================================================= */
+
+.worksheet-panel {
+    min-width: 0;
+}
+
+.header-card {
+    background: var(--card);
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    padding: 20px 22px;
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+.title-area {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.title-icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 14px;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--secondary);
+
+    font-size: 23px;
+}
+
+.title-area h2 {
+    margin: 0;
+
+    color: var(--primary-dark);
+
+    font-size: 20px;
+}
+
+.title-area p {
+    margin: 4px 0 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.score-box {
+    padding: 10px 14px;
+
+    border-radius: 11px;
+
+    background: var(--secondary);
+
+    color: var(--primary-dark);
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+button {
+    font-family: inherit;
+}
+
+.check-btn,
+.reset-btn {
+    border: none;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: 800;
+
+    transition: .2s;
+}
+
+.check-btn {
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--accent)
+        );
+
+    color: white;
+
+    box-shadow:
+        0 5px 14px rgba(100,70,140,.18);
+}
+
+.check-btn:hover {
+    transform: translateY(-2px);
+}
+
+.reset-btn {
+    background: #edf0f4;
+    color: var(--text);
+}
+
+.reset-btn:hover {
+    background: #e1e6ed;
+}
+
+
+/* =========================================================
+   STUDENT BANNER
+========================================================= */
+
+.student-banner {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px 16px;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.04);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: var(--primary-dark);
+}
+
+.student-banner-icon {
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.worksheet-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    padding-bottom: 25px;
+}
+
+.section-card {
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 19px;
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 17px;
+}
+
+.section-number {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 11px;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--secondary);
+
+    color: var(--primary-dark);
+
+    font-weight: 900;
+}
+
+.section-heading h2 {
+    margin: 0;
+
+    font-size: 16px;
+}
+
+.section-heading p {
+    margin: 3px 0 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   QUESTIONS — VERTICAL
+========================================================= */
+
+.problems-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.problem-card {
+    padding: 16px;
+
+    background: var(--soft-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    transition: .2s;
+}
+
+.problem-card:hover {
+    transform: translateY(-1px);
+
+    border-color: var(--primary);
+}
+
+.problem-label {
+    color: var(--muted);
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .08em;
+
+    font-weight: 900;
+
+    margin-bottom: 8px;
+}
+
+.equation {
+    font-size: 18px;
+
+    font-weight: 900;
+
+    margin-bottom: 12px;
+}
+
+.answer-row {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.answer-input {
+    width: 115px;
+    height: 40px;
+
+    border: 2px solid var(--border);
+
+    border-radius: 10px;
+
+    background: white;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition: .2s;
+}
+
+.answer-input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px
+        color-mix(
+            in srgb,
+            var(--primary) 12%,
+            transparent
+        );
+}
+
+.answer-input.correct {
+    border-color: var(--success);
+
+    background: var(--success-bg);
+
+    color: #187044;
+}
+
+.answer-input.incorrect {
+    border-color: var(--error);
+
+    background: var(--error-bg);
+
+    color: #a52c2c;
+}
+
+
+/* =========================================================
+   FEEDBACK ICON
+========================================================= */
+
+.feedback-icon {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    font-weight: 900;
+
+    opacity: 0;
+
+    transform: scale(.5);
+
+    transition: .2s;
+}
+
+.feedback-icon.show {
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+.feedback-icon.good {
+    background: var(--success-bg);
+
+    color: var(--success);
+}
+
+.feedback-icon.bad {
+    background: var(--error-bg);
+
+    color: var(--error);
+}
+
+
+/* =========================================================
+   BAR MODEL
+========================================================= */
+
+.bar-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.bar-problem {
+    padding: 17px;
+
+    border-radius: 15px;
+
+    background: var(--soft-card);
+
+    border: 1px solid var(--border);
+}
+
+.bar-question {
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.45;
+
+    margin-bottom: 13px;
+}
+
+.bar-model {
+    display: flex;
+
+    height: 55px;
+
+    border: 2px solid var(--primary);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-bottom: 10px;
+}
+
+.bar-part {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    border-right: 2px solid white;
+}
+
+.bar-part:last-child {
+    border-right: none;
+}
+
+.known {
+    background: #9bd5b9;
+
+    color: #174c34;
+}
+
+.unknown {
+    background: #ffd77d;
+
+    color: #604400;
+}
+
+.whole {
+    background: #8091ed;
+
+    color: white;
+}
+
+.bar-labels {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   WORD PROBLEMS
+========================================================= */
+
+.word-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.word-problem {
+    padding: 17px;
+
+    border-radius: 15px;
+
+    background: var(--soft-card);
+
+    border: 1px solid var(--border);
+}
+
+.word-problem h3 {
+    margin: 0 0 7px;
+
+    font-size: 15px;
+}
+
+.word-problem p {
+    margin: 0 0 12px;
+
+    color: var(--muted);
+
+    line-height: 1.55;
+
+    font-size: 13px;
+}
+
+.mini-bar {
+    display: flex;
+
+    height: 39px;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    margin-bottom: 12px;
+}
+
+.mini-bar span {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    padding: 3px;
+}
+
+.mini-known {
+    background: #9bd5b9;
+
+    color: #174c34;
+}
+
+.mini-unknown {
+    background: #ffd77d;
+
+    color: #604400;
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result-banner {
+    display: none;
+
+    padding: 13px 16px;
+
+    margin-bottom: 18px;
+
+    border-radius: 13px;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-align: center;
+}
+
+.result-banner.show {
+    display: block;
+}
+
+.result-banner.success {
+    background: var(--success-bg);
+
+    color: #187044;
+
+    border: 1px solid #bce5cb;
+}
+
+.result-banner.try {
+    background: var(--secondary);
+
+    color: var(--primary-dark);
+
+    border: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+.scratch-panel {
+    min-width: 0;
+
+    position: sticky;
+
+    top: 18px;
+
+    height: calc(100vh - 36px);
+}
+
+.scratch-card {
+    height: 100%;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.scratch-header {
+    padding: 17px;
+
+    border-bottom: 1px solid var(--border);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--secondary),
+            rgba(255,255,255,.8)
+        );
+}
+
+.scratch-header h2 {
+    margin: 0;
+
+    font-size: 16px;
+}
+
+.scratch-header p {
+    margin: 4px 0 0;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.scratch-toolbar {
+    display: flex;
+
+    gap: 6px;
+
+    padding: 11px;
+
+    border-bottom: 1px solid var(--border);
+
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    border: none;
+
+    padding: 8px 11px;
+
+    border-radius: 8px;
+
+    background: #edf0f4;
+
+    color: var(--text);
+
+    font-weight: 800;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.tool-btn.active {
+    background: var(--primary);
+
+    color: white;
+}
+
+.clear-btn {
+    margin-left: auto;
+
+    background: #fff0f0;
+
+    color: #bd4444;
+}
+
+.canvas-wrap {
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 11px;
+
+    background:
+        linear-gradient(
+            rgba(100,100,100,.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(100,100,100,.04) 1px,
+            transparent 1px
+        );
+
+    background-size: 25px 25px;
+}
+
+#scratchpad {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    background: rgba(255,255,255,.92);
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    touch-action: none;
+
+    cursor: crosshair;
+}
+
+.scratch-footer {
+    padding: 10px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   DECORATIONS
+========================================================= */
+
+.decor {
+    position: fixed;
+
+    pointer-events: none;
+
+    opacity: .15;
+
+    z-index: -1;
+
+    font-size: 42px;
+}
+
+.decor.one {
+    left: 15px;
+    bottom: 30px;
+}
+
+.decor.two {
+    right: 18px;
+    top: 100px;
+}
+
+.decor.three {
+    right: 30%;
+    bottom: 15px;
+}
+
+body.hareem .decor.one::after {
+    content: "🌸";
+}
+
+body.hareem .decor.two::after {
+    content: "💗";
+}
+
+body.hareem .decor.three::after {
+    content: "✨";
+}
+
+body.husnain .decor.one::after {
+    content: "🚀";
+}
+
+body.husnain .decor.two::after {
+    content: "⚡";
+}
+
+body.husnain .decor.three::after {
+    content: "⭐";
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    .scratch-panel {
+        position: relative;
+
+        top: auto;
+
+        height: 550px;
+    }
+}
+
+@media (max-width: 720px) {
+
+    .app-header {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .student-switcher {
+        justify-content: center;
+    }
+
+    .app {
+        padding: 10px;
+    }
+
+    .header-card {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .score-box,
+    .check-btn,
+    .reset-btn {
+        flex: 1;
+    }
+
+    .problems-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .title-area h2 {
+        font-size: 17px;
+    }
+
+    .section-card {
+        padding: 15px;
+    }
+
+    .problem-card,
+    .bar-problem,
+    .word-problem {
+        padding: 13px;
+    }
+
+    .answer-input {
+        width: 105px;
+    }
+
+    .scratch-panel {
+        height: 450px;
+    }
+}
+</style>
+</head>
+
+
+<body class="hareem">
+
+
+<!-- =========================================================
+     BACKGROUND DECORATIONS
+========================================================= -->
+
+<div class="decor one"></div>
+<div class="decor two"></div>
+<div class="decor three"></div>
+
+
+<!-- =========================================================
+     TOP HEADER
+========================================================= -->
+
+<header class="app-header">
+
+    <div class="brand">
+
+        <div
+            class="brand-icon"
+            id="brandIcon">
+            🌸
+        </div>
+
+        <div>
+
+            <h1 id="studentTitle">
+                Hareem's Maths Mission
+            </h1>
+
+            <p>
+                Subtraction • Bar Models • Word Problems
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="student-switcher">
+
+        <button
+            id="hareemBtn"
+            class="student-btn active"
+            onclick="setTheme('hareem')">
+
+            🌸 Hareem
+
+        </button>
+
+
+        <button
+            id="husnainBtn"
+            class="student-btn"
+            onclick="setTheme('husnain')">
+
+            🚀 Husnain
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
+
+<div class="app">
+
+
+<main class="worksheet-panel">
+
+
+    <!-- HEADER -->
+
+    <div class="header-card">
+
+        <div class="title-area">
+
+            <div class="title-icon">
+                ➖
+            </div>
+
+            <div>
+
+                <h2>
+                    Subtraction & Bar Models
+                </h2>
+
+                <p>
+                    Work carefully and use the scratchpad for your calculations.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <div
+                class="score-box"
+                id="score">
+
+                Score: 0 / 11
+
+            </div>
+
+
+            <button
+                class="reset-btn"
+                onclick="resetWorksheet()">
+
+                Reset
+
+            </button>
+
+
+            <button
+                class="check-btn"
+                onclick="checkAnswers()">
+
+                ✓ Check Answers
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- STUDENT MESSAGE -->
+
+    <div class="student-banner">
+
+        <span
+            class="student-banner-icon"
+            id="bannerIcon">
+            🌸
+        </span>
+
+        <span id="bannerText">
+            Hareem, show your working and solve each problem carefully!
+        </span>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="resultBanner"
+        class="result-banner">
+    </div>
+
+
+    <div class="worksheet-content">
+
+
+        <!-- =================================================
+             SECTION 1
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    1
+                </div>
+
+                <div>
+
+                    <h2>
+                        Column Subtraction
+                    </h2>
+
+                    <p>
+                        Solve each subtraction problem.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="problems-grid">
+
+
+                <div class="problem-card">
+
+                    <div class="problem-label">
+                        Problem A
+                    </div>
+
+                    <div class="equation">
+                        4,572 − 2,341 =
+                    </div>
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2231"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Answer">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="problem-card">
+
+                    <div class="problem-label">
+                        Problem B
+                    </div>
+
+                    <div class="equation">
+                        7,462 − 7,151 =
+                    </div>
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="311"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Answer">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="problem-card">
+
+                    <div class="problem-label">
+                        Problem C
+                    </div>
+
+                    <div class="equation">
+                        6,582 − 582 =
+                    </div>
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="6000"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Answer">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="problem-card">
+
+                    <div class="problem-label">
+                        Problem D
+                    </div>
+
+                    <div class="equation">
+                        2,348 − 235 =
+                    </div>
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2113"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Answer">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SECTION 2
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    2
+                </div>
+
+                <div>
+
+                    <h2>
+                        Missing Number Bar Models
+                    </h2>
+
+                    <p>
+                        Subtract the known part from the whole.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="bar-list">
+
+
+                <!-- BAR 1 -->
+
+                <div class="bar-problem">
+
+                    <div class="bar-question">
+                        2,978 − 1,365 = ?
+                    </div>
+
+
+                    <div class="bar-model">
+
+                        <div
+                            class="bar-part known"
+                            style="width:46%">
+
+                            1,365
+
+                        </div>
+
+                        <div
+                            class="bar-part unknown"
+                            style="width:54%">
+
+                            ?
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-labels">
+
+                        <span>
+                            Known part
+                        </span>
+
+                        <span>
+                            Whole = 2,978
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="1613"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Missing number">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BAR 2 -->
+
+                <div class="bar-problem">
+
+                    <div class="bar-question">
+                        5,346 − 3,214 = ?
+                    </div>
+
+
+                    <div class="bar-model">
+
+                        <div
+                            class="bar-part known"
+                            style="width:60%">
+
+                            3,214
+
+                        </div>
+
+                        <div
+                            class="bar-part unknown"
+                            style="width:40%">
+
+                            ?
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-labels">
+
+                        <span>
+                            Known part
+                        </span>
+
+                        <span>
+                            Whole = 5,346
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2132"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Missing number">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BAR 3 -->
+
+                <div class="bar-problem">
+
+                    <div class="bar-question">
+                        The whole is 5,674. One part is 470.
+                        Find the missing part.
+                    </div>
+
+
+                    <div class="bar-model">
+
+                        <div
+                            class="bar-part known"
+                            style="width:18%">
+
+                            470
+
+                        </div>
+
+                        <div
+                            class="bar-part unknown"
+                            style="width:82%">
+
+                            ?
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-labels">
+
+                        <span>
+                            Known part
+                        </span>
+
+                        <span>
+                            Whole = 5,674
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="5204"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Missing number">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SECTION 3
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-heading">
+
+                <div class="section-number">
+                    3
+                </div>
+
+                <div>
+
+                    <h2>
+                        Word Problems
+                    </h2>
+
+                    <p>
+                        Read the problem, identify the whole and part,
+                        then subtract.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="word-list">
+
+
+                <!-- WORD 1 -->
+
+                <div class="word-problem">
+
+                    <h3>
+                        🏫 School Population
+                    </h3>
+
+                    <p>
+                        A school has
+                        <strong>3,597 students</strong>
+                        altogether.
+                        <strong>2,182 are boys</strong>.
+                        How many are girls?
+                    </p>
+
+
+                    <div class="mini-bar">
+
+                        <span
+                            class="mini-known"
+                            style="width:61%">
+
+                            Boys: 2,182
+
+                        </span>
+
+                        <span
+                            class="mini-unknown"
+                            style="width:39%">
+
+                            Girls: ?
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="1415"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Girls">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WORD 2 -->
+
+                <div class="word-problem">
+
+                    <h3>
+                        🚗 Car Mileage
+                    </h3>
+
+                    <p>
+                        One car travelled
+                        <strong>7,653 km</strong>.
+                        Another travelled
+                        <strong>5,612 km</strong>.
+                        How much farther did the first car travel?
+                    </p>
+
+
+                    <div class="mini-bar">
+
+                        <span
+                            class="mini-known"
+                            style="width:73%">
+
+                            5,612 km
+
+                        </span>
+
+                        <span
+                            class="mini-unknown"
+                            style="width:27%">
+
+                            Difference?
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2041"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Difference">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WORD 3 -->
+
+                <div class="word-problem">
+
+                    <h3>
+                        🏖️ Mass of Sand
+                    </h3>
+
+                    <p>
+                        There were
+                        <strong>3,576 g</strong>
+                        of sand.
+                        <strong>1,250 g</strong>
+                        was removed.
+                        How much sand remained?
+                    </p>
+
+
+                    <div class="mini-bar">
+
+                        <span
+                            class="mini-known"
+                            style="width:35%">
+
+                            Removed: 1,250 g
+
+                        </span>
+
+                        <span
+                            class="mini-unknown"
+                            style="width:65%">
+
+                            Remaining?
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2326"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Sand left">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WORD 4 -->
+
+                <div class="word-problem">
+
+                    <h3>
+                        🎡 Fair Tickets
+                    </h3>
+
+                    <p>
+                        Whitney has
+                        <strong>3,486 tickets</strong>.
+                        Amir has
+                        <strong>1,413 fewer tickets</strong>
+                        than Whitney.
+                        How many tickets does Amir have?
+                    </p>
+
+
+                    <div class="mini-bar">
+
+                        <span
+                            class="mini-known"
+                            style="width:60%">
+
+                            Amir: ?
+
+                        </span>
+
+                        <span
+                            class="mini-unknown"
+                            style="width:40%">
+
+                            1,413 fewer
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer-row">
+
+                        <input
+                            class="answer-input"
+                            data-answer="2073"
+                            type="text"
+                            inputmode="numeric"
+                            placeholder="Amir's tickets">
+
+                        <div class="feedback-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     SCRATCHPAD
+========================================================= -->
+
+<aside class="scratch-panel">
+
+    <div class="scratch-card">
+
+        <div class="scratch-header">
+
+            <h2 id="scratchTitle">
+                🌸 Hareem's Rough Work
+            </h2>
+
+            <p>
+                Use this space to work out your subtraction.
+            </p>
+
+        </div>
+
+
+        <div class="scratch-toolbar">
+
+            <button
+                id="penBtn"
+                class="tool-btn active"
+                onclick="setTool('pen')">
+
+                ✏ Pen
+
+            </button>
+
+
+            <button
+                id="eraserBtn"
+                class="tool-btn"
+                onclick="setTool('eraser')">
+
+                ⌫ Eraser
+
+            </button>
+
+
+            <button
+                class="tool-btn clear-btn"
+                onclick="clearCanvas()">
+
+                🗑 Clear
+
+            </button>
+
+        </div>
+
+
+        <div class="canvas-wrap">
+
+            <canvas id="scratchpad"></canvas>
+
+        </div>
+
+
+        <div class="scratch-footer">
+
+            Tip: Try writing the numbers in columns before subtracting.
+
+        </div>
+
+    </div>
+
+</aside>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   THEME / STUDENT SWITCHER
+========================================================= */
+
+function setTheme(theme) {
+
+    document.body.classList.remove(
+        "hareem",
+        "husnain"
+    );
+
+    document.body.classList.add(theme);
+
+
+    const hareemBtn =
+        document.getElementById("hareemBtn");
+
+    const husnainBtn =
+        document.getElementById("husnainBtn");
+
+
+    hareemBtn.classList.toggle(
+        "active",
+        theme === "hareem"
+    );
+
+    husnainBtn.classList.toggle(
+        "active",
+        theme === "husnain"
+    );
+
+
+    const brandIcon =
+        document.getElementById("brandIcon");
+
+    const studentTitle =
+        document.getElementById("studentTitle");
+
+    const bannerIcon =
+        document.getElementById("bannerIcon");
+
+    const bannerText =
+        document.getElementById("bannerText");
+
+    const scratchTitle =
+        document.getElementById("scratchTitle");
+
+
+    if (theme === "hareem") {
+
+        brandIcon.textContent = "🌸";
+
+        studentTitle.textContent =
+            "Hareem's Maths Mission";
+
+        bannerIcon.textContent = "🌸";
+
+        bannerText.textContent =
+            "Hareem, show your working and solve each problem carefully!";
+
+        scratchTitle.textContent =
+            "🌸 Hareem's Rough Work";
+
+    }
+
+    else {
+
+        brandIcon.textContent = "🚀";
+
+        studentTitle.textContent =
+            "Husnain's Maths Mission";
+
+        bannerIcon.textContent = "🚀";
+
+        bannerText.textContent =
+            "Husnain, show your working and solve each problem like a maths champion!";
+
+        scratchTitle.textContent =
+            "🚀 Husnain's Rough Work";
+
+    }
+
+}
+
+
+/* =========================================================
+   ANSWER CHECKING
+========================================================= */
+
+function normalizeAnswer(value) {
+
+    return value
+        .trim()
+        .replace(/,/g, "")
+        .replace(/\s/g, "");
+
+}
+
+
+function checkAnswers() {
+
+    const inputs =
+        document.querySelectorAll(
+            ".answer-input"
+        );
+
+    let correct = 0;
+
+    const total = inputs.length;
+
+
+    inputs.forEach(input => {
+
+        const value =
+            normalizeAnswer(
+                input.value
+            );
+
+        const expected =
+            normalizeAnswer(
+                input.dataset.answer
+            );
+
+
+        const icon =
+            input.parentElement.querySelector(
+                ".feedback-icon"
+            );
+
+
+        input.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        icon.classList.remove(
+            "show",
+            "good",
+            "bad"
+        );
+
+
+        if (value === "") {
+            return;
+        }
+
+
+        if (value === expected) {
+
+            correct++;
+
+            input.classList.add(
+                "correct"
+            );
+
+            icon.textContent = "✓";
+
+            icon.classList.add(
+                "show",
+                "good"
+            );
+
+        }
+
+        else {
+
+            input.classList.add(
+                "incorrect"
+            );
+
+            icon.textContent = "✕";
+
+            icon.classList.add(
+                "show",
+                "bad"
+            );
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        `Score: ${correct} / ${total}`;
+
+
+    const banner =
+        document.getElementById(
+            "resultBanner"
+        );
+
+
+    banner.classList.remove(
+        "success",
+        "try"
+    );
+
+    banner.classList.add(
+        "show"
+    );
+
+
+    if (correct === total) {
+
+        banner.classList.add(
+            "success"
+        );
+
+
+        const name =
+            document.body.classList.contains(
+                "husnain"
+            )
+            ? "Husnain"
+            : "Hareem";
+
+
+        banner.textContent =
+            `🎉 Amazing, ${name}! Every answer is correct!`;
+
+    }
+
+    else {
+
+        banner.classList.add(
+            "try"
+        );
+
+
+        banner.textContent =
+            `You got ${correct} out of ${total} correct. ` +
+            `Check the red answers and try again!`;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetWorksheet() {
+
+    const inputs =
+        document.querySelectorAll(
+            ".answer-input"
+        );
+
+
+    inputs.forEach(input => {
+
+        input.value = "";
+
+        input.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+
+        const icon =
+            input.parentElement.querySelector(
+                ".feedback-icon"
+            );
+
+
+        icon.classList.remove(
+            "show",
+            "good",
+            "bad"
+        );
+
+    });
+
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        "Score: 0 / 11";
+
+
+    const banner =
+        document.getElementById(
+            "resultBanner"
+        );
+
+
+    banner.className =
+        "result-banner";
+
+
+    clearCanvas();
+
+}
+
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+const canvas =
+    document.getElementById(
+        "scratchpad"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+let drawing = false;
+
+let currentTool = "pen";
+
+let lastX = 0;
+
+let lastY = 0;
+
+
+/* =========================================================
+   CANVAS RESIZE
+========================================================= */
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    if (
+        rect.width <= 0 ||
+        rect.height <= 0
+    ) {
+        return;
+    }
+
+
+    const oldCanvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    oldCanvas.width =
+        canvas.width;
+
+    oldCanvas.height =
+        canvas.height;
+
+
+    const oldCtx =
+        oldCanvas.getContext(
+            "2d"
+        );
+
+
+    if (
+        canvas.width > 0 &&
+        canvas.height > 0
+    ) {
+
+        oldCtx.drawImage(
+            canvas,
+            0,
+            0
+        );
+
+    }
+
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    canvas.width =
+        rect.width * dpr;
+
+    canvas.height =
+        rect.height * dpr;
+
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    if (
+        oldCanvas.width > 0 &&
+        oldCanvas.height > 0
+    ) {
+
+        ctx.drawImage(
+            oldCanvas,
+            0,
+            0,
+            oldCanvas.width,
+            oldCanvas.height,
+            0,
+            0,
+            rect.width,
+            rect.height
+        );
+
+    }
+
+
+    ctx.lineCap = "round";
+
+    ctx.lineJoin = "round";
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(
+            resizeCanvas,
+            100
+        );
+
+    }
+);
+
+
+/* =========================================================
+   POINTER POSITION
+========================================================= */
+
+function getPosition(event) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    return {
+
+        x:
+            event.clientX -
+            rect.left,
+
+        y:
+            event.clientY -
+            rect.top
+
+    };
+
+}
+
+
+/* =========================================================
+   DRAWING
+========================================================= */
+
+function startDrawing(event) {
+
+    event.preventDefault();
+
+    drawing = true;
+
+
+    const position =
+        getPosition(event);
+
+
+    lastX =
+        position.x;
+
+    lastY =
+        position.y;
+
+
+    canvas.setPointerCapture(
+        event.pointerId
+    );
+
+}
+
+
+function draw(event) {
+
+    if (!drawing) {
+        return;
+    }
+
+
+    event.preventDefault();
+
+
+    const position =
+        getPosition(event);
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        lastX,
+        lastY
+    );
+
+    ctx.lineTo(
+        position.x,
+        position.y
+    );
+
+
+    if (
+        currentTool === "pen"
+    ) {
+
+        ctx.globalCompositeOperation =
+            "source-over";
+
+        ctx.strokeStyle =
+            "#24242b";
+
+        ctx.lineWidth =
+            3;
+
+    }
+
+    else {
+
+        ctx.globalCompositeOperation =
+            "destination-out";
+
+        ctx.lineWidth =
+            25;
+
+    }
+
+
+    ctx.stroke();
+
+
+    lastX =
+        position.x;
+
+    lastY =
+        position.y;
+
+}
+
+
+function stopDrawing() {
+
+    drawing = false;
+
+    ctx.beginPath();
+
+    ctx.globalCompositeOperation =
+        "source-over";
+
+}
+
+
+/* =========================================================
+   POINTER EVENTS
+========================================================= */
+
+canvas.addEventListener(
+    "pointerdown",
+    startDrawing
+);
+
+canvas.addEventListener(
+    "pointermove",
+    draw
+);
+
+canvas.addEventListener(
+    "pointerup",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointercancel",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopDrawing
+);
+
+
+/* =========================================================
+   TOOL SWITCHING
+========================================================= */
+
+function setTool(tool) {
+
+    currentTool =
+        tool;
+
+
+    document
+        .getElementById(
+            "penBtn"
+        )
+        .classList.toggle(
+            "active",
+            tool === "pen"
+        );
+
+
+    document
+        .getElementById(
+            "eraserBtn"
+        )
+        .classList.toggle(
+            "active",
+            tool === "eraser"
+        );
+
+
+    canvas.style.cursor =
+        tool === "pen"
+            ? "crosshair"
+            : "cell";
+
+}
+
+
+/* =========================================================
+   CLEAR CANVAS
+========================================================= */
+
+function clearCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    ctx.save();
+
+    ctx.setTransform(
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+    );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   ENTER KEY = CHECK
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".answer-input"
+    )
+    .forEach(input => {
+
+        input.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    checkAnswers();
+
+                }
+
+            }
+        );
+
+    });
+
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,2945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jerry's 3-Digit Multiplication Adventure</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Nunito", sans-serif;
+
+    background:
+        radial-gradient(circle at top left, #fff4dc, transparent 35%),
+        radial-gradient(circle at bottom right, #eee9ff, transparent 40%),
+        #f8f6f2;
+
+    color: #29313d;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    height: 76px;
+
+    padding: 0 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(255,255,255,.94);
+
+    border-bottom: 1px solid #e8e3db;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 50;
+
+    backdrop-filter: blur(12px);
+}
+
+.logo {
+
+    font-family: "Baloo 2";
+
+    font-size: 28px;
+
+    font-weight: 800;
+}
+
+.logo span {
+    color: #7357e8;
+}
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+.progress-wrapper {
+    width: 190px;
+}
+
+.progress-label {
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    color: #888;
+
+    margin-bottom: 5px;
+}
+
+.progress-track {
+
+    width: 100%;
+
+    height: 9px;
+
+    background: #e9e5df;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+
+    width: 0%;
+
+    height: 100%;
+
+    background: #7357e8;
+
+    border-radius: 20px;
+
+    transition: width .5s ease;
+}
+
+.stars {
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+
+    width: min(1120px, 94%);
+
+    margin: auto;
+
+    padding: 35px 0 50px;
+}
+
+.level-header {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.level-badge {
+
+    display: inline-flex;
+
+    padding: 7px 16px;
+
+    background: #eee9ff;
+
+    color: #6548d7;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.level-header h1 {
+
+    font-family: "Baloo 2";
+
+    font-size: 42px;
+
+    line-height: 1.1;
+
+    margin-top: 8px;
+}
+
+.level-header p {
+
+    color: #777;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   GAME GRID
+========================================================= */
+
+.game-grid {
+
+    display: grid;
+
+    grid-template-columns: .9fr 1.1fr;
+
+    gap: 25px;
+}
+
+
+/* =========================================================
+   JERRY CARD
+========================================================= */
+
+.jerry-card {
+
+    min-height: 600px;
+
+    background: white;
+
+    border-radius: 28px;
+
+    padding: 25px;
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    box-shadow:
+        0 16px 45px rgba(50,40,80,.09);
+}
+
+.jerry-image {
+
+    width: 290px;
+
+    height: 250px;
+
+    object-fit: contain;
+
+    margin-top: 105px;
+
+    border-radius: 20px;
+
+    transition: opacity .3s ease;
+}
+
+.jerry-image.change {
+
+    animation: jerryChange .45s ease;
+}
+
+@keyframes jerryChange {
+
+    0% {
+        opacity: 0;
+        transform: scale(.75);
+    }
+
+    60% {
+        transform: scale(1.06);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   THINKING BUBBLE
+========================================================= */
+
+.thinking-bubble {
+
+    position: absolute;
+
+    top: 22px;
+
+    right: 15px;
+
+    width: 270px;
+
+    padding: 17px 19px;
+
+    background: white;
+
+    border: 3px solid #ddd6ff;
+
+    border-radius: 28px;
+
+    color: #4d4568;
+
+    font-weight: 800;
+
+    line-height: 1.4;
+
+    box-shadow:
+        0 10px 25px rgba(50,40,80,.08);
+
+    z-index: 10;
+
+    animation: bubbleAppear .4s ease;
+}
+
+.thinking-bubble::before {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: -18px;
+
+    left: 38px;
+
+    width: 18px;
+
+    height: 18px;
+
+    background: white;
+
+    border: 3px solid #ddd6ff;
+
+    border-radius: 50%;
+}
+
+.thinking-bubble::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: -34px;
+
+    left: 20px;
+
+    width: 9px;
+
+    height: 9px;
+
+    background: white;
+
+    border: 3px solid #ddd6ff;
+
+    border-radius: 50%;
+}
+
+@keyframes bubbleAppear {
+
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   JERRY STATUS
+========================================================= */
+
+.jerry-status {
+
+    text-align: center;
+
+    margin-top: 20px;
+}
+
+.jerry-status strong {
+
+    font-size: 21px;
+}
+
+.jerry-status p {
+
+    color: #888;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   MATH CARD
+========================================================= */
+
+.math-card {
+
+    background: white;
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 16px 45px rgba(50,40,80,.09);
+
+    padding: 35px;
+
+    min-height: 600px;
+}
+
+.problem-number {
+
+    color: #888;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   PLACE VALUE INDICATOR
+========================================================= */
+
+.place-indicator {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+
+    flex-wrap: wrap;
+}
+
+.place {
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    background: #f2f0f8;
+
+    color: #8a8794;
+
+    transition: .3s;
+}
+
+.place.active {
+
+    background: #eee9ff;
+
+    color: #6548d7;
+
+    transform: scale(1.06);
+
+}
+
+.place.done {
+
+    background: #eaf8ee;
+
+    color: #287b45;
+}
+
+
+/* =========================================================
+   VERTICAL WORK
+========================================================= */
+
+.vertical-work {
+
+    width: 330px;
+
+    margin: auto;
+
+    font-family: "Baloo 2";
+
+    font-size: 52px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.math-row {
+
+    height: 62px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    letter-spacing: 2px;
+}
+
+.operator {
+
+    color: #7357e8;
+
+    margin-right: 13px;
+}
+
+
+/* =========================================================
+   CARRY AREA
+========================================================= */
+
+.carry-row {
+
+    height: 43px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding-right: 8px;
+
+    gap: 7px;
+}
+
+.carry-box {
+
+    width: 48px;
+
+    height: 38px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-family: "Baloo 2";
+
+    font-size: 22px;
+
+    color: #df765d;
+
+    background: #fff3ed;
+
+    border-radius: 8px;
+
+    opacity: 0;
+
+    transform: scale(.7);
+
+    transition: .3s;
+}
+
+.carry-box.visible {
+
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+.carry-label {
+
+    position: absolute;
+
+    font-family: "Nunito";
+
+    font-size: 10px;
+
+    color: #df765d;
+
+    margin-top: 35px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ANSWER LINE
+========================================================= */
+
+.answer-line {
+
+    border-top: 5px solid #29313d;
+
+    margin-top: 5px;
+
+    padding-top: 10px;
+}
+
+
+/* =========================================================
+   ANSWER DISPLAY
+
+   Important:
+
+   New digits are inserted BEFORE
+   existing digits.
+
+   5
+   ↓
+   35
+   ↓
+   335
+   ↓
+
+========================================================= */
+
+.answer-display {
+
+    min-height: 70px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 5px;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   ANSWER DIGITS
+========================================================= */
+
+.answer-digit {
+
+    width: 58px;
+
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: #eaf8ee;
+
+    border: 3px solid #4aaa69;
+
+    border-radius: 13px;
+
+    color: #287b45;
+
+    font-family: "Baloo 2";
+
+    font-size: 35px;
+
+    animation: digitAppear .35s ease;
+}
+
+@keyframes digitAppear {
+
+    from {
+        opacity: 0;
+        transform: scale(.4);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   NEW DIGIT SWIPE
+========================================================= */
+
+.answer-digit.swipe-left {
+
+    animation:
+        swipeLeft .65s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes swipeLeft {
+
+    0% {
+        opacity: 0;
+        transform:
+            translateX(70px)
+            scale(.7);
+    }
+
+    50% {
+        opacity: 1;
+        transform:
+            translateX(25px)
+            scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+        transform:
+            translateX(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   ACTIVE INPUT
+========================================================= */
+
+.answer-input {
+
+    width: 82px;
+
+    height: 58px;
+
+    flex-shrink: 0;
+
+    border: 3px dashed #bcb5df;
+
+    border-radius: 13px;
+
+    background: #faf9ff;
+
+    text-align: center;
+
+    font-family: "Baloo 2";
+
+    font-size: 32px;
+
+    font-weight: 800;
+
+    color: #44377f;
+
+    outline: none;
+
+    transition: .2s;
+}
+
+.answer-input:focus {
+
+    border-color: #7357e8;
+
+    background: #f4f1ff;
+
+    transform: scale(1.05);
+}
+
+.answer-input.wrong {
+
+    border-color: #dd6a6a;
+
+    background: #fff0f0;
+
+    animation: shake .3s;
+}
+
+@keyframes shake {
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+}
+
+
+/* =========================================================
+   FINAL ANSWER DIGIT
+========================================================= */
+
+.final-answer {
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: #fff5d8;
+
+    border: 3px solid #e4b94d;
+
+    border-radius: 13px;
+
+    color: #8a6500;
+
+    font-family: "Baloo 2";
+
+    font-size: 35px;
+}
+
+
+/* =========================================================
+   STEP INDICATOR
+========================================================= */
+
+.step-progress {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+.step-dot {
+
+    width: 11px;
+
+    height: 11px;
+
+    border-radius: 50%;
+
+    background: #ddd9e8;
+
+    transition: .3s;
+}
+
+.step-dot.active {
+
+    width: 30px;
+
+    border-radius: 20px;
+
+    background: #7357e8;
+}
+
+.step-dot.done {
+
+    background: #49a96a;
+}
+
+
+/* =========================================================
+   TEACHING PANEL
+========================================================= */
+
+.teaching-panel {
+
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: #faf8ff;
+
+    border: 2px solid #ebe5ff;
+
+    border-radius: 20px;
+}
+
+.step-title {
+
+    font-family: "Baloo 2";
+
+    font-size: 25px;
+
+    color: #6348d5;
+}
+
+.step-message {
+
+    margin-top: 5px;
+
+    color: #666;
+
+    line-height: 1.5;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+.feedback {
+
+    min-height: 30px;
+
+    margin-top: 15px;
+
+    text-align: center;
+
+    font-weight: 800;
+}
+
+.feedback.good {
+    color: #329257;
+}
+
+.feedback.bad {
+    color: #d45a5a;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.actions {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+button {
+
+    border: none;
+
+    border-radius: 15px;
+
+    padding: 13px 22px;
+
+    font-family: "Nunito";
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+button:hover {
+
+    transform: translateY(-2px);
+}
+
+.check-btn {
+
+    background: #7357e8;
+
+    color: white;
+}
+
+.hint-btn {
+
+    background: #fff0c7;
+
+    color: #805d00;
+}
+
+.next-btn {
+
+    display: none;
+
+    background: #49a96a;
+
+    color: white;
+}
+
+
+/* =========================================================
+   COMPLETE MODAL
+========================================================= */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: rgba(38,30,60,.55);
+
+    backdrop-filter: blur(5px);
+
+    z-index: 100;
+}
+
+.modal-box {
+
+    width: min(460px, 90%);
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding: 40px;
+
+    text-align: center;
+
+    animation: modalPop .4s ease;
+}
+
+.trophy {
+
+    font-size: 65px;
+}
+
+.modal-box h2 {
+
+    font-family: "Baloo 2";
+
+    font-size: 35px;
+
+    margin: 10px 0;
+}
+
+.modal-box p {
+
+    color: #777;
+
+    line-height: 1.5;
+}
+
+@keyframes modalPop {
+
+    from {
+        opacity: 0;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti {
+
+    position: fixed;
+
+    width: 10px;
+
+    height: 14px;
+
+    top: -20px;
+
+    z-index: 200;
+
+    animation: fall 2s linear forwards;
+}
+
+@keyframes fall {
+
+    to {
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:850px) {
+
+    .game-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .jerry-card {
+
+        min-height: 470px;
+    }
+}
+
+@media(max-width:550px) {
+
+    .header {
+
+        padding: 0 15px;
+    }
+
+    .logo {
+
+        font-size: 21px;
+    }
+
+    .progress-wrapper {
+
+        width: 90px;
+    }
+
+    .level-header h1 {
+
+        font-size: 32px;
+    }
+
+    .math-card {
+
+        padding: 20px;
+    }
+
+    .vertical-work {
+
+        width: 285px;
+
+        font-size: 45px;
+    }
+
+    .thinking-bubble {
+
+        width: 215px;
+
+        font-size: 14px;
+    }
+
+    .jerry-image {
+
+        width: 240px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+<header class="header">
+
+    <div class="logo">
+        🧀 Jerry's <span>Math Quest</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="progress-wrapper">
+
+            <div class="progress-label">
+                Progress
+            </div>
+
+            <div class="progress-track">
+
+                <div
+                    class="progress-bar"
+                    id="progressBar">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div
+            class="stars"
+            id="stars">
+
+            ⭐ 0
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ======================================================
+     MAIN
+====================================================== -->
+
+<main class="main">
+
+
+<section class="level-header">
+
+    <div
+        class="level-badge"
+        id="levelBadge">
+
+        🧠 3-DIGIT × 1-DIGIT
+
+    </div>
+
+    <h1 id="levelTitle">
+        Jerry's Multiplication Mission
+    </h1>
+
+    <p id="levelSubtitle">
+        Work from RIGHT to LEFT and master written multiplication!
+    </p>
+
+</section>
+
+
+<!-- ======================================================
+     GAME
+====================================================== -->
+
+<section class="game-grid">
+
+
+<!-- ======================================================
+     JERRY
+====================================================== -->
+
+<div class="jerry-card">
+
+    <div
+        class="thinking-bubble"
+        id="thinkingBubble">
+
+        💭 Start from the
+        <strong>RIGHT!</strong>
+
+    </div>
+
+
+    <img
+        id="jerryImage"
+        class="jerry-image"
+
+        src="https://th.bing.com/th/id/OIP.yKtXZKRKlIi1gV0pjRZd5wHaE9?w=267&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
+
+        alt="Jerry thinking">
+
+
+    <div class="jerry-status">
+
+        <strong id="jerryStatus">
+            Jerry is thinking...
+        </strong>
+
+        <p>
+            Help Jerry solve each place-value step!
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     MATH
+====================================================== -->
+
+<div class="math-card">
+
+
+    <div
+        class="problem-number"
+        id="problemNumber">
+
+        Problem 1
+
+    </div>
+
+
+    <!-- PLACE VALUE -->
+
+    <div class="place-indicator">
+
+        <div
+            id="placeHundreds"
+            class="place">
+
+            HUNDREDS
+
+        </div>
+
+        <div
+            id="placeTens"
+            class="place">
+
+            TENS
+
+        </div>
+
+        <div
+            id="placeOnes"
+            class="place active">
+
+            ONES
+
+        </div>
+
+    </div>
+
+
+    <!-- VERTICAL MULTIPLICATION -->
+
+    <div class="vertical-work">
+
+
+        <!-- CARRIES -->
+
+        <div class="carry-row">
+
+            <div
+                id="carryHundreds"
+                class="carry-box">
+
+            </div>
+
+            <div
+                id="carryTens"
+                class="carry-box">
+
+            </div>
+
+            <div
+                id="carryOnes"
+                class="carry-box">
+
+            </div>
+
+        </div>
+
+
+        <!-- TOP NUMBER -->
+
+        <div class="math-row">
+
+            <span id="topNumber">
+                345
+            </span>
+
+        </div>
+
+
+        <!-- BOTTOM NUMBER -->
+
+        <div class="math-row">
+
+            <span class="operator">
+                ×
+            </span>
+
+            <span id="bottomNumber">
+                3
+            </span>
+
+        </div>
+
+
+        <!-- ANSWER -->
+
+        <div class="answer-line">
+
+            <div
+                id="answerDisplay"
+                class="answer-display">
+
+                <input
+                    id="answerInput"
+                    class="answer-input"
+
+                    type="text"
+
+                    inputmode="numeric"
+
+                    autocomplete="off"
+
+                    maxlength="2"
+
+                    aria-label="Enter multiplication step">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STEP PROGRESS -->
+
+    <div class="step-progress">
+
+        <div
+            id="dot1"
+            class="step-dot active">
+        </div>
+
+        <div
+            id="dot2"
+            class="step-dot">
+        </div>
+
+        <div
+            id="dot3"
+            class="step-dot">
+        </div>
+
+    </div>
+
+
+    <!-- TEACHING PANEL -->
+
+    <div class="teaching-panel">
+
+        <div
+            id="stepTitle"
+            class="step-title">
+
+            Step 1 — Ones 🧠
+
+        </div>
+
+        <div
+            id="stepMessage"
+            class="step-message">
+
+            Start from the RIGHT.
+            Multiply 3 × 5.
+
+        </div>
+
+    </div>
+
+
+    <!-- FEEDBACK -->
+
+    <div
+        id="feedback"
+        class="feedback">
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="actions">
+
+        <button
+            id="hintButton"
+            class="hint-btn">
+
+            💡 Hint
+
+        </button>
+
+        <button
+            id="checkButton"
+            class="check-btn">
+
+            ✓ Check Step
+
+        </button>
+
+        <button
+            id="nextButton"
+            class="next-btn">
+
+            Next Problem →
+
+        </button>
+
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- ======================================================
+     COMPLETE MODAL
+====================================================== -->
+
+<div
+    id="completeModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <div class="trophy">
+            🏆
+        </div>
+
+        <h2 id="completeTitle">
+            Multiplication Master!
+        </h2>
+
+        <p id="completeMessage">
+            You mastered 3-digit × 1-digit multiplication!
+        </p>
+
+        <div
+            style="
+                font-size:25px;
+                margin:20px;
+            ">
+
+            ⭐ ⭐ ⭐
+
+        </div>
+
+        <button
+            id="continueButton"
+            class="check-btn">
+
+            Play Again →
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   JERRY IMAGES
+========================================================= */
+
+const JERRY_THINKING =
+"https://th.bing.com/th/id/OIP.yKtXZKRKlIi1gV0pjRZd5wHaE9?w=267&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3";
+
+const JERRY_CORRECT =
+"https://www.bing.com/th/id/OGC.a87c20030050d030eb616c34485799d1?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fgifdb.com%2fimages%2fthumbnail%2fjerry-and-tweety-from-the-cartoon-tom-and-jerry-are-dancing-together-69k9h9t8t9z0ad0b.gif&ehk=MDOJNufFmUnzLNnsUfale4s%2bv5LU%2bTshJS8rQDsEABs%3d";
+
+const JERRY_WRONG =
+"https://www.bing.com/th/id/OGC.3edc410d47e287f1832a86da4346bc02?r=0&o=7&pid=1.7&rm=3&rurl=https%3a%2f%2fgifdb.com%2fimages%2fhigh%2fshame-on-you-jerry-mouse-tsk-jj1d36jcx2x8v2so.gif&ehk=B6lUDPFM5KHhW0lFoBrsbt%2bfY6qQOh1LOI%2b0kEw0Hvo%3d";
+
+
+/* =========================================================
+   PROBLEMS
+
+   All are 3-digit × 1-digit.
+
+   The game automatically calculates:
+   ones
+   tens + carry
+   hundreds + carry
+========================================================= */
+
+const problems = [
+
+    { a: 345, b: 3 },
+
+    { a: 214, b: 4 },
+
+    { a: 326, b: 2 },
+
+    { a: 157, b: 6 },
+
+    { a: 428, b: 3 },
+
+    { a: 235, b: 4 },
+
+    { a: 512, b: 3 },
+
+    { a: 764, b: 2 }
+
+];
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let currentProblem = 0;
+
+let currentStep = 0;
+
+let stars = 0;
+
+
+/*
+   Step 0 = ones
+   Step 1 = tens
+   Step 2 = hundreds
+*/
+
+let stepResults = [];
+
+let carries = [];
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const topNumber =
+document.getElementById("topNumber");
+
+const bottomNumber =
+document.getElementById("bottomNumber");
+
+const answerDisplay =
+document.getElementById("answerDisplay");
+
+const thinkingBubble =
+document.getElementById("thinkingBubble");
+
+const jerryImage =
+document.getElementById("jerryImage");
+
+const jerryStatus =
+document.getElementById("jerryStatus");
+
+const stepTitle =
+document.getElementById("stepTitle");
+
+const stepMessage =
+document.getElementById("stepMessage");
+
+const feedback =
+document.getElementById("feedback");
+
+const checkButton =
+document.getElementById("checkButton");
+
+const nextButton =
+document.getElementById("nextButton");
+
+const hintButton =
+document.getElementById("hintButton");
+
+const progressBar =
+document.getElementById("progressBar");
+
+const starsDisplay =
+document.getElementById("stars");
+
+const carryOnes =
+document.getElementById("carryOnes");
+
+const carryTens =
+document.getElementById("carryTens");
+
+const carryHundreds =
+document.getElementById("carryHundreds");
+
+
+/* =========================================================
+   PLACE ELEMENTS
+========================================================= */
+
+const placeOnes =
+document.getElementById("placeOnes");
+
+const placeTens =
+document.getElementById("placeTens");
+
+const placeHundreds =
+document.getElementById("placeHundreds");
+
+
+/* =========================================================
+   STEP DOTS
+========================================================= */
+
+const dots = [
+
+    document.getElementById("dot1"),
+
+    document.getElementById("dot2"),
+
+    document.getElementById("dot3")
+
+];
+
+
+/* =========================================================
+   SET JERRY IMAGE
+========================================================= */
+
+function setJerryImage(image) {
+
+    jerryImage.classList.remove("change");
+
+    void jerryImage.offsetWidth;
+
+    jerryImage.src = image;
+
+    jerryImage.classList.add("change");
+
+}
+
+
+/* =========================================================
+   GET CURRENT PROBLEM
+========================================================= */
+
+function getProblem() {
+
+    return problems[currentProblem];
+
+}
+
+
+/* =========================================================
+   DIGITS
+========================================================= */
+
+function getDigits() {
+
+    const p = getProblem();
+
+    const hundreds =
+        Math.floor(p.a / 100);
+
+    const tens =
+        Math.floor((p.a % 100) / 10);
+
+    const ones =
+        p.a % 10;
+
+    return {
+        hundreds,
+        tens,
+        ones
+    };
+
+}
+
+
+/* =========================================================
+   CREATE INPUT
+========================================================= */
+
+function createInput() {
+
+    const input =
+        document.createElement("input");
+
+    input.id =
+        "answerInput";
+
+    input.className =
+        "answer-input";
+
+    input.type =
+        "text";
+
+    input.inputMode =
+        "numeric";
+
+    input.autocomplete =
+        "off";
+
+    input.maxLength =
+        2;
+
+    input.setAttribute(
+        "aria-label",
+        "Enter multiplication step"
+    );
+
+    answerDisplay.appendChild(
+        input
+    );
+
+    input.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                checkAnswer();
+
+            }
+
+        }
+    );
+
+    setTimeout(
+        () => input.focus(),
+        50
+    );
+
+    return input;
+
+}
+
+
+/* =========================================================
+   RESET CARRIES
+========================================================= */
+
+function resetCarries() {
+
+    [
+        carryOnes,
+        carryTens,
+        carryHundreds
+    ].forEach(box => {
+
+        box.textContent = "";
+
+        box.classList.remove(
+            "visible"
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   UPDATE PLACE INDICATORS
+========================================================= */
+
+function updatePlaceIndicators() {
+
+    [
+        placeOnes,
+        placeTens,
+        placeHundreds
+    ].forEach(
+        element => {
+
+            element.classList.remove(
+                "active",
+                "done"
+            );
+
+        }
+    );
+
+
+    if (currentStep === 0) {
+
+        placeOnes.classList.add(
+            "active"
+        );
+
+    }
+
+    else if (currentStep === 1) {
+
+        placeOnes.classList.add(
+            "done"
+        );
+
+        placeTens.classList.add(
+            "active"
+        );
+
+    }
+
+    else {
+
+        placeOnes.classList.add(
+            "done"
+        );
+
+        placeTens.classList.add(
+            "done"
+        );
+
+        placeHundreds.classList.add(
+            "active"
+        );
+
+    }
+
+
+    dots.forEach(
+        (dot, index) => {
+
+            dot.classList.remove(
+                "active",
+                "done"
+            );
+
+            if (index < currentStep) {
+
+                dot.classList.add(
+                    "done"
+                );
+
+            }
+
+            else if (index === currentStep) {
+
+                dot.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ADD DIGIT TO LEFT
+========================================================= */
+
+function addDigitToLeft(
+    value,
+    animate = true
+) {
+
+    const digit =
+        document.createElement("div");
+
+    digit.className =
+        "answer-digit";
+
+    digit.textContent =
+        value;
+
+    if (animate) {
+
+        digit.classList.add(
+            "swipe-left"
+        );
+
+    }
+
+    const existingDigits =
+        answerDisplay.querySelectorAll(
+            ".answer-digit"
+        );
+
+
+    if (
+        existingDigits.length === 0
+    ) {
+
+        answerDisplay.appendChild(
+            digit
+        );
+
+    }
+
+    else {
+
+        answerDisplay.insertBefore(
+            digit,
+            existingDigits[0]
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD PROBLEM
+========================================================= */
+
+function loadProblem() {
+
+    const p =
+        getProblem();
+
+    const digits =
+        getDigits();
+
+
+    currentStep = 0;
+
+    stepResults = [];
+
+    carries = [];
+
+
+    topNumber.textContent =
+        p.a;
+
+    bottomNumber.textContent =
+        p.b;
+
+
+    answerDisplay.innerHTML =
+        "";
+
+
+    resetCarries();
+
+
+    createInput();
+
+
+    feedback.textContent =
+        "";
+
+    feedback.className =
+        "feedback";
+
+
+    checkButton.style.display =
+        "inline-block";
+
+    nextButton.style.display =
+        "none";
+
+
+    setJerryImage(
+        JERRY_THINKING
+    );
+
+
+    jerryStatus.textContent =
+        "Jerry is thinking...";
+
+
+    thinkingBubble.innerHTML =
+        `💭 Start from the <strong>RIGHT</strong>!`;
+
+
+    stepTitle.textContent =
+        "Step 1 — Ones 🧠";
+
+
+    stepMessage.innerHTML =
+        `Start from the <strong>RIGHT</strong>. Multiply <strong>${p.b} × ${digits.ones}</strong>.`;
+
+
+    document.getElementById(
+        "problemNumber"
+    ).textContent =
+        `Problem ${currentProblem + 1}`;
+
+
+    updatePlaceIndicators();
+
+    updateProgress();
+
+}
+
+
+/* =========================================================
+   STEP 1 — ONES
+========================================================= */
+
+function solveOnes() {
+
+    const p =
+        getProblem();
+
+    const digits =
+        getDigits();
+
+
+    const input =
+        document.getElementById(
+            "answerInput"
+        );
+
+
+    const value =
+        Number(input.value);
+
+
+    const product =
+        p.b * digits.ones;
+
+
+    if (value !== product) {
+
+        wrongAnswer(
+            `Multiply ${p.b} × ${digits.ones}.`
+        );
+
+        return false;
+
+    }
+
+
+    /*
+       Save result.
+    */
+
+    stepResults[0] =
+        product;
+
+
+    /*
+       Calculate carry.
+    */
+
+    const carry =
+        Math.floor(
+            product / 10
+        );
+
+
+    carries[0] =
+        carry;
+
+
+    /*
+       Ones digit.
+    */
+
+    const onesDigit =
+        product % 10;
+
+
+    input.remove();
+
+
+    addDigitToLeft(
+        onesDigit,
+        false
+    );
+
+
+    /*
+       Show carry.
+    */
+
+    if (carry > 0) {
+
+        carryTens.textContent =
+            carry;
+
+        carryTens.classList.add(
+            "visible"
+        );
+
+    }
+
+
+    feedback.textContent =
+        `🎉 Great! ${p.b} × ${digits.ones} = ${product}.`;
+
+    feedback.className =
+        "feedback good";
+
+
+    thinkingBubble.innerHTML =
+        `🤩 Nice! Put <strong>${onesDigit}</strong> in the ONES place.`;
+
+
+    jerryStatus.textContent =
+        "Jerry is moving LEFT!";
+
+
+    currentStep = 1;
+
+
+    createInput();
+
+
+    stepTitle.textContent =
+        "Step 2 — Tens 🧠";
+
+
+    if (carry > 0) {
+
+        stepMessage.innerHTML =
+            `You have a carry of <strong>${carry}</strong>. Now calculate <strong>${p.b} × ${digits.tens}</strong> and add the carry.`;
+
+    }
+
+    else {
+
+        stepMessage.innerHTML =
+            `Move LEFT. Multiply <strong>${p.b} × ${digits.tens}</strong>.`;
+
+    }
+
+
+    updatePlaceIndicators();
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   STEP 2 — TENS
+========================================================= */
+
+function solveTens() {
+
+    const p =
+        getProblem();
+
+    const digits =
+        getDigits();
+
+
+    const input =
+        document.getElementById(
+            "answerInput"
+        );
+
+
+    const value =
+        Number(input.value);
+
+
+    const carry =
+        carries[0] || 0;
+
+
+    const product =
+        p.b * digits.tens + carry;
+
+
+    if (value !== product) {
+
+        if (carry > 0) {
+
+            wrongAnswer(
+                `Remember the carry ${carry}. Calculate ${p.b} × ${digits.tens} + ${carry}.`
+            );
+
+        }
+
+        else {
+
+            wrongAnswer(
+                `Calculate ${p.b} × ${digits.tens}.`
+            );
+
+        }
+
+        return false;
+
+    }
+
+
+    stepResults[1] =
+        product;
+
+
+    const newCarry =
+        Math.floor(
+            product / 10
+        );
+
+
+    carries[1] =
+        newCarry;
+
+
+    const tensDigit =
+        product % 10;
+
+
+    input.remove();
+
+
+    /*
+       Move the tens digit
+       to the LEFT of the ones digit.
+    */
+
+    addDigitToLeft(
+        tensDigit,
+        true
+    );
+
+
+    /*
+       Show new carry.
+    */
+
+    if (newCarry > 0) {
+
+        carryHundreds.textContent =
+            newCarry;
+
+        carryHundreds.classList.add(
+            "visible"
+        );
+
+    }
+
+
+    feedback.textContent =
+        `🏆 Excellent! ${p.b} × ${digits.tens} + ${carry} = ${product}.`;
+
+    feedback.className =
+        "feedback good";
+
+
+    thinkingBubble.innerHTML =
+        `👏 Great! <strong>${tensDigit}</strong> goes in the TENS place.`;
+
+
+    jerryStatus.textContent =
+        "Jerry is moving to the hundreds!";
+
+
+    currentStep = 2;
+
+
+    createInput();
+
+
+    stepTitle.textContent =
+        "Step 3 — Hundreds 🧠";
+
+
+    if (newCarry > 0) {
+
+        stepMessage.innerHTML =
+            `Remember the carry <strong>${newCarry}</strong>. Now calculate <strong>${p.b} × ${digits.hundreds}</strong> and add the carry.`;
+
+    }
+
+    else {
+
+        stepMessage.innerHTML =
+            `Move LEFT. Multiply <strong>${p.b} × ${digits.hundreds}</strong>.`;
+
+    }
+
+
+    updatePlaceIndicators();
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   STEP 3 — HUNDREDS
+========================================================= */
+
+function solveHundreds() {
+
+    const p =
+        getProblem();
+
+    const digits =
+        getDigits();
+
+
+    const input =
+        document.getElementById(
+            "answerInput"
+        );
+
+
+    const value =
+        Number(input.value);
+
+
+    const carry =
+        carries[1] || 0;
+
+
+    const product =
+        p.b * digits.hundreds + carry;
+
+
+    if (value !== product) {
+
+        if (carry > 0) {
+
+            wrongAnswer(
+                `Remember the carry ${carry}. Calculate ${p.b} × ${digits.hundreds} + ${carry}.`
+            );
+
+        }
+
+        else {
+
+            wrongAnswer(
+                `Calculate ${p.b} × ${digits.hundreds}.`
+            );
+
+        }
+
+        return false;
+
+    }
+
+
+    input.remove();
+
+
+    /*
+       Important:
+
+       At the hundreds step the result
+       can be TWO digits.
+
+       Example:
+
+       3 × 3 + 1 = 10
+
+       So:
+
+       10
+
+       becomes:
+
+       1 0 3 5
+
+    */
+
+    const resultString =
+        String(product);
+
+
+    /*
+       Insert digits one at a time.
+
+       Since addDigitToLeft() inserts
+       on the left, reverse the string.
+    */
+
+    const digitsToAdd =
+        resultString.split("").reverse();
+
+
+    digitsToAdd.forEach(
+        (digit, index) => {
+
+            setTimeout(
+                () => {
+
+                    addDigitToLeft(
+                        digit,
+                        true
+                    );
+
+                },
+                index * 180
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        finishProblem,
+        500
+    );
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   FINISH PROBLEM
+========================================================= */
+
+function finishProblem() {
+
+    const p =
+        getProblem();
+
+    const answer =
+        p.a * p.b;
+
+
+    thinkingBubble.innerHTML =
+        `🤩 YES! <strong>${p.a} × ${p.b} = ${answer}</strong>`;
+
+
+    jerryStatus.textContent =
+        "Jerry is celebrating! 🎉";
+
+
+    setJerryImage(
+        JERRY_CORRECT
+    );
+
+
+    stepTitle.textContent =
+        "Complete! 🏆";
+
+
+    stepMessage.innerHTML =
+        `You worked from <strong>RIGHT → LEFT</strong>, used the carries, and found the answer <strong>${answer}</strong>.`;
+
+
+    feedback.textContent =
+        `🎉 Correct! ${p.a} × ${p.b} = ${answer}`;
+
+
+    feedback.className =
+        "feedback good";
+
+
+    /*
+       Mark all digits green.
+    */
+
+    const answerDigits =
+        document.querySelectorAll(
+            ".answer-digit"
+        );
+
+
+    answerDigits.forEach(
+        digit => {
+
+            digit.style.background =
+                "#eaf8ee";
+
+            digit.style.borderColor =
+                "#4aaa69";
+
+        }
+    );
+
+
+    stars++;
+
+
+    starsDisplay.textContent =
+        `⭐ ${stars}`;
+
+
+    checkButton.style.display =
+        "none";
+
+
+    nextButton.style.display =
+        "inline-block";
+
+
+    dots.forEach(
+        dot => {
+
+            dot.classList.remove(
+                "active"
+            );
+
+            dot.classList.add(
+                "done"
+            );
+
+        }
+    );
+
+
+    placeOnes.classList.remove(
+        "active"
+    );
+
+    placeOnes.classList.add(
+        "done"
+    );
+
+    placeTens.classList.remove(
+        "active"
+    );
+
+    placeTens.classList.add(
+        "done"
+    );
+
+    placeHundreds.classList.remove(
+        "active"
+    );
+
+    placeHundreds.classList.add(
+        "done"
+    );
+
+
+    createConfetti();
+
+}
+
+
+/* =========================================================
+   CHECK ANSWER
+========================================================= */
+
+function checkAnswer() {
+
+    if (currentStep === 0) {
+
+        solveOnes();
+
+    }
+
+    else if (currentStep === 1) {
+
+        solveTens();
+
+    }
+
+    else if (currentStep === 2) {
+
+        solveHundreds();
+
+    }
+
+}
+
+
+/* =========================================================
+   WRONG ANSWER
+========================================================= */
+
+function wrongAnswer(message) {
+
+    const input =
+        document.getElementById(
+            "answerInput"
+        );
+
+
+    if (input) {
+
+        input.classList.remove(
+            "wrong"
+        );
+
+        void input.offsetWidth;
+
+        input.classList.add(
+            "wrong"
+        );
+
+    }
+
+
+    feedback.textContent =
+        "Not quite! 💭 " + message;
+
+
+    feedback.className =
+        "feedback bad";
+
+
+    thinkingBubble.innerHTML =
+        "😵 Let's try that step again!";
+
+
+    jerryStatus.textContent =
+        "Jerry needs another try!";
+
+
+    setJerryImage(
+        JERRY_WRONG
+    );
+
+
+    setTimeout(
+        () => {
+
+            setJerryImage(
+                JERRY_THINKING
+            );
+
+        },
+        1300
+    );
+
+}
+
+
+/* =========================================================
+   HINT
+========================================================= */
+
+function showHint() {
+
+    const p =
+        getProblem();
+
+    const digits =
+        getDigits();
+
+
+    const carry =
+        currentStep === 1
+            ? carries[0] || 0
+            : currentStep === 2
+                ? carries[1] || 0
+                : 0;
+
+
+    if (currentStep === 0) {
+
+        thinkingBubble.innerHTML =
+            `💡 Look at the <strong>RIGHTMOST</strong> digit: ${digits.ones}.`;
+
+
+        stepMessage.innerHTML =
+            `Multiply <strong>${p.b} × ${digits.ones}</strong>.`;
+
+    }
+
+
+    else if (currentStep === 1) {
+
+        thinkingBubble.innerHTML =
+            `💡 Move one place LEFT.`;
+
+
+        stepMessage.innerHTML =
+            `Calculate <strong>${p.b} × ${digits.tens}</strong>${carry ? ` and add the carry <strong>${carry}</strong>` : ""}.`;
+
+    }
+
+
+    else {
+
+        thinkingBubble.innerHTML =
+            `💡 You are at the HUNDREDS place!`;
+
+
+        stepMessage.innerHTML =
+            `Calculate <strong>${p.b} × ${digits.hundreds}</strong>${carry ? ` and add the carry <strong>${carry}</strong>` : ""}.`;
+
+    }
+
+}
+
+
+/* =========================================================
+   HINT BUTTON
+========================================================= */
+
+hintButton.addEventListener(
+    "click",
+    showHint
+);
+
+
+/* =========================================================
+   NEXT PROBLEM
+========================================================= */
+
+nextButton.addEventListener(
+    "click",
+    function() {
+
+        currentProblem++;
+
+
+        if (
+            currentProblem >=
+            problems.length
+        ) {
+
+            showLevelComplete();
+
+        }
+
+        else {
+
+            loadProblem();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   LEVEL COMPLETE
+========================================================= */
+
+function showLevelComplete() {
+
+    const modal =
+        document.getElementById(
+            "completeModal"
+        );
+
+
+    document.getElementById(
+        "completeTitle"
+    ).textContent =
+        "Multiplication Master! 🏆";
+
+
+    document.getElementById(
+        "completeMessage"
+    ).textContent =
+        `Amazing! You completed all ${problems.length} three-digit multiplication problems using the written method.`;
+
+
+    modal.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   CONTINUE / RESTART
+========================================================= */
+
+document.getElementById(
+    "continueButton"
+).addEventListener(
+    "click",
+    function() {
+
+        document.getElementById(
+            "completeModal"
+        ).style.display =
+            "none";
+
+
+        currentProblem = 0;
+
+        currentStep = 0;
+
+        stars = 0;
+
+
+        starsDisplay.textContent =
+            "⭐ 0";
+
+
+        loadProblem();
+
+    }
+);
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function updateProgress() {
+
+    const total =
+        problems.length;
+
+
+    /*
+       Progress is based on completed
+       problems, not individual steps.
+    */
+
+    const percentage =
+        (currentProblem / total) * 100;
+
+
+    progressBar.style.width =
+        `${percentage}%`;
+
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function createConfetti() {
+
+    const confettiColors = [
+
+        "#7357e8",
+
+        "#f2b84b",
+
+        "#49a96a",
+
+        "#df765d",
+
+        "#5b9bd5"
+
+    ];
+
+
+    for (
+        let i = 0;
+        i < 35;
+        i++
+    ) {
+
+        const piece =
+            document.createElement(
+                "div"
+            );
+
+
+        piece.className =
+            "confetti";
+
+
+        piece.style.left =
+            Math.random() * 100 +
+            "vw";
+
+
+        piece.style.animationDelay =
+            Math.random() * .5 +
+            "s";
+
+
+        piece.style.background =
+            confettiColors[
+                Math.floor(
+                    Math.random() *
+                    confettiColors.length
+                )
+            ];
+
+
+        document.body.appendChild(
+            piece
+        );
+
+
+        setTimeout(
+            () => piece.remove(),
+            2500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+loadProblem();
+
+</script>
+
+</body>
+</html>

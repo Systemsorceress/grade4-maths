@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factor Bugs — Factors & Factor Pairs</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root{
+  --yellow:#ffcc00;
+  --blue:#4a6572;
+  --brown:#8d5524;
+  --red:#e53935;
+  --green:#35a853;
+  --cream:#fff9df;
+  --white:#fff;
+  --black:#000;
+  --shadow:7px 7px 0 #000;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 10% 10%,#ffe77d 0 5px,transparent 6px),
+    radial-gradient(circle at 90% 30%,#ffd84d 0 6px,transparent 7px),
+    linear-gradient(135deg,#fff4b8,#fffdf0);
+  color:#111;
+  font-family:'Fredoka',sans-serif;
+}
+
+button,input{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+header{
+  background:var(--yellow);
+  border-bottom:5px solid #000;
+  padding:18px 25px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 5px 0 rgba(0,0,0,.15);
+}
+
+.header-inner{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.cartoon-face{
+  width:65px;
+  height:65px;
+  background:#fff;
+  border:4px solid #000;
+  border-radius:50%;
+  position:relative;
+  box-shadow:4px 4px 0 #000;
+}
+
+.cartoon-face:before,
+.cartoon-face:after{
+  content:"";
+  position:absolute;
+  width:11px;
+  height:17px;
+  background:#000;
+  border-radius:50%;
+  top:20px;
+}
+
+.cartoon-face:before{left:16px}
+.cartoon-face:after{right:16px}
+
+.ear{
+  position:absolute;
+  width:23px;
+  height:23px;
+  background:#4a6572;
+  border:4px solid #000;
+  border-radius:50%;
+  top:-12px;
+}
+.ear:first-child{left:-9px}
+.ear:last-child{right:-9px}
+
+.title{
+  font-family:'Baloo 2',sans-serif;
+  font-size:34px;
+  font-weight:800;
+  line-height:1;
+}
+
+.subtitle{
+  font-size:14px;
+  font-weight:600;
+}
+
+.score-box{
+  background:#fff;
+  border:4px solid #000;
+  border-radius:15px;
+  padding:8px 18px;
+  box-shadow:4px 4px 0 #000;
+  text-align:center;
+}
+
+.score-box strong{
+  display:block;
+  font-size:25px;
+  color:var(--brown);
+}
+
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:30px 18px 70px;
+}
+
+.hero{
+  background:#fff;
+  border:5px solid #000;
+  border-radius:25px;
+  box-shadow:var(--shadow);
+  padding:25px;
+  margin-bottom:30px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:20px;
+}
+
+.hero h1{
+  margin:0 0 5px;
+  font-size:42px;
+  color:var(--blue);
+}
+
+.hero p{
+  margin:0;
+  font-size:18px;
+}
+
+.cheese{
+  width:130px;
+  height:95px;
+  background:var(--yellow);
+  border:5px solid #000;
+  border-radius:20px 35px 25px 30px;
+  transform:rotate(-5deg);
+  position:relative;
+}
+
+.cheese span{
+  position:absolute;
+  width:15px;
+  height:15px;
+  background:#d99f00;
+  border:3px solid #000;
+  border-radius:50%;
+}
+.cheese span:nth-child(1){left:25px;top:25px}
+.cheese span:nth-child(2){right:20px;top:45px}
+.cheese span:nth-child(3){left:60px;bottom:15px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:28px;
+}
+
+.card{
+  background:#fff;
+  border:4px solid #000;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:24px;
+  position:relative;
+  overflow:hidden;
+}
+
+.card.full{
+  grid-column:1/-1;
+}
+
+.card h2{
+  margin:0 0 8px;
+  font-size:27px;
+  color:var(--blue);
+}
+
+.card h3{
+  margin:18px 0 10px;
+}
+
+.card p{
+  line-height:1.5;
+}
+
+.badge{
+  display:inline-block;
+  background:var(--yellow);
+  border:3px solid #000;
+  padding:5px 13px;
+  border-radius:20px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.instruction{
+  background:#fff7ca;
+  border:3px dashed #000;
+  border-radius:14px;
+  padding:12px;
+  margin:12px 0 18px;
+}
+
+.canvas-wrap{
+  background:#e9f5f8;
+  border:4px solid #000;
+  border-radius:18px;
+  padding:10px;
+  margin:15px 0;
+}
+
+canvas{
+  width:100%;
+  height:300px;
+  display:block;
+  background:
+    linear-gradient(#ffffff 1px,transparent 1px),
+    linear-gradient(90deg,#ffffff 1px,transparent 1px);
+  background-size:25px 25px;
+  border-radius:10px;
+  touch-action:none;
+}
+
+.canvas-controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.btn{
+  border:3px solid #000;
+  border-radius:13px;
+  background:var(--yellow);
+  padding:10px 18px;
+  font-size:16px;
+  font-weight:700;
+  box-shadow:3px 3px 0 #000;
+  transition:.15s;
+}
+
+.btn:hover{
+  transform:translate(-2px,-2px);
+  box-shadow:5px 5px 0 #000;
+}
+
+.btn:active{
+  transform:translate(2px,2px);
+  box-shadow:1px 1px 0 #000;
+}
+
+.btn.blue{background:#8ec9df}
+.btn.green{background:#8bdc9b}
+.btn.red{background:#ff8585}
+
+.answer-line{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  font-size:20px;
+  margin:13px 0;
+}
+
+.answer{
+  width:75px;
+  height:43px;
+  border:3px solid #000;
+  border-radius:10px;
+  text-align:center;
+  font-size:20px;
+  font-weight:700;
+  background:#fffdf2;
+}
+
+.answer:focus{
+  outline:3px solid var(--yellow);
+}
+
+.feedback{
+  margin-top:10px;
+  min-height:30px;
+  font-weight:700;
+}
+
+.feedback.correct{color:#188038}
+.feedback.wrong{color:#c5221f}
+
+.bug-area{
+  display:flex;
+  justify-content:center;
+  margin:15px 0 25px;
+}
+
+.bug{
+  position:relative;
+  width:350px;
+  height:300px;
+}
+
+.bug-body{
+  position:absolute;
+  width:150px;
+  height:180px;
+  background:#ef3030;
+  border:5px solid #000;
+  border-radius:50%;
+  left:100px;
+  top:55px;
+  z-index:2;
+  box-shadow:6px 6px 0 #000;
+}
+
+.bug-body:after{
+  content:"";
+  position:absolute;
+  height:165px;
+  width:5px;
+  background:#000;
+  left:68px;
+  top:5px;
+}
+
+.bug-head{
+  position:absolute;
+  width:70px;
+  height:70px;
+  background:#111;
+  border:5px solid #000;
+  border-radius:50%;
+  left:140px;
+  top:15px;
+  z-index:3;
+}
+
+.bug-eye{
+  position:absolute;
+  width:20px;
+  height:25px;
+  background:#fff;
+  border:3px solid #000;
+  border-radius:50%;
+  top:12px;
+}
+.bug-eye:first-child{left:12px}
+.bug-eye:last-child{right:12px}
+
+.bug-eye:after{
+  content:"";
+  position:absolute;
+  width:7px;
+  height:10px;
+  background:#000;
+  border-radius:50%;
+  left:4px;
+  top:5px;
+}
+
+.bug-number{
+  position:absolute;
+  z-index:5;
+  left:136px;
+  top:125px;
+  width:78px;
+  height:45px;
+  background:#fff;
+  border:3px solid #000;
+  border-radius:10px;
+  text-align:center;
+  padding-top:7px;
+  font-size:24px;
+  font-weight:800;
+}
+
+.spot{
+  position:absolute;
+  width:25px;
+  height:25px;
+  background:#111;
+  border-radius:50%;
+  z-index:4;
+}
+.s1{left:120px;top:85px}.s2{left:190px;top:90px}
+.s3{left:120px;top:180px}.s4{left:200px;top:180px}
+
+.leg{
+  position:absolute;
+  z-index:8;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:18px;
+  font-weight:700;
+}
+
+.leg input{
+  width:55px;
+  height:38px;
+  border:3px solid #000;
+  border-radius:9px;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+}
+
+.left1{left:0;top:90px}
+.left2{left:0;top:150px}
+.left3{left:0;top:210px}
+
+.right1{right:0;top:90px}
+.right2{right:0;top:150px}
+.right3{right:0;top:210px}
+
+.leg-line{
+  width:45px;
+  height:4px;
+  background:#000;
+}
+
+.options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+
+.option{
+  border:4px solid #000;
+  background:#fff;
+  border-radius:15px;
+  padding:15px;
+  font-size:22px;
+  font-weight:700;
+  box-shadow:3px 3px 0 #000;
+  transition:.15s;
+}
+
+.option:hover{
+  transform:translateY(-3px);
+}
+
+.option.selected{
+  background:var(--yellow);
+}
+
+.option.correct{
+  background:#82df98;
+}
+
+.option.incorrect{
+  background:#ff8585;
+}
+
+.option.missed{
+  background:#ffb0b0;
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:18px 0;
+}
+
+.tab{
+  border:3px solid #000;
+  border-radius:12px;
+  background:#fff;
+  padding:9px 15px;
+  font-weight:800;
+  font-size:17px;
+  box-shadow:3px 3px 0 #000;
+}
+
+.tab.active{
+  background:var(--yellow);
+  transform:translateY(-2px);
+}
+
+.factor-inputs{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+
+.pair{
+  background:#f7f7f7;
+  border:3px solid #000;
+  border-radius:12px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.pair input{
+  width:65px;
+  height:40px;
+  border:3px solid #000;
+  border-radius:8px;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+}
+
+.logic-options{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+
+.logic-option{
+  border:4px solid #000;
+  border-radius:15px;
+  background:#fff;
+  padding:18px;
+  text-align:center;
+  font-size:25px;
+  font-weight:800;
+  box-shadow:3px 3px 0 #000;
+}
+
+.logic-option.selected{
+  background:var(--yellow);
+}
+
+.tip{
+  background:#dcecf2;
+  border:3px solid #000;
+  border-radius:15px;
+  padding:15px;
+  margin-top:18px;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+  animation:fade .2s ease;
+}
+
+.modal-box{
+  background:#fff;
+  border:5px solid #000;
+  border-radius:25px;
+  box-shadow:10px 10px 0 #000;
+  width:min(500px,100%);
+  text-align:center;
+  padding:20px;
+  position:relative;
+}
+
+.modal-box h2{
+  font-size:32px;
+  margin:5px;
+}
+
+.modal-box img{
+  width:100%;
+  max-width:350px;
+  height:230px;
+  object-fit:contain;
+  border:3px solid #000;
+  border-radius:15px;
+  background:#eee;
+  margin:10px 0;
+}
+
+.close{
+  position:absolute;
+  right:12px;
+  top:10px;
+  width:42px;
+  height:42px;
+  border:3px solid #000;
+  border-radius:50%;
+  background:#ff8585;
+  font-size:24px;
+  font-weight:800;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr}
+  .card.full{grid-column:auto}
+  .hero{grid-template-columns:1fr}
+  .options{grid-template-columns:repeat(2,1fr)}
+  .logic-options{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:500px){
+  .title{font-size:25px}
+  .hero h1{font-size:32px}
+  .card{padding:17px}
+  .options{grid-template-columns:1fr 1fr}
+  .factor-inputs{grid-template-columns:1fr}
+  canvas{height:250px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="cartoon-face">
+        <div class="ear"></div>
+        <div class="ear"></div>
+      </div>
+      <div>
+        <div class="title">FACTOR BUGS!</div>
+        <div class="subtitle">Factors • Factor Pairs • Arrays</div>
+      </div>
+    </div>
+
+    <div class="score-box">
+      SCORE
+      <strong id="score">0</strong>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div>
+    <h1>🐞 The Great Factor Hunt!</h1>
+    <p>
+      Help the factor bugs discover numbers that multiply together.
+      Build arrays, complete factor pairs and catch the correct factors!
+    </p>
+  </div>
+
+  <div class="cheese">
+    <span></span><span></span><span></span>
+  </div>
+</section>
+
+<div class="grid">
+
+<!-- ACTIVITY 1 -->
+<section class="card full">
+  <span class="badge">ACTIVITY 1</span>
+  <h2>🧀 Array Multiplication — Number 12</h2>
+
+  <p>
+    Drag the red magnetic balls into rows and columns.
+    Can you make different arrays for <strong>12</strong>?
+  </p>
+
+  <div class="instruction">
+    💡 <strong>Remember:</strong> If the balls can make equal rows and columns,
+    the row number and column number are a factor pair!
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="canvas12"></canvas>
+    <div class="canvas-controls">
+      <button class="btn blue" onclick="resetCanvas('canvas12',12)">↻ Reset Balls</button>
+      <button class="btn green" onclick="checkArray12()">✓ Check Array</button>
+    </div>
+  </div>
+
+  <div class="answer-line">
+    1 × <input class="answer" id="a1"> = 12
+  </div>
+
+  <div class="answer-line">
+    <input class="answer" id="a2"> × 6 = 12
+  </div>
+
+  <div class="answer-line">
+    <input class="answer" id="a3"> × <input class="answer" id="a4"> = 12
+  </div>
+
+  <div class="answer-line">
+    12 has <input class="answer" id="a5"> factor pairs.
+  </div>
+
+  <div class="answer-line">
+    12 has <input class="answer" id="a6"> factors altogether.
+  </div>
+
+  <button class="btn" onclick="checkActivity1()">🔎 Check My Answers</button>
+  <div class="feedback" id="feedback1"></div>
+</section>
+
+
+<!-- ACTIVITY 2 -->
+<section class="card">
+  <span class="badge">ACTIVITY 2</span>
+  <h2>🐞 The Factor Bug — 20</h2>
+
+  <p>
+    This hungry factor bug needs all the factor pairs of <strong>20</strong>.
+    Complete every leg!
+  </p>
+
+  <div class="bug-area">
+    <div class="bug">
+
+      <div class="bug-head">
+        <div class="bug-eye"></div>
+        <div class="bug-eye"></div>
+      </div>
+
+      <div class="bug-body"></div>
+
+      <div class="bug-number">20</div>
+
+      <div class="spot s1"></div>
+      <div class="spot s2"></div>
+      <div class="spot s3"></div>
+      <div class="spot s4"></div>
+
+      <div class="leg left1">
+        <input id="bug1" placeholder="?">
+        <div class="leg-line"></div>
+      </div>
+
+      <div class="leg left2">
+        <input id="bug2" placeholder="?">
+        <div class="leg-line"></div>
+      </div>
+
+      <div class="leg left3">
+        <input id="bug3" placeholder="?">
+        <div class="leg-line"></div>
+      </div>
+
+      <div class="leg right1">
+        <div class="leg-line"></div>
+        <input id="bug4" placeholder="?">
+      </div>
+
+      <div class="leg right2">
+        <div class="leg-line"></div>
+        <input id="bug5" placeholder="?">
+      </div>
+
+      <div class="leg right3">
+        <div class="leg-line"></div>
+        <input id="bug6" placeholder="?">
+      </div>
+
+    </div>
+  </div>
+
+  <button class="btn" onclick="checkBug()">🐞 Check Bug Legs</button>
+  <div class="feedback" id="feedback2"></div>
+</section>
+
+
+<!-- ACTIVITY 3 -->
+<section class="card">
+  <span class="badge">ACTIVITY 3</span>
+  <h2>🔍 Catch the Factors!</h2>
+
+  <p>
+    Which of these numbers are <strong>factors of 20</strong>?
+    Select every correct answer.
+  </p>
+
+  <div class="options" id="factorOptions">
+    <button class="option" data-value="2">2</button>
+    <button class="option" data-value="3">3</button>
+    <button class="option" data-value="5">5</button>
+    <button class="option" data-value="8">8</button>
+    <button class="option" data-value="10">10</button>
+    <button class="option" data-value="15">15</button>
+  </div>
+
+  <button class="btn" onclick="checkFactors20()">🎯 Check Factors</button>
+  <div class="feedback" id="feedback3"></div>
+
+  <div class="tip">
+    🧠 <strong>Factor test:</strong> A factor divides the number exactly,
+    leaving no remainder.
+  </div>
+</section>
+
+
+<!-- ACTIVITY 4 -->
+<section class="card full">
+  <span class="badge">ACTIVITY 4</span>
+  <h2>🎯 Dynamic Factor Array Challenges</h2>
+
+  <p>
+    Choose a target number. Then use the magnetic balls to build an array
+    and write <strong>all of its factor pairs</strong>.
+  </p>
+
+  <div class="tabs" id="numberTabs">
+    <button class="tab active" data-number="18">18</button>
+    <button class="tab" data-number="24">24</button>
+    <button class="tab" data-number="30">30</button>
+    <button class="tab" data-number="48">48</button>
+    <button class="tab" data-number="35">35</button>
+    <button class="tab" data-number="16">16</button>
+    <button class="tab" data-number="56">56</button>
+  </div>
+
+  <h3>
+    Target Number:
+    <span id="targetNumber" style="color:#8d5524;font-size:30px;">18</span>
+  </h3>
+
+  <div class="canvas-wrap">
+    <canvas id="challengeCanvas"></canvas>
+
+    <div class="canvas-controls">
+      <button class="btn blue" onclick="resetChallenge()">↻ Reset Balls</button>
+      <button class="btn green" onclick="checkChallengeArray()">✓ Check Array</button>
+    </div>
+  </div>
+
+  <h3>Write all the factor pairs:</h3>
+
+  <div class="factor-inputs" id="pairInputs"></div>
+
+  <button class="btn" onclick="checkChallengePairs()">🔎 Check Factor Pairs</button>
+
+  <div class="feedback" id="feedback4"></div>
+</section>
+
+
+<!-- ACTIVITY 5 -->
+<section class="card full">
+  <span class="badge">ACTIVITY 5</span>
+  <h2>🧠 Odd Number of Factors — Detective Logic</h2>
+
+  <p>
+    Which number has an <strong>odd number of factors</strong>?
+  </p>
+
+  <div class="logic-options">
+    <button class="logic-option" data-value="48">48</button>
+    <button class="logic-option" data-value="35">35</button>
+    <button class="logic-option" data-value="16">16</button>
+    <button class="logic-option" data-value="56">56</button>
+  </div>
+
+  <button class="btn" onclick="checkOddFactors()">🕵️ Solve Mystery</button>
+  <div class="feedback" id="feedback5"></div>
+
+  <div class="tip">
+    ⭐ <strong>Super Detective Tip:</strong>
+    Square numbers have an odd number of factors because one factor pair
+    meets in the middle.
+    <br><br>
+    For example:
+    <strong>16 → 1, 2, 4, 8, 16</strong>
+  </div>
+</section>
+
+</div>
+</main>
+
+
+<!-- FEEDBACK MODAL -->
+<div class="modal" id="feedbackModal">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">×</button>
+    <h2 id="modalTitle">Great Job!</h2>
+    <img id="feedbackGif" src="" alt="Tom and Jerry feedback">
+    <p id="modalMessage"></p>
+    <button class="btn" onclick="closeModal()">Continue! 🧀</button>
+  </div>
+</div>
+
+
+<script>
+/* ============================================================
+   GIF FEEDBACK
+============================================================ */
+
+const happyGifs = [
+  "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+  "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+  "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+  "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+  "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+];
+
+const wrongGifs = [
+  "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+  "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+  "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+  "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+  "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+  "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+];
+
+function randomItem(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function showFeedback(correct,message){
+  const modal=document.getElementById("feedbackModal");
+  const img=document.getElementById("feedbackGif");
+  const title=document.getElementById("modalTitle");
+  const text=document.getElementById("modalMessage");
+
+  if(correct){
+    title.textContent="🎉 FANTASTIC!";
+    text.textContent=message || "You caught those factors!";
+    img.src=randomItem(happyGifs);
+  }else{
+    title.textContent="😹 OOPS!";
+    text.textContent=message || "Tom says: try again!";
+    img.src=randomItem(wrongGifs);
+  }
+
+  modal.classList.add("show");
+}
+
+function closeModal(){
+  document.getElementById("feedbackModal").classList.remove("show");
+}
+
+
+/* ============================================================
+   SCORE
+============================================================ */
+
+let score=0;
+
+function addScore(points){
+  score+=points;
+  document.getElementById("score").textContent=score;
+}
+
+
+/* ============================================================
+   MAGNETIC BALL CANVAS ENGINE
+============================================================ */
+
+const canvases={};
+
+function setupCanvas(id,total){
+  const canvas=document.getElementById(id);
+  const ctx=canvas.getContext("2d");
+
+  function resize(){
+    const rect=canvas.getBoundingClientRect();
+    canvas.width=rect.width*devicePixelRatio;
+    canvas.height=rect.height*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    draw();
+  }
+
+  const state={
+    canvas,
+    ctx,
+    balls:[],
+    dragged:null,
+    offsetX:0,
+    offsetY:0,
+    total
+  };
+
+  function createBalls(){
+    state.balls=[];
+
+    const cols=Math.ceil(Math.sqrt(total));
+    const spacing=Math.min(
+      42,
+      Math.max(28,(canvas.clientWidth-40)/cols)
+    );
+
+    const rows=Math.ceil(total/cols);
+
+    for(let i=0;i<total;i++){
+      const col=i%cols;
+      const row=Math.floor(i/cols);
+
+      state.balls.push({
+        x:35+col*spacing,
+        y:40+row*spacing,
+        r:13
+      });
+    }
+
+    draw();
+  }
+
+  function draw(){
+    const w=canvas.clientWidth;
+    const h=canvas.clientHeight;
+
+    ctx.clearRect(0,0,w,h);
+
+    /* magnetic tray */
+    ctx.fillStyle="rgba(255,255,255,.65)";
+    ctx.strokeStyle="#000";
+    ctx.lineWidth=3;
+    ctx.strokeRect(8,8,w-16,h-16);
+
+    /* instruction */
+    ctx.fillStyle="#4a6572";
+    ctx.font="bold 14px Fredoka";
+    ctx.fillText("DRAG THE BALLS • BUILD AN EQUAL-ROW ARRAY",18,h-14);
+
+    state.balls.forEach((b,i)=>{
+      ctx.beginPath();
+      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+
+      const grad=ctx.createRadialGradient(
+        b.x-4,b.y-5,2,
+        b.x,b.y,18
+      );
+
+      grad.addColorStop(0,"#ff7777");
+      grad.addColorStop(1,"#c62828");
+
+      ctx.fillStyle=grad;
+      ctx.fill();
+      ctx.lineWidth=3;
+      ctx.strokeStyle="#000";
+      ctx.stroke();
+
+      /* tiny shine */
+      ctx.beginPath();
+      ctx.arc(b.x-4,b.y-4,3,0,Math.PI*2);
+      ctx.fillStyle="#fff";
+      ctx.fill();
+    });
+  }
+
+  function pointerPos(e){
+    const rect=canvas.getBoundingClientRect();
+
+    const clientX=e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY=e.touches ? e.touches[0].clientY : e.clientY;
+
+    return {
+      x:clientX-rect.left,
+      y:clientY-rect.top
+    };
+  }
+
+  function down(e){
+    e.preventDefault();
+
+    const p=pointerPos(e);
+
+    for(let i=state.balls.length-1;i>=0;i--){
+      const b=state.balls[i];
+
+      if(Math.hypot(p.x-b.x,p.y-b.y)<b.r+8){
+        state.dragged=b;
+        state.offsetX=p.x-b.x;
+        state.offsetY=p.y-b.y;
+        break;
+      }
+    }
+  }
+
+  function move(e){
+    if(!state.dragged)return;
+
+    e.preventDefault();
+
+    const p=pointerPos(e);
+    const b=state.dragged;
+
+    b.x=Math.max(b.r,Math.min(canvas.clientWidth-b.r,p.x-state.offsetX));
+    b.y=Math.max(b.r,Math.min(canvas.clientHeight-b.r,p.y-state.offsetY));
+
+    draw();
+  }
+
+  function up(){
+    state.dragged=null;
+  }
+
+  canvas.addEventListener("mousedown",down);
+  canvas.addEventListener("mousemove",move);
+  window.addEventListener("mouseup",up);
+
+  canvas.addEventListener("touchstart",down,{passive:false});
+  canvas.addEventListener("touchmove",move,{passive:false});
+  window.addEventListener("touchend",up);
+
+  state.reset=createBalls;
+
+  canvases[id]=state;
+
+  window.addEventListener("resize",resize);
+
+  setTimeout(()=>{
+    resize();
+    createBalls();
+  },0);
+
+  return state;
+}
+
+function resetCanvas(id,total){
+  if(!canvases[id]){
+    setupCanvas(id,total);
+  }else{
+    canvases[id].total=total;
+    canvases[id].reset();
+  }
+}
+
+function arrayShape(id){
+  const state=canvases[id];
+  if(!state)return null;
+
+  const balls=[...state.balls];
+
+  /*
+    Determine approximate rows by grouping balls
+    whose y coordinates are close together.
+  */
+  balls.sort((a,b)=>a.y-b.y);
+
+  const tolerance=22;
+  const rows=[];
+
+  balls.forEach(ball=>{
+    let row=rows.find(r=>Math.abs(r.avgY-ball.y)<tolerance);
+
+    if(!row){
+      row={balls:[],avgY:ball.y};
+      rows.push(row);
+    }
+
+    row.balls.push(ball);
+    row.avgY=row.balls.reduce((sum,b)=>sum+b.y,0)/row.balls.length;
+  });
+
+  rows.sort((a,b)=>a.avgY-b.avgY);
+
+  if(rows.length<2)return null;
+
+  const lengths=rows.map(r=>r.balls.length);
+
+  const equal=lengths.every(x=>x===lengths[0]);
+
+  if(!equal)return null;
+
+  return {
+    rows:rows.length,
+    columns:lengths[0]
+  };
+}
+
+
+/* ============================================================
+   ACTIVITY 1
+============================================================ */
+
+setupCanvas("canvas12",12);
+
+function checkArray12(){
+  const shape=arrayShape("canvas12");
+
+  if(!shape){
+    showFeedback(false,
+      "Try moving the balls into straight, equal rows. For 12, try 2 × 6 or 3 × 4!"
+    );
+    return;
+  }
+
+  const product=shape.rows*shape.columns;
+
+  if(product===12){
+    addScore(5);
+    showFeedback(true,
+      `Amazing array! You made ${shape.rows} × ${shape.columns} = 12.`
+    );
+  }else{
+    showFeedback(false,"Your rows are equal, but keep checking the total!");
+  }
+}
+
+function value(id){
+  return document.getElementById(id).value.trim();
+}
+
+function checkActivity1(){
+  const answers={
+    a1:"12",
+    a2:"2",
+    a3:"3",
+    a4:"4",
+    a5:"3",
+    a6:"6"
+  };
+
+  let correct=true;
+
+  Object.keys(answers).forEach(id=>{
+    const input=document.getElementById(id);
+
+    if(value(id)===answers[id]){
+      input.style.background="#b9efc5";
+    }else{
+      input.style.background="#ffb0b0";
+      correct=false;
+    }
+  });
+
+  if(correct){
+    addScore(10);
+    document.getElementById("feedback1").textContent=
+      "✓ All six answers are correct!";
+    document.getElementById("feedback1").className="feedback correct";
+    showFeedback(true,"You found all the factor facts for 12!");
+  }else{
+    document.getElementById("feedback1").textContent=
+      "✗ Some answers need another look.";
+    document.getElementById("feedback1").className="feedback wrong";
+    showFeedback(false,"Check the factor pairs of 12: 1×12, 2×6 and 3×4.");
+  }
+}
+
+
+/* ============================================================
+   ACTIVITY 2
+============================================================ */
+
+function checkBug(){
+  const expected=["1","2","4","20","10","5"];
+  let correct=true;
+
+  expected.forEach((answer,i)=>{
+    const input=document.getElementById("bug"+(i+1));
+
+    if(value("bug"+(i+1))===answer){
+      input.style.background="#b9efc5";
+    }else{
+      input.style.background="#ffb0b0";
+      correct=false;
+    }
+  });
+
+  const fb=document.getElementById("feedback2");
+
+  if(correct){
+    addScore(10);
+    fb.textContent="✓ The Factor Bug is completely filled!";
+    fb.className="feedback correct";
+    showFeedback(true,"Fantastic! You found every factor pair of 20.");
+  }else{
+    fb.textContent="✗ One or more bug legs are incorrect.";
+    fb.className="feedback wrong";
+    showFeedback(false,"Remember: 1×20, 2×10 and 4×5 all make 20.");
+  }
+}
+
+
+/* ============================================================
+   ACTIVITY 3
+============================================================ */
+
+document.querySelectorAll("#factorOptions .option").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    btn.classList.toggle("selected");
+  });
+});
+
+function checkFactors20(){
+  const correctSet=["2","5","10"];
+
+  const buttons=[
+    ...document.querySelectorAll("#factorOptions .option")
+  ];
+
+  let correct=true;
+
+  buttons.forEach(btn=>{
+    const selected=btn.classList.contains("selected");
+    const should=correctSet.includes(btn.dataset.value);
+
+    btn.classList.remove("correct","incorrect","missed");
+
+    if(selected && should){
+      btn.classList.add("correct");
+    }else if(selected && !should){
+      btn.classList.add("incorrect");
+      correct=false;
+    }else if(!selected && should){
+      btn.classList.add("missed");
+      correct=false;
+    }
+  });
+
+  const fb=document.getElementById("feedback3");
+
+  if(correct){
+    addScore(10);
+    fb.textContent="✓ Excellent! 2, 5 and 10 are factors of 20.";
+    fb.className="feedback correct";
+    showFeedback(true,"You caught all three factors!");
+  }else{
+    fb.textContent="✗ Some factor bugs escaped!";
+    fb.className="feedback wrong";
+    showFeedback(false,"Try dividing 20 by each number. Which divisions have no remainder?");
+  }
+}
+
+
+/* ============================================================
+   ACTIVITY 4
+============================================================ */
+
+const targets=[18,24,30,48,35,16,56];
+let currentTarget=18;
+
+setupCanvas("challengeCanvas",18);
+
+function getFactorPairs(n){
+  const pairs=[];
+
+  for(let i=1;i<=Math.sqrt(n);i++){
+    if(n%i===0){
+      pairs.push([i,n/i]);
+    }
+  }
+
+  return pairs;
+}
+
+function buildPairInputs(){
+  const container=document.getElementById("pairInputs");
+  const pairs=getFactorPairs(currentTarget);
+
+  container.innerHTML="";
+
+  pairs.forEach((pair,index)=>{
+    const div=document.createElement("div");
+    div.className="pair";
+
+    div.innerHTML=`
+      <span>Pair ${index+1}:</span>
+      <input id="pairA${index}" type="number" min="1">
+      <strong>×</strong>
+      <input id="pairB${index}" type="number" min="1">
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function selectTarget(number){
+  currentTarget=number;
+
+  document.getElementById("targetNumber").textContent=number;
+
+  document.querySelectorAll(".tab").forEach(tab=>{
+    tab.classList.toggle(
+      "active",
+      Number(tab.dataset.number)===number
+    );
+  });
+
+  resetCanvas("challengeCanvas",number);
+  buildPairInputs();
+
+  document.getElementById("feedback4").textContent="";
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    selectTarget(Number(tab.dataset.number));
+  });
+});
+
+function resetChallenge(){
+  resetCanvas("challengeCanvas",currentTarget);
+}
+
+function checkChallengeArray(){
+  const shape=arrayShape("challengeCanvas");
+
+  if(!shape){
+    showFeedback(false,
+      "Make straight equal rows. Try one of the factor pairs for "+currentTarget+"."
+    );
+    return;
+  }
+
+  if(shape.rows*shape.columns===currentTarget){
+    addScore(5);
+    showFeedback(true,
+      `Great array! ${shape.rows} × ${shape.columns} = ${currentTarget}.`
+    );
+  }else{
+    showFeedback(false,"The array needs to contain exactly "+currentTarget+" balls.");
+  }
+}
+
+function checkChallengePairs(){
+  const pairs=getFactorPairs(currentTarget);
+  let correct=true;
+
+  pairs.forEach((pair,index)=>{
+    const a=Number(document.getElementById("pairA"+index).value);
+    const b=Number(document.getElementById("pairB"+index).value);
+
+    const boxA=document.getElementById("pairA"+index);
+    const boxB=document.getElementById("pairB"+index);
+
+    const valid=(a===pair[0] && b===pair[1]) ||
+                (a===pair[1] && b===pair[0]);
+
+    if(valid){
+      boxA.style.background="#b9efc5";
+      boxB.style.background="#b9efc5";
+    }else{
+      boxA.style.background="#ffb0b0";
+      boxB.style.background="#ffb0b0";
+      correct=false;
+    }
+  });
+
+  const fb=document.getElementById("feedback4");
+
+  if(correct){
+    addScore(10);
+    fb.textContent=`✓ Perfect! You found all ${pairs.length} factor pairs of ${currentTarget}.`;
+    fb.className="feedback correct";
+
+    showFeedback(true,
+      `Excellent! You found every factor pair of ${currentTarget}.`
+    );
+  }else{
+    fb.textContent="✗ Some factor pairs are incorrect.";
+    fb.className="feedback wrong";
+
+    showFeedback(false,
+      `Keep looking! Try multiplying the numbers in each pair to get ${currentTarget}.`
+    );
+  }
+}
+
+buildPairInputs();
+
+
+/* ============================================================
+   ACTIVITY 5
+============================================================ */
+
+document.querySelectorAll(".logic-option").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".logic-option").forEach(x=>{
+      x.classList.remove("selected");
+    });
+
+    btn.classList.add("selected");
+  });
+});
+
+function checkOddFactors(){
+  const selected=document.querySelector(".logic-option.selected");
+  const fb=document.getElementById("feedback5");
+
+  if(!selected){
+    fb.textContent="Choose one number first!";
+    fb.className="feedback wrong";
+    return;
+  }
+
+  if(selected.dataset.value==="16"){
+    selected.style.background="#82df98";
+    addScore(10);
+
+    fb.textContent="✓ Correct! 16 is a square number and has 5 factors.";
+    fb.className="feedback correct";
+
+    showFeedback(true,
+      "Brilliant detective work! 16 is a square number."
+    );
+  }else{
+    selected.style.background="#ff8585";
+
+    fb.textContent="✗ Not quite. Think about square numbers.";
+    fb.className="feedback wrong";
+
+    showFeedback(false,
+      "Hint: a square number has an odd number of factors. Try 16!"
+    );
+  }
+}
+
+
+/* ============================================================
+   KEYBOARD ACCESSIBILITY
+============================================================ */
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeModal();
+  }
+});
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+window.addEventListener("load",()=>{
+  buildPairInputs();
+});
+</script>
+
+</body>
+</html>

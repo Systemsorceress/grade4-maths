@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tom & Jerry Long Division Adventure</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+    --yellow: #ffd21f;
+    --yellow-dark: #e5a900;
+    --tom-blue: #5d8fa8;
+    --tom-dark: #365968;
+    --jerry-brown: #98603a;
+    --orange: #f59b35;
+    --cream: #fff9df;
+    --white: #ffffff;
+    --gray: #d7dde0;
+    --dark: #20252a;
+    --green: #48b96b;
+    --green-light: #dff7e5;
+    --red: #e84c4c;
+    --red-light: #ffe2e2;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: "Fredoka", sans-serif;
+
+    color: var(--dark);
+
+    background:
+        radial-gradient(circle at 10% 15%,
+            rgba(255,210,31,.35) 0 55px,
+            transparent 56px),
+
+        radial-gradient(circle at 90% 25%,
+            rgba(93,143,168,.18) 0 75px,
+            transparent 76px),
+
+        linear-gradient(
+            135deg,
+            #fffdf3,
+            #eaf5f8
+        );
+
+    padding: 20px;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.container {
+
+    width: min(1150px, 100%);
+
+    margin: auto;
+
+    background: var(--white);
+
+    border: 4px solid #000;
+
+    border-radius: 22px;
+
+    box-shadow:
+        8px 8px 0 rgba(0,0,0,.18);
+
+    padding: 22px;
+
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+header {
+
+    background: var(--yellow);
+
+    border: 4px solid #000;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    text-align: center;
+
+    position: relative;
+
+    box-shadow:
+        5px 5px 0 #000;
+
+    margin-bottom: 20px;
+
+}
+
+header h1 {
+
+    margin: 0;
+
+    font-size: clamp(25px, 4vw, 38px);
+
+    font-weight: 700;
+
+    color: #222;
+
+}
+
+.subtitle {
+
+    margin-top: 7px;
+
+    font-family: "Comic Neue", cursive;
+
+    font-weight: 700;
+
+    font-size: 18px;
+
+}
+
+.character-left,
+.character-right {
+
+    position: absolute;
+
+    font-size: 48px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+.character-left {
+    left: 18px;
+}
+
+.character-right {
+    right: 18px;
+}
+
+
+/* =========================================
+   TOP CONTROLS
+========================================= */
+
+.controls {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+button,
+select {
+
+    font-family: "Fredoka", sans-serif;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    padding: 10px 15px;
+
+    border: 3px solid #000;
+
+    border-radius: 12px;
+
+    background: var(--tom-blue);
+
+    color: white;
+
+    cursor: pointer;
+
+    box-shadow:
+        3px 4px 0 #000;
+
+    transition: .12s;
+
+}
+
+button:hover,
+select:hover {
+
+    transform: translateY(-2px);
+
+}
+
+button:active {
+
+    transform: translateY(2px);
+
+    box-shadow:
+        1px 2px 0 #000;
+
+}
+
+button.primary {
+
+    background: var(--yellow);
+
+    color: #000;
+
+}
+
+button.reset {
+
+    background: #e9edf0;
+
+    color: #222;
+
+}
+
+.progress {
+
+    background: var(--cream);
+
+    border: 3px solid #000;
+
+    border-radius: 12px;
+
+    padding: 9px 14px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   INSTRUCTIONS
+========================================= */
+
+.instructions {
+
+    background: #eef7fa;
+
+    border: 3px solid #000;
+
+    border-radius: 15px;
+
+    padding: 14px 17px;
+
+    margin-bottom: 20px;
+
+}
+
+.instructions strong {
+
+    color: var(--tom-dark);
+
+}
+
+.instructions p {
+
+    margin: 5px 0 0;
+
+    font-family: "Comic Neue", cursive;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   WORKSPACE
+========================================= */
+
+.workspace {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.4fr)
+        minmax(290px, .75fr);
+
+    gap: 20px;
+
+    align-items: start;
+
+}
+
+
+/* =========================================
+   DIVISION CARD
+========================================= */
+
+.division-card {
+
+    background: #fff;
+
+    border: 4px solid #000;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    box-shadow:
+        5px 5px 0 rgba(0,0,0,.15);
+
+}
+
+.card-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+
+}
+
+.card-title h2 {
+
+    margin: 0;
+
+    font-size: 23px;
+
+}
+
+.problem-badge {
+
+    background: var(--orange);
+
+    color: #000;
+
+    border: 3px solid #000;
+
+    border-radius: 10px;
+
+    padding: 7px 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   PROBLEM DISPLAY
+========================================= */
+
+.problem-display {
+
+    background: var(--cream);
+
+    border: 3px solid #000;
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    padding: 12px;
+
+    margin-bottom: 10px;
+
+}
+
+.problem-display .problem {
+
+    font-size: 29px;
+
+    font-weight: 700;
+
+}
+
+.problem-display .instruction {
+
+    font-family: "Comic Neue", cursive;
+
+    font-weight: 700;
+
+    font-size: 16px;
+
+}
+
+
+/* =========================================
+   ORIGINAL LONG DIVISION STYLE
+========================================= */
+
+.division-board {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin: 18px 0;
+
+    font-size: 1.2rem;
+
+    overflow-x: auto;
+
+    padding: 15px;
+
+    background: #f8fafb;
+
+    border: 3px dashed #777;
+
+    border-radius: 14px;
+
+}
+
+.divisor {
+
+    padding-right: 12px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    padding-top: 38px;
+
+    letter-spacing: 2px;
+
+    font-weight: 700;
+
+}
+
+.bracket-body {
+
+    border-left: 4px solid #000;
+
+    padding-left: 8px;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+.grid-row {
+
+    display: flex;
+
+    height: 42px;
+
+    align-items: center;
+
+}
+
+#row-quotient {
+
+    border-bottom: 4px solid #000;
+
+}
+
+.cell {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    position: relative;
+
+    font-weight: 700;
+
+}
+
+input.cell-input {
+
+    width: 35px;
+
+    height: 35px;
+
+    font-family: "Fredoka", sans-serif;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    border: 3px solid #000;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: var(--yellow);
+
+    color: #000;
+
+    animation: pulse 1s infinite alternate;
+
+}
+
+input.cell-input:focus {
+
+    border-color: var(--tom-blue);
+
+    box-shadow:
+        0 0 0 4px rgba(93,143,168,.25);
+
+}
+
+input.cell-input.correct {
+
+    background: var(--green-light);
+
+    border-color: var(--green);
+
+    animation: none;
+
+}
+
+input.cell-input.wrong {
+
+    background: var(--red-light);
+
+    border-color: var(--red);
+
+    animation: shake .3s ease;
+
+}
+
+.sub-line {
+
+    border-bottom: 3px solid #000;
+
+}
+
+.minus-sign {
+
+    position: absolute;
+
+    left: -24px;
+
+    font-weight: bold;
+
+}
+
+.arrow-down {
+
+    color: var(--tom-blue);
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    animation: bounce .8s infinite;
+
+}
+
+.reveal-anim {
+
+    animation:
+        fadeIn .3s ease-out;
+
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status {
+
+    min-height: 32px;
+
+    text-align: center;
+
+    font-family: "Comic Neue", cursive;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+}
+
+.status.success {
+
+    color: var(--green);
+
+}
+
+.status.error {
+
+    color: var(--red);
+
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 10px;
+
+}
+
+
+/* =========================================
+   SCRATCHPAD
+========================================= */
+
+.scratchpad {
+
+    background: #fff;
+
+    border: 4px solid #000;
+
+    border-radius: 18px;
+
+    padding: 15px;
+
+    box-shadow:
+        5px 5px 0 rgba(0,0,0,.15);
+
+    position: sticky;
+
+    top: 20px;
+
+}
+
+.scratch-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 10px;
+
+}
+
+.scratch-title h2 {
+
+    margin: 0;
+
+    font-size: 22px;
+
+}
+
+.scratch-title span {
+
+    font-size: 34px;
+
+}
+
+.tools {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-bottom: 9px;
+
+}
+
+.tool {
+
+    padding: 6px 9px;
+
+    border: 2px solid #000;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #000;
+
+    box-shadow: none;
+
+    font-size: 13px;
+
+}
+
+.tool.active {
+
+    background: var(--yellow);
+
+}
+
+.color {
+
+    width: 31px;
+
+    height: 31px;
+
+    padding: 0;
+
+}
+
+.black {
+
+    background: #111;
+
+}
+
+.blue {
+
+    background: #2674d9;
+
+}
+
+.red {
+
+    background: #e53935;
+
+}
+
+#scratchCanvas {
+
+    width: 100%;
+
+    height: 390px;
+
+    display: block;
+
+    background-color: #fffef2;
+
+    background-image:
+
+        linear-gradient(
+            #e1e5e7 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            #e1e5e7 1px,
+            transparent 1px
+        );
+
+    background-size: 25px 25px;
+
+    border: 3px solid #000;
+
+    border-radius: 12px;
+
+    touch-action: none;
+
+    cursor: crosshair;
+
+}
+
+.scratch-note {
+
+    text-align: center;
+
+    font-family: "Comic Neue", cursive;
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+    margin-top: 7px;
+
+}
+
+
+/* =========================================
+   COMPLETION
+========================================= */
+
+.completion-banner {
+
+    display: none;
+
+    text-align: center;
+
+    background: var(--green-light);
+
+    color: #165b2c;
+
+    border: 4px solid #000;
+
+    border-radius: 15px;
+
+    padding: 16px;
+
+    margin-top: 18px;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================
+   FEEDBACK MODAL
+========================================= */
+
+.feedback-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,.7);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+
+}
+
+.feedback-overlay.show {
+
+    display: flex;
+
+}
+
+.feedback-modal {
+
+    width: min(480px, 100%);
+
+    background: white;
+
+    border: 5px solid #000;
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    text-align: center;
+
+    box-shadow:
+        9px 9px 0 #000;
+
+    animation:
+        modalPop .35s ease;
+
+}
+
+.feedback-heading {
+
+    background: var(--yellow);
+
+    border-bottom: 4px solid #000;
+
+    padding: 13px;
+
+    font-size: 27px;
+
+    font-weight: 700;
+
+}
+
+.feedback-modal img {
+
+    width: 100%;
+
+    height: 250px;
+
+    object-fit: contain;
+
+    background: #f2f5f6;
+
+    display: block;
+
+}
+
+.feedback-message {
+
+    padding: 13px 15px 5px;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+}
+
+.feedback-sub {
+
+    padding: 0 15px 13px;
+
+    font-family: "Comic Neue", cursive;
+
+    font-weight: 700;
+
+}
+
+.feedback-close {
+
+    width: calc(100% - 30px);
+
+    margin: 0 15px 15px;
+
+    background: var(--tom-blue);
+
+    color: white;
+
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+@keyframes pulse {
+
+    from {
+        background: #ffe96c;
+    }
+
+    to {
+        background: var(--yellow);
+    }
+
+}
+
+@keyframes bounce {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(5px);
+    }
+
+}
+
+@keyframes shake {
+
+    0%,100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+
+}
+
+@keyframes modalPop {
+
+    from {
+        opacity: 0;
+        transform: scale(.65) rotate(-3deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media(max-width:850px) {
+
+    .workspace {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .scratchpad {
+
+        position: static;
+
+    }
+
+}
+
+@media(max-width:550px) {
+
+    body {
+
+        padding: 8px;
+
+    }
+
+    .container {
+
+        padding: 10px;
+
+    }
+
+    .character-left,
+    .character-right {
+
+        display: none;
+
+    }
+
+    .grid-row {
+
+        height: 36px;
+
+    }
+
+    .cell {
+
+        width: 36px;
+
+        height: 36px;
+
+    }
+
+    input.cell-input {
+
+        width: 31px;
+
+        height: 31px;
+
+    }
+
+    #scratchCanvas {
+
+        height: 300px;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<header>
+
+    <div class="character-left">🐱</div>
+
+    <h1>🐾 TOM & JERRY LONG DIVISION</h1>
+
+    <div class="subtitle">
+        Help Jerry solve the maths before Tom catches him!
+    </div>
+
+    <div class="character-right">🐭</div>
+
+</header>
+
+
+<div class="controls">
+
+    <button
+        class="primary"
+        onclick="nextProblem()"
+    >
+        ➡️ NEXT PROBLEM
+    </button>
+
+    <button
+        class="reset"
+        onclick="resetProblem()"
+    >
+        🔄 RESET
+    </button>
+
+    <div class="progress">
+        ⭐ Score:
+        <span id="score">0</span>
+        /
+        <span id="total">15</span>
+    </div>
+
+    <div class="progress">
+        📝 Problem:
+        <span id="problemNumber">1</span>
+        / 15
+    </div>
+
+</div>
+
+
+<div class="instructions">
+
+    <strong>🧠 How to solve:</strong>
+
+    <p>
+        Work through the long division one step at a time.
+        Type your answer in the yellow box. 
+        Use the scratchpad on the right for rough work.
+    </p>
+
+</div>
+
+
+<div class="workspace">
+
+
+    <!-- =====================================
+         DIVISION
+    ====================================== -->
+
+    <div class="division-card">
+
+
+        <div class="card-title">
+
+            <h2>
+                ✏️ Solve the Division
+            </h2>
+
+            <div
+                class="problem-badge"
+                id="difficultyBadge"
+            >
+                Grade 4
+            </div>
+
+        </div>
+
+
+        <div class="problem-display">
+
+            <div
+                class="problem"
+                id="problemDisplay"
+            >
+                48 ÷ 6
+            </div>
+
+            <div class="instruction">
+                Enter each step carefully.
+            </div>
+
+        </div>
+
+
+        <div class="division-board">
+
+            <div
+                class="divisor"
+                id="divisorContainer"
+            ></div>
+
+            <div
+                class="bracket-body"
+                id="bracketBody"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="status"
+            id="status"
+        ></div>
+
+
+        <div class="actions">
+
+            <button
+                class="primary"
+                onclick="checkCurrentAnswer()"
+            >
+                ✓ CHECK ANSWER
+            </button>
+
+            <button
+                onclick="nextProblem()"
+            >
+                ➡️ NEXT PROBLEM
+            </button>
+
+        </div>
+
+
+        <div
+            class="completion-banner"
+            id="completionBanner"
+        >
+            🏆 PROBLEM COMPLETE! 🏆
+            <br>
+            Jerry escaped Tom!
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         SCRATCHPAD
+    ====================================== -->
+
+    <div class="scratchpad">
+
+
+        <div class="scratch-title">
+
+            <h2>
+                ✏️ Rough Work
+            </h2>
+
+            <span>
+                🐭
+            </span>
+
+        </div>
+
+
+        <div class="tools">
+
+            <button
+                class="tool active"
+                id="penTool"
+                onclick="setTool('pen')"
+            >
+                ✏️ Pen
+            </button>
+
+
+            <button
+                class="tool"
+                id="eraserTool"
+                onclick="setTool('eraser')"
+            >
+                🧽 Eraser
+            </button>
+
+
+            <button
+                class="tool color black"
+                onclick="setColor('#111111')"
+                title="Black"
+            ></button>
+
+
+            <button
+                class="tool color blue"
+                onclick="setColor('#2674d9')"
+                title="Blue"
+            ></button>
+
+
+            <button
+                class="tool color red"
+                onclick="setColor('#e53935')"
+                title="Red"
+            ></button>
+
+
+            <select
+                class="tool"
+                id="strokeWidth"
+                onchange="changeStrokeWidth()"
+            >
+                <option value="2">
+                    Thin
+                </option>
+
+                <option value="4" selected>
+                    Medium
+                </option>
+
+                <option value="7">
+                    Thick
+                </option>
+            </select>
+
+
+            <button
+                class="tool"
+                onclick="clearScratchpad()"
+            >
+                🗑️ Clear
+            </button>
+
+        </div>
+
+
+        <canvas
+            id="scratchCanvas"
+        ></canvas>
+
+
+        <div class="scratch-note">
+
+            Use this space for rough calculations.
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<!-- =========================================
+     FEEDBACK MODAL
+========================================= -->
+
+<div
+    class="feedback-overlay"
+    id="feedbackOverlay"
+>
+
+    <div class="feedback-modal">
+
+        <div
+            class="feedback-heading"
+            id="feedbackHeading"
+        >
+            🎉 GREAT JOB!
+        </div>
+
+
+        <img
+            id="feedbackGif"
+            src=""
+            alt="Tom and Jerry feedback"
+        >
+
+
+        <div
+            class="feedback-message"
+            id="feedbackMessage"
+        >
+            Amazing work!
+        </div>
+
+
+        <div
+            class="feedback-sub"
+            id="feedbackSub"
+        >
+            Keep going!
+        </div>
+
+
+        <button
+            class="feedback-close"
+            onclick="closeFeedback()"
+        >
+            🚀 CONTINUE
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   GIFS
+========================================================= */
+
+const happyGifs = [
+
+    "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+
+    "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+
+    "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+
+];
+
+
+const wrongGifs = [
+
+    "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+
+    "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+
+    "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+
+    "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+
+    "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+
+];
+
+
+/* =========================================================
+   EXACTLY 15 QUESTIONS
+   5 × 2-DIGIT
+   10 × 3/4-DIGIT
+   ALL ONE-DIGIT DIVISORS
+========================================================= */
+
+const questions = [
+
+    /* ---------- 5 TWO-DIGIT ---------- */
+
+    {
+        dividend: 48,
+        divisor: 6
+    },
+
+    {
+        dividend: 72,
+        divisor: 8
+    },
+
+    {
+        dividend: 84,
+        divisor: 7
+    },
+
+    {
+        dividend: 96,
+        divisor: 8
+    },
+
+    {
+        dividend: 63,
+        divisor: 9
+    },
+
+
+    /* ---------- 5 THREE-DIGIT ---------- */
+
+    {
+        dividend: 144,
+        divisor: 4
+    },
+
+    {
+        dividend: 216,
+        divisor: 6
+    },
+
+    {
+        dividend: 324,
+        divisor: 4
+    },
+
+    {
+        dividend: 432,
+        divisor: 8
+    },
+
+    {
+        dividend: 525,
+        divisor: 5
+    },
+
+
+    /* ---------- 5 FOUR-DIGIT ---------- */
+
+    {
+        dividend: 1248,
+        divisor: 6
+    },
+
+    {
+        dividend: 1440,
+        divisor: 8
+    },
+
+    {
+        dividend: 2160,
+        divisor: 6
+    },
+
+    {
+        dividend: 3240,
+        divisor: 9
+    },
+
+    {
+        dividend: 4320,
+        divisor: 8
+    }
+
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentQuestion = 0;
+
+let currentStepIndex = 0;
+
+let steps = [];
+
+let finalRemainder = 0;
+
+let score = 0;
+
+let solvedQuestions = new Set();
+
+
+/* =========================================================
+   COMPUTE LONG DIVISION STEPS
+========================================================= */
+
+function computeSteps(
+    dividendStr,
+    divisor
+) {
+
+    let result = [];
+
+    let currentVal = 0;
+
+    let started = false;
+
+    let remainder = 0;
+
+
+    for (
+        let i = 0;
+        i < dividendStr.length;
+        i++
+    ) {
+
+        const digit =
+            parseInt(
+                dividendStr[i]
+            );
+
+
+        currentVal =
+            currentVal * 10 + digit;
+
+
+        /*
+           Before the divisor fits,
+           keep collecting digits.
+        */
+
+        if (
+            !started &&
+            currentVal < divisor
+        ) {
+
+            if (
+                i <
+                dividendStr.length - 1
+            ) {
+
+                continue;
+
+            }
+
+        }
+
+
+        started = true;
+
+
+        const qDigit =
+            Math.floor(
+                currentVal / divisor
+            );
+
+
+        const multVal =
+            qDigit * divisor;
+
+
+        const subVal =
+            currentVal - multVal;
+
+
+        result.push({
+
+            colIndex: i,
+
+            workingVal: currentVal,
+
+            qDigit: qDigit,
+
+            multVal: multVal,
+
+            subVal: subVal,
+
+            nextDigit:
+                i <
+                dividendStr.length - 1
+
+                    ? parseInt(
+                        dividendStr[i + 1]
+                    )
+
+                    : null
+
+        });
+
+
+        currentVal =
+            subVal;
+
+    }
+
+
+    remainder =
+        currentVal;
+
+
+    finalRemainder =
+        remainder;
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+function initProblem() {
+
+    const question =
+        questions[currentQuestion];
+
+
+    const dividendStr =
+        String(
+            question.dividend
+        );
+
+
+    steps =
+        computeSteps(
+            dividendStr,
+            question.divisor
+        );
+
+
+    currentStepIndex = 0;
+
+
+    document
+        .getElementById(
+            "problemDisplay"
+        )
+        .innerText =
+        `${question.dividend} ÷ ${question.divisor}`;
+
+
+    document
+        .getElementById(
+            "divisorContainer"
+        )
+        .innerText =
+        question.divisor;
+
+
+    document
+        .getElementById(
+            "problemNumber"
+        )
+        .innerText =
+        currentQuestion + 1;
+
+
+    document
+        .getElementById(
+            "difficultyBadge"
+        )
+        .innerText =
+        String(
+            question.dividend
+        ).length === 2
+            ? "2-Digit"
+            : String(
+                question.dividend
+            ).length === 3
+                ? "3-Digit"
+                : "4-Digit";
+
+
+    document
+        .getElementById(
+            "completionBanner"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "status"
+        )
+        .innerText =
+        "";
+
+
+    renderBoardSkeleton();
+
+    processStep();
+
+}
+
+
+/* =========================================================
+   BOARD
+========================================================= */
+
+function renderBoardSkeleton() {
+
+    const question =
+        questions[currentQuestion];
+
+
+    const dividendStr =
+        String(
+            question.dividend
+        );
+
+
+    const body =
+        document.getElementById(
+            "bracketBody"
+        );
+
+
+    body.innerHTML =
+        "";
+
+
+    /*
+       Quotient row
+    */
+
+    const qRow =
+        createRow(
+            "row-quotient"
+        );
+
+
+    for (
+        let i = 0;
+        i < dividendStr.length + 3;
+        i++
+    ) {
+
+        qRow.appendChild(
+            createCell(
+                `q-${i}`
+            )
+        );
+
+    }
+
+
+    body.appendChild(
+        qRow
+    );
+
+
+    /*
+       Dividend row
+    */
+
+    const dRow =
+        createRow(
+            "row-dividend"
+        );
+
+
+    for (
+        let i = 0;
+        i < dividendStr.length;
+        i++
+    ) {
+
+        const cell =
+            createCell(
+                `d-${i}`
+            );
+
+
+        cell.innerText =
+            dividendStr[i];
+
+
+        dRow.appendChild(
+            cell
+        );
+
+    }
+
+
+    body.appendChild(
+        dRow
+    );
+
+}
+
+
+/* =========================================================
+   CREATE ROW
+========================================================= */
+
+function createRow(id) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "grid-row";
+
+
+    if (id) {
+
+        row.id =
+            id;
+
+    }
+
+
+    return row;
+
+}
+
+
+/* =========================================================
+   CREATE CELL
+========================================================= */
+
+function createCell(id) {
+
+    const cell =
+        document.createElement(
+            "div"
+        );
+
+
+    cell.className =
+        "cell";
+
+
+    if (id) {
+
+        cell.id =
+            id;
+
+    }
+
+
+    return cell;
+
+}
+
+
+/* =========================================================
+   PROCESS CURRENT STEP
+========================================================= */
+
+function processStep() {
+
+    const totalSteps =
+        steps.length * 3;
+
+
+    /*
+       Remainder label
+    */
+
+    if (
+        currentStepIndex ===
+        totalSteps
+    ) {
+
+        const question =
+            questions[currentQuestion];
+
+
+        const rCell =
+            document.getElementById(
+                `q-${String(
+                    question.dividend
+                ).length}`
+            );
+
+
+        setInstruction(
+            `FINAL STEP: Type R to show that you have found the remainder.`
+        );
+
+
+        makeInput(
+            rCell,
+            "R",
+            () => advanceStep(),
+            1
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Final remainder
+    */
+
+    if (
+        currentStepIndex ===
+        totalSteps + 1
+    ) {
+
+        const question =
+            questions[currentQuestion];
+
+
+        const rCell =
+            document.getElementById(
+                `q-${
+                    String(
+                        question.dividend
+                    ).length + 1
+                }`
+            );
+
+
+        setInstruction(
+            `FINAL STEP: Enter the remainder ${finalRemainder}.`
+        );
+
+
+        makeInput(
+            rCell,
+            String(
+                finalRemainder
+            ),
+            () => advanceStep(),
+            String(
+                finalRemainder
+            ).length
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Complete
+    */
+
+    if (
+        currentStepIndex >
+        totalSteps + 1
+    ) {
+
+        finishProblem();
+
+        return;
+
+    }
+
+
+    const stepNum =
+        Math.floor(
+            currentStepIndex / 3
+        );
+
+
+    const subStep =
+        currentStepIndex % 3;
+
+
+    const step =
+        steps[stepNum];
+
+
+    /*
+       QUOTIENT
+    */
+
+    if (
+        subStep === 0
+    ) {
+
+        setInstruction(
+            step.workingVal < questions[currentQuestion].divisor
+
+                ? `The divisor is bigger than ${step.workingVal}, so the quotient digit is 0.`
+
+                : `How many times does ${questions[currentQuestion].divisor} go into ${step.workingVal}?`
+        );
+
+
+        const cell =
+            document.getElementById(
+                `q-${step.colIndex}`
+            );
+
+
+        makeInput(
+            cell,
+            String(
+                step.qDigit
+            ),
+            () => advanceStep(),
+            1
+        );
+
+    }
+
+
+    /*
+       MULTIPLICATION
+    */
+
+    else if (
+        subStep === 1
+    ) {
+
+        setInstruction(
+            `Multiply ${step.qDigit} × ${questions[currentQuestion].divisor}.`
+        );
+
+
+        const body =
+            document.getElementById(
+                "bracketBody"
+            );
+
+
+        const multRow =
+            createRow(
+                `mult-row-${stepNum}`
+            );
+
+
+        const multStr =
+            String(
+                step.multVal
+            );
+
+
+        const startCol =
+            step.colIndex -
+            multStr.length +
+            1;
+
+
+        for (
+            let i = 0;
+            i <
+            String(
+                questions[currentQuestion].dividend
+            ).length;
+            i++
+        ) {
+
+            const cell =
+                createCell();
+
+
+            if (
+                i === startCol
+            ) {
+
+                const minus =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                minus.className =
+                    "minus-sign";
+
+
+                minus.innerText =
+                    "−";
+
+
+                cell.appendChild(
+                    minus
+                );
+
+            }
+
+
+            if (
+                i >= startCol &&
+                i <= step.colIndex
+            ) {
+
+                cell.classList.add(
+                    "sub-line"
+                );
+
+            }
+
+
+            multRow.appendChild(
+                cell
+            );
+
+        }
+
+
+        body.appendChild(
+            multRow
+        );
+
+
+        const target =
+            multRow.children[
+                step.colIndex
+            ];
+
+
+        makeInput(
+            target,
+            multStr,
+            () => advanceStep(),
+            multStr.length
+        );
+
+    }
+
+
+    /*
+       SUBTRACTION
+    */
+
+    else {
+
+        setInstruction(
+            `Subtract to find ${step.subVal}.`
+        );
+
+
+        const body =
+            document.getElementById(
+                "bracketBody"
+            );
+
+
+        const subRow =
+            createRow(
+                `sub-row-${stepNum}`
+            );
+
+
+        const subStr =
+            String(
+                step.subVal
+            );
+
+
+        const width =
+            String(
+                questions[currentQuestion]
+                    .dividend
+            ).length;
+
+
+        for (
+            let i = 0;
+            i < width;
+            i++
+        ) {
+
+            subRow.appendChild(
+                createCell()
+            );
+
+        }
+
+
+        body.appendChild(
+            subRow
+        );
+
+
+        const targetCell =
+            subRow.children[
+                step.colIndex
+            ];
+
+
+        makeInput(
+            targetCell,
+            subStr,
+            () => {
+
+                if (
+                    step.nextDigit !==
+                    null
+                ) {
+
+                    const nextCell =
+                        subRow.children[
+                            step.colIndex + 1
+                        ];
+
+
+                    nextCell.innerHTML =
+                        `<span class="arrow-down">↓</span>`;
+
+
+                    setTimeout(
+                        () => {
+
+                            nextCell.innerText =
+                                step.nextDigit;
+
+
+                            nextCell.classList.add(
+                                "reveal-anim"
+                            );
+
+
+                            advanceStep();
+
+                        },
+                        500
+                    );
+
+                }
+
+                else {
+
+                    advanceStep();
+
+                }
+
+            },
+            subStr.length
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   INSTRUCTION
+========================================================= */
+
+function setInstruction(text) {
+
+    document
+        .querySelector(
+            ".problem-display .instruction"
+        )
+        .innerText =
+        text;
+
+}
+
+
+/* =========================================================
+   MAKE INPUT
+========================================================= */
+
+function makeInput(
+    targetCell,
+    expectedValue,
+    onSuccess,
+    digitLength = 1
+) {
+
+    targetCell.innerHTML =
+        "";
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "text";
+
+
+    input.className =
+        "cell-input reveal-anim";
+
+
+    input.maxLength =
+        digitLength;
+
+
+    if (
+        digitLength > 1
+    ) {
+
+        input.style.width =
+            `${24 * digitLength + 10}px`;
+
+    }
+
+
+    targetCell.appendChild(
+        input
+    );
+
+
+    input.focus();
+
+
+    let alreadyChecked =
+        false;
+
+
+    input.addEventListener(
+        "input",
+        event => {
+
+            if (
+                alreadyChecked
+            ) {
+
+                return;
+
+            }
+
+
+            const value =
+                event.target.value
+                    .trim()
+                    .toUpperCase();
+
+
+            if (
+                value ===
+                String(
+                    expectedValue
+                ).toUpperCase()
+            ) {
+
+                alreadyChecked =
+                    true;
+
+
+                input.classList.add(
+                    "correct"
+                );
+
+
+                targetCell.innerText =
+                    String(
+                        expectedValue
+                    ).toUpperCase();
+
+
+                targetCell.classList.add(
+                    "reveal-anim"
+                );
+
+
+                document
+                    .getElementById(
+                        "status"
+                    )
+                    .className =
+                    "status success";
+
+
+                document
+                    .getElementById(
+                        "status"
+                    )
+                    .innerText =
+                    "✓ Correct!";
+
+
+                onSuccess();
+
+            }
+
+        }
+    );
+
+
+    input.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                checkCurrentAnswer();
+
+            }
+
+        }
+    );
+
+
+    /*
+       Store expected answer so
+       CHECK ANSWER can validate it.
+    */
+
+    input.dataset.answer =
+        String(
+            expectedValue
+        ).toUpperCase();
+
+}
+
+
+/* =========================================================
+   CHECK BUTTON
+========================================================= */
+
+function checkCurrentAnswer() {
+
+    const input =
+        document.querySelector(
+            "input.cell-input"
+        );
+
+
+    if (!input) {
+
+        return;
+
+    }
+
+
+    const expected =
+        input.dataset.answer;
+
+
+    const actual =
+        input.value
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        actual === expected
+    ) {
+
+        input.classList.remove(
+            "wrong"
+        );
+
+        input.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        input.classList.remove(
+            "correct"
+        );
+
+        input.classList.add(
+            "wrong"
+        );
+
+
+        document
+            .getElementById(
+                "status"
+            )
+            .className =
+            "status error";
+
+
+        document
+            .getElementById(
+                "status"
+            )
+            .innerText =
+            "✗ Not quite! Check your working and try again.";
+
+
+        showFeedback(
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADVANCE
+========================================================= */
+
+function advanceStep() {
+
+    currentStepIndex++;
+
+    processStep();
+
+}
+
+
+/* =========================================================
+   FINISH PROBLEM
+========================================================= */
+
+function finishProblem() {
+
+    const key =
+        currentQuestion;
+
+
+    if (
+        !solvedQuestions.has(
+            key
+        )
+    ) {
+
+        solvedQuestions.add(
+            key
+        );
+
+        score++;
+
+    }
+
+
+    document
+        .getElementById(
+            "score"
+        )
+        .innerText =
+        score;
+
+
+    document
+        .getElementById(
+            "completionBanner"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "status"
+        )
+        .className =
+        "status success";
+
+
+    document
+        .getElementById(
+            "status"
+        )
+        .innerText =
+        "🎉 Excellent! You completed the division!";
+
+
+    setInstruction(
+        "🎉 Great work! Click NEXT PROBLEM for another challenge."
+    );
+
+
+    showFeedback(
+        true
+    );
+
+}
+
+
+/* =========================================================
+   NEXT PROBLEM
+========================================================= */
+
+function nextProblem() {
+
+    closeFeedback();
+
+
+    currentQuestion++;
+
+
+    if (
+        currentQuestion >=
+        questions.length
+    ) {
+
+        currentQuestion = 0;
+
+    }
+
+
+    initProblem();
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetProblem() {
+
+    closeFeedback();
+
+    initProblem();
+
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function randomItem(array) {
+
+    return array[
+        Math.floor(
+            Math.random() *
+            array.length
+        )
+    ];
+
+}
+
+
+function showFeedback(correct) {
+
+    const overlay =
+        document.getElementById(
+            "feedbackOverlay"
+        );
+
+
+    const image =
+        document.getElementById(
+            "feedbackGif"
+        );
+
+
+    const heading =
+        document.getElementById(
+            "feedbackHeading"
+        );
+
+
+    const message =
+        document.getElementById(
+            "feedbackMessage"
+        );
+
+
+    const sub =
+        document.getElementById(
+            "feedbackSub"
+        );
+
+
+    if (correct) {
+
+        image.src =
+            randomItem(
+                happyGifs
+            );
+
+
+        heading.innerText =
+            "🎉 AMAZING!";
+
+
+        message.innerText =
+            randomItem([
+                "You solved it!",
+                "Fantastic maths!",
+                "Jerry is celebrating!",
+                "Brilliant work!",
+                "Tom didn't catch you!"
+            ]);
+
+
+        sub.innerText =
+            "You completed the whole long-division problem.";
+
+    }
+
+    else {
+
+        image.src =
+            randomItem(
+                wrongGifs
+            );
+
+
+        heading.innerText =
+            "😹 OOPS!";
+
+
+        message.innerText =
+            randomItem([
+                "Try that step again!",
+                "Almost there!",
+                "Check your calculation!",
+                "Tom thinks you made a mistake!",
+                "Have another look!"
+            ]);
+
+
+        sub.innerText =
+            "Use your scratchpad and try again.";
+
+    }
+
+
+    overlay.classList.add(
+        "show"
+    );
+
+}
+
+
+function closeFeedback() {
+
+    document
+        .getElementById(
+            "feedbackOverlay"
+        )
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+const canvas =
+    document.getElementById(
+        "scratchCanvas"
+    );
+
+
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+
+let drawing = false;
+
+let currentColor =
+    "#111111";
+
+let currentTool =
+    "pen";
+
+let currentStrokeWidth =
+    4;
+
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    const ratio =
+        window.devicePixelRatio || 1;
+
+
+    canvas.width =
+        rect.width * ratio;
+
+
+    canvas.height =
+        rect.height * ratio;
+
+
+    ctx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
+}
+
+
+function getPosition(event) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    return {
+
+        x:
+            event.clientX -
+            rect.left,
+
+        y:
+            event.clientY -
+            rect.top
+
+    };
+
+}
+
+
+function startDrawing(event) {
+
+    drawing =
+        true;
+
+
+    const pos =
+        getPosition(
+            event
+        );
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+
+    canvas.setPointerCapture(
+        event.pointerId
+    );
+
+}
+
+
+function draw(event) {
+
+    if (!drawing) {
+
+        return;
+
+    }
+
+
+    const pos =
+        getPosition(
+            event
+        );
+
+
+    ctx.lineWidth =
+        currentStrokeWidth;
+
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.lineJoin =
+        "round";
+
+
+    if (
+        currentTool ===
+        "eraser"
+    ) {
+
+        ctx.globalCompositeOperation =
+            "destination-out";
+
+    }
+
+    else {
+
+        ctx.globalCompositeOperation =
+            "source-over";
+
+        ctx.strokeStyle =
+            currentColor;
+
+    }
+
+
+    ctx.lineTo(
+        pos.x,
+        pos.y
+    );
+
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+}
+
+
+function stopDrawing() {
+
+    drawing =
+        false;
+
+
+    ctx.beginPath();
+
+
+    ctx.globalCompositeOperation =
+        "source-over";
+
+}
+
+
+canvas.addEventListener(
+    "pointerdown",
+    startDrawing
+);
+
+canvas.addEventListener(
+    "pointermove",
+    draw
+);
+
+canvas.addEventListener(
+    "pointerup",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointercancel",
+    stopDrawing
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopDrawing
+);
+
+
+function setTool(tool) {
+
+    currentTool =
+        tool;
+
+
+    document
+        .getElementById(
+            "penTool"
+        )
+        .classList.toggle(
+            "active",
+            tool === "pen"
+        );
+
+
+    document
+        .getElementById(
+            "eraserTool"
+        )
+        .classList.toggle(
+            "active",
+            tool === "eraser"
+        );
+
+}
+
+
+function setColor(color) {
+
+    currentColor =
+        color;
+
+
+    setTool(
+        "pen"
+    );
+
+}
+
+
+function changeStrokeWidth() {
+
+    currentStrokeWidth =
+        Number(
+            document
+                .getElementById(
+                    "strokeWidth"
+                )
+                .value
+        );
+
+}
+
+
+function clearScratchpad() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+}
+
+
+/* =========================================================
+   MODAL EVENTS
+========================================================= */
+
+document
+    .getElementById(
+        "feedbackOverlay"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target.id ===
+                "feedbackOverlay"
+            ) {
+
+                closeFeedback();
+
+            }
+
+        }
+    );
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            closeFeedback();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+resizeCanvas();
+
+initProblem();
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+</script>
+
+</body>
+</html>

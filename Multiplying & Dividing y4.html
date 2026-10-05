@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tom & Jerry Math Adventure!</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root{
+    --cheese:#FFCC00;
+    --tom:#708090;
+    --jerry:#8B4513;
+    --sky:#55BCEB;
+    --sky-light:#E5F7FF;
+    --red:#E53935;
+    --green:#39A85A;
+    --green-light:#DDF6E4;
+    --orange:#F7931E;
+    --purple:#9B59B6;
+    --pink:#FF8FA3;
+    --white:#FFFFFF;
+    --cream:#FFFBEA;
+    --black:#000000;
+    --shadow:6px 6px 0 #000;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:"Fredoka",sans-serif;
+    color:#171717;
+    background:
+        radial-gradient(circle at 5% 15%,rgba(255,204,0,.35) 0 5px,transparent 6px),
+        radial-gradient(circle at 95% 25%,rgba(85,188,235,.25) 0 6px,transparent 7px),
+        radial-gradient(circle at 20% 90%,rgba(139,69,19,.12) 0 5px,transparent 6px),
+        linear-gradient(135deg,#FFF9D9,#F4FCFF);
+    min-height:100vh;
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--cheese);
+    border-bottom:4px solid #000;
+    box-shadow:0 4px 0 rgba(0,0,0,.15);
+}
+
+.header-inner{
+    max-width:1250px;
+    margin:auto;
+    padding:13px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.mouse-logo{
+    width:58px;
+    height:58px;
+    border:4px solid #000;
+    border-radius:50%;
+    background:var(--tom);
+    position:relative;
+    box-shadow:4px 4px 0 #000;
+}
+
+.mouse-logo:before,
+.mouse-logo:after{
+    content:"";
+    position:absolute;
+    width:27px;
+    height:27px;
+    border:4px solid #000;
+    border-radius:50%;
+    background:#8FA0AD;
+    top:-15px;
+}
+
+.mouse-logo:before{
+    left:-7px;
+}
+
+.mouse-logo:after{
+    right:-7px;
+}
+
+.mouse-eye{
+    position:absolute;
+    top:21px;
+    width:8px;
+    height:11px;
+    border-radius:50%;
+    background:#000;
+}
+
+.mouse-eye.left{
+    left:16px;
+}
+
+.mouse-eye.right{
+    right:16px;
+}
+
+.brand h1{
+    font-family:"Baloo 2",sans-serif;
+    font-size:31px;
+    margin:0;
+    line-height:1;
+    font-weight:800;
+}
+
+.brand p{
+    margin:4px 0 0;
+    font-size:13px;
+    font-weight:600;
+}
+
+.score-panel{
+    background:#fff;
+    border:3px solid #000;
+    border-radius:16px;
+    padding:7px 16px;
+    box-shadow:4px 4px 0 #000;
+    min-width:155px;
+    text-align:center;
+}
+
+.score-panel .score-label{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.score-panel strong{
+    display:block;
+    font-size:25px;
+    color:var(--jerry);
+}
+
+/* ================= MAIN ================= */
+
+main{
+    max-width:1250px;
+    margin:auto;
+    padding:28px 18px 80px;
+}
+
+.hero{
+    background:#fff;
+    border:4px solid #000;
+    border-radius:25px;
+    box-shadow:var(--shadow);
+    padding:25px;
+    margin-bottom:30px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:center;
+    gap:25px;
+}
+
+.hero h2{
+    font-family:"Baloo 2",sans-serif;
+    font-size:42px;
+    color:var(--tom);
+    margin:0 0 4px;
+    line-height:1;
+}
+
+.hero p{
+    margin:10px 0 0;
+    font-size:18px;
+    line-height:1.5;
+}
+
+.cheese-decoration{
+    width:145px;
+    height:100px;
+    background:var(--cheese);
+    border:5px solid #000;
+    border-radius:20px 40px 30px 25px;
+    transform:rotate(-6deg);
+    position:relative;
+}
+
+.hole{
+    position:absolute;
+    border:3px solid #000;
+    background:#E5A900;
+    border-radius:50%;
+}
+
+.hole.h1{
+    width:20px;
+    height:20px;
+    left:25px;
+    top:20px;
+}
+
+.hole.h2{
+    width:14px;
+    height:14px;
+    right:22px;
+    top:30px;
+}
+
+.hole.h3{
+    width:23px;
+    height:23px;
+    left:60px;
+    bottom:15px;
+}
+
+.hole.h4{
+    width:11px;
+    height:11px;
+    right:35px;
+    bottom:12px;
+}
+
+/* ================= SECTIONS ================= */
+
+.section{
+    margin-bottom:35px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.section-number{
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    border:3px solid #000;
+    border-radius:50%;
+    background:var(--cheese);
+    font-size:22px;
+    font-weight:800;
+    box-shadow:3px 3px 0 #000;
+}
+
+.section-title h2{
+    margin:0;
+    font-family:"Baloo 2",sans-serif;
+    font-size:30px;
+}
+
+.card{
+    background:#fff;
+    border:3px solid #000;
+    border-radius:21px;
+    box-shadow:var(--shadow);
+    padding:22px;
+    margin-bottom:25px;
+}
+
+.card h3{
+    font-size:24px;
+    margin:0 0 8px;
+    color:var(--jerry);
+}
+
+.card p{
+    line-height:1.5;
+}
+
+.instructions{
+    background:#FFF6C4;
+    border:3px dashed #000;
+    border-radius:14px;
+    padding:12px 15px;
+    margin:15px 0;
+}
+
+.question{
+    background:#FAFAFA;
+    border:3px solid #000;
+    border-radius:16px;
+    padding:15px;
+    margin:12px 0;
+    font-size:19px;
+    line-height:1.8;
+}
+
+.answer{
+    width:72px;
+    height:40px;
+    border:3px solid #000;
+    border-radius:10px;
+    background:#fff;
+    text-align:center;
+    font-size:18px;
+    font-weight:700;
+    outline:none;
+    vertical-align:middle;
+    transition:.15s;
+}
+
+.answer:focus{
+    border-color:var(--sky);
+    box-shadow:0 0 0 3px rgba(85,188,235,.25);
+}
+
+.answer.correct{
+    border-color:#168A3D;
+    background:var(--green-light);
+}
+
+.answer.incorrect{
+    border-color:#D51F1F;
+    background:#FFE1E1;
+}
+
+.currency-input{
+    width:82px;
+}
+
+.btn{
+    border:3px solid #000;
+    border-radius:13px;
+    padding:10px 18px;
+    background:var(--cheese);
+    font-size:16px;
+    font-weight:800;
+    box-shadow:4px 4px 0 #000;
+    transition:.15s;
+}
+
+.btn:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:6px 6px 0 #000;
+}
+
+.btn:active{
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 #000;
+}
+
+.btn.blue{
+    background:var(--sky);
+}
+
+.feedback{
+    min-height:26px;
+    margin-top:12px;
+    font-weight:700;
+}
+
+.feedback.good{
+    color:#168A3D;
+}
+
+.feedback.bad{
+    color:#C62828;
+}
+
+/* ================= RED COUNTERS ================= */
+
+.counter-array{
+    display:grid;
+    grid-template-columns:repeat(10,30px);
+    gap:9px;
+    justify-content:center;
+    padding:22px;
+    background:var(--sky-light);
+    border:3px solid #000;
+    border-radius:17px;
+    margin:18px auto;
+    max-width:460px;
+}
+
+.counter{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#FF7777,#E53935 55%,#A71919);
+    border:3px solid #000;
+    box-shadow:2px 2px 0 #000;
+}
+
+/* ================= BASE 10 ================= */
+
+.base10-board{
+    background:#F2FBFF;
+    border:3px solid #000;
+    border-radius:17px;
+    padding:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:35px;
+}
+
+.hundred-flat{
+    width:170px;
+    height:170px;
+    background:#6BCB77;
+    border:4px solid #000;
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    grid-template-rows:repeat(10,1fr);
+}
+
+.hundred-flat span{
+    border:1px solid rgba(0,0,0,.45);
+}
+
+.rods{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    max-width:400px;
+    justify-content:center;
+}
+
+.rod{
+    width:25px;
+    height:145px;
+    background:var(--cheese);
+    border:3px solid #000;
+    border-radius:4px;
+    display:flex;
+    flex-direction:column;
+}
+
+.rod span{
+    flex:1;
+    border-bottom:1px solid rgba(0,0,0,.35);
+}
+
+.base10-label{
+    width:100%;
+    text-align:center;
+    font-size:19px;
+    font-weight:700;
+}
+
+/* ================= PLACE VALUE ================= */
+
+.pv-container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:15px;
+}
+
+.place-table{
+    border-collapse:collapse;
+    background:#fff;
+    width:min(600px,100%);
+}
+
+.place-table th,
+.place-table td{
+    border:3px solid #000;
+    text-align:center;
+    padding:10px;
+}
+
+.place-table th{
+    background:var(--tom);
+    color:#fff;
+    font-size:20px;
+}
+
+.place-dots{
+    min-height:55px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.pv-dot{
+    width:19px;
+    height:19px;
+    background:var(--red);
+    border:2px solid #000;
+    border-radius:50%;
+}
+
+.arrow-down{
+    background:var(--cheese);
+    border:3px solid #000;
+    border-radius:15px;
+    padding:7px 22px;
+    font-weight:800;
+    font-size:18px;
+}
+
+/* ================= MONEY ================= */
+
+.money-box{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:15px;
+    background:#FFF7D5;
+    border:3px solid #000;
+    border-radius:15px;
+}
+
+.coin{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#FFD84A;
+    border:3px solid #000;
+    display:grid;
+    place-items:center;
+    font-weight:800;
+    font-size:12px;
+    box-shadow:2px 2px 0 #000;
+}
+
+/* ================= FUNCTION MACHINES ================= */
+
+.machine-list{
+    display:grid;
+    gap:15px;
+    margin:18px 0;
+}
+
+.machine{
+    display:grid;
+    grid-template-columns:1fr 100px 1fr;
+    align-items:center;
+    gap:10px;
+    background:#F3FBFF;
+    border:3px solid #000;
+    border-radius:15px;
+    padding:12px;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+}
+
+.machine-box{
+    border:3px solid #000;
+    background:#fff;
+    border-radius:10px;
+    padding:10px;
+}
+
+.machine-operation{
+    background:var(--cheese);
+    border:3px solid #000;
+    border-radius:50%;
+    width:65px;
+    height:65px;
+    display:grid;
+    place-items:center;
+    margin:auto;
+    font-size:22px;
+}
+
+/* ================= SCALE PLAN ================= */
+
+.room-wrap{
+    background:#FFF9E0;
+    border:3px solid #000;
+    border-radius:16px;
+    padding:25px;
+    display:flex;
+    justify-content:center;
+}
+
+.room{
+    width:min(500px,80%);
+    aspect-ratio:3/1;
+    background:#F7931E;
+    border:5px solid #000;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    font-weight:800;
+}
+
+.room .length-label{
+    position:absolute;
+    top:-40px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.room .width-label{
+    position:absolute;
+    right:-75px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+/* ================= BALLOON ================= */
+
+.balloon-area{
+    min-height:280px;
+    background:#F8F2FF;
+    border:3px solid #000;
+    border-radius:17px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:50px;
+    flex-wrap:wrap;
+    padding:20px;
+}
+
+.balloon-group{
+    text-align:center;
+    font-weight:700;
+}
+
+.balloon{
+    width:75px;
+    height:95px;
+    background:var(--purple);
+    border:4px solid #000;
+    border-radius:50% 50% 45% 45%;
+    position:relative;
+    margin:auto;
+    box-shadow:4px 4px 0 #000;
+}
+
+.balloon:before{
+    content:"";
+    position:absolute;
+    bottom:-15px;
+    left:28px;
+    border-left:8px solid transparent;
+    border-right:8px solid transparent;
+    border-top:15px solid #000;
+}
+
+.balloon:after{
+    content:"";
+    position:absolute;
+    width:2px;
+    height:75px;
+    background:#000;
+    left:50%;
+    top:94px;
+}
+
+.balloon-number{
+    margin-top:80px;
+    font-size:18px;
+}
+
+/* ================= ORANGES ================= */
+
+.orange-array{
+    display:grid;
+    grid-template-columns:repeat(4,52px);
+    gap:12px;
+    justify-content:center;
+    background:#FFF7E7;
+    border:3px solid #000;
+    border-radius:17px;
+    padding:20px;
+    margin:15px auto;
+    width:max-content;
+    max-width:100%;
+}
+
+.orange{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#FFB347,#F7931E 60%,#C75B00);
+    border:3px solid #000;
+    position:relative;
+}
+
+.orange:after{
+    content:"";
+    position:absolute;
+    width:8px;
+    height:5px;
+    background:#3D7A2E;
+    border:2px solid #000;
+    border-radius:50%;
+    top:-5px;
+    left:20px;
+}
+
+/* ================= NUMBER TRACK ================= */
+
+.number-track{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:15px 0;
+}
+
+.track-number{
+    min-width:58px;
+    min-height:45px;
+    padding:7px 10px;
+    border:3px solid #000;
+    border-radius:10px;
+    background:#fff;
+    display:grid;
+    place-items:center;
+    font-size:18px;
+    font-weight:700;
+}
+
+.track-number.missing{
+    background:#FFF2A8;
+}
+
+.track-input{
+    width:60px;
+    height:38px;
+    border:0;
+    border-bottom:3px solid #000;
+    background:transparent;
+    text-align:center;
+    font-size:18px;
+    font-weight:800;
+    outline:none;
+}
+
+/* ================= BAR MODELS ================= */
+
+.bar-model{
+    margin:20px 0;
+    background:#F7FCFF;
+    border:3px solid #000;
+    border-radius:16px;
+    padding:18px;
+}
+
+.bar{
+    display:flex;
+    height:70px;
+    border:4px solid #000;
+    border-radius:8px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.bar-part{
+    flex:1;
+    background:#FFDA4D;
+    border-right:3px solid #000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    font-weight:800;
+}
+
+.bar-part:last-child{
+    border-right:0;
+}
+
+/* ================= RADIO ================= */
+
+.radio-choice{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:15px 0;
+}
+
+.radio-card{
+    border:3px solid #000;
+    border-radius:13px;
+    padding:12px 16px;
+    background:#fff;
+    font-weight:700;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.radio-card.selected{
+    background:var(--cheese);
+    transform:translateY(-2px);
+    box-shadow:3px 3px 0 #000;
+}
+
+.radio-card.correct{
+    background:var(--green-light);
+    border-color:#168A3D;
+}
+
+.radio-card.incorrect{
+    background:#FFE1E1;
+    border-color:#D51F1F;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal.show{
+    display:flex;
+    animation:fadeIn .2s ease;
+}
+
+.modal-card{
+    width:min(500px,100%);
+    background:#fff;
+    border:5px solid #000;
+    border-radius:25px;
+    box-shadow:10px 10px 0 #000;
+    text-align:center;
+    padding:20px;
+    position:relative;
+}
+
+.modal-card h2{
+    font-family:"Baloo 2",sans-serif;
+    font-size:35px;
+    margin:0;
+}
+
+.modal-card img{
+    width:100%;
+    max-width:350px;
+    height:230px;
+    object-fit:contain;
+    border:3px solid #000;
+    border-radius:15px;
+    background:#eee;
+    margin:12px 0;
+}
+
+.modal-card p{
+    font-size:18px;
+}
+
+.modal-close{
+    position:absolute;
+    top:9px;
+    right:10px;
+    width:40px;
+    height:40px;
+    border:3px solid #000;
+    border-radius:50%;
+    background:#FF8A8A;
+    font-size:23px;
+    font-weight:800;
+}
+
+/* ================= COMPLETION ================= */
+
+.completed-banner{
+    background:var(--green-light);
+    border:3px solid #000;
+    border-radius:15px;
+    padding:14px;
+    margin-bottom:25px;
+    font-weight:700;
+    text-align:center;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:scale(.9);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.pop{
+    animation:pop .3s ease;
+}
+
+@keyframes pop{
+    50%{
+        transform:scale(1.08);
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:750px){
+
+    .header-inner{
+        padding:10px 12px;
+    }
+
+    .brand h1{
+        font-size:23px;
+    }
+
+    .brand p{
+        display:none;
+    }
+
+    .mouse-logo{
+        width:48px;
+        height:48px;
+    }
+
+    .score-panel{
+        min-width:115px;
+        padding:5px 10px;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .hero h2{
+        font-size:34px;
+    }
+
+    .cheese-decoration{
+        margin:auto;
+    }
+
+    .machine{
+        grid-template-columns:1fr;
+    }
+
+    .machine-operation{
+        transform:rotate(90deg);
+    }
+
+    .room .width-label{
+        right:-55px;
+        font-size:16px;
+    }
+}
+
+@media(max-width:480px){
+
+    main{
+        padding:18px 10px 60px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .section-title h2{
+        font-size:24px;
+    }
+
+    .question{
+        font-size:17px;
+    }
+
+    .answer{
+        width:62px;
+    }
+
+    .counter-array{
+        grid-template-columns:repeat(5,30px);
+    }
+
+    .balloon-area{
+        gap:25px;
+    }
+
+    .orange-array{
+        grid-template-columns:repeat(4,48px);
+        gap:7px;
+    }
+
+    .orange{
+        width:44px;
+        height:44px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <div class="mouse-logo">
+                <div class="mouse-eye left"></div>
+                <div class="mouse-eye right"></div>
+            </div>
+
+            <div>
+                <h1>Tom & Jerry Math Adventure!</h1>
+                <p>Multiplication • Division • Multiples • Fact Families</p>
+            </div>
+
+        </div>
+
+        <div class="score-panel">
+            <div class="score-label">Completed</div>
+            <strong id="scoreDisplay">0 / 12</strong>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <div class="hero">
+
+        <div>
+
+            <h2>🐭 Let's Go on a Math Adventure!</h2>
+
+            <p>
+                Help Tom and Jerry solve the mystery numbers.
+                Complete each activity and check your answer.
+            </p>
+
+        </div>
+
+        <div class="cheese-decoration">
+            <div class="hole h1"></div>
+            <div class="hole h2"></div>
+            <div class="hole h3"></div>
+            <div class="hole h4"></div>
+        </div>
+
+    </div>
+
+
+    <div id="completionBanner" class="completed-banner" style="display:none;">
+        🎉 Amazing! You completed the whole Math Adventure!
+    </div>
+
+
+    <!-- =====================================================
+         SECTION 1
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div class="section-number">1</div>
+            <h2>Multiplying & Dividing by 10</h2>
+        </div>
+
+
+        <!-- ACTIVITY 1 -->
+
+        <div class="card activity-card" id="activity1">
+
+            <h3>🔴 1. Array Division — 50 Counters</h3>
+
+            <p>
+                Look at the array. There are
+                <strong>5 rows</strong> with
+                <strong>10 counters</strong> in each row.
+            </p>
+
+            <div class="counter-array" id="counterArray"></div>
+
+            <div class="question">
+
+                50 =
+                <input class="answer" data-answer="5">
+
+                groups of 10.
+
+                <br>
+
+                50 ÷ 10 =
+                <input class="answer" data-answer="5">
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity1')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 2 -->
+
+        <div class="card activity-card" id="activity2">
+
+            <h3>✏️ 2. Array Practice Calculations</h3>
+
+            <div class="question">
+
+                30 ÷ 10 =
+                <input class="answer" data-answer="3">
+
+                <br>
+
+                40 ÷ 10 =
+                <input class="answer" data-answer="4">
+
+                <br>
+
+                <input class="answer" data-answer="1">
+                = 10 ÷ 10
+
+                <br>
+
+                <input class="answer" data-answer="2">
+                = 20 ÷ 10
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity2')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 3 -->
+
+        <div class="card activity-card" id="activity3">
+
+            <h3>🟩 3. Base-10 Block Visuals</h3>
+
+            <div class="instructions">
+                One hundred flat = 100.
+                One ten rod = 10.
+                So 14 tens = 140!
+            </div>
+
+            <div class="base10-board">
+
+                <div>
+
+                    <div class="hundred-flat" id="hundredFlat"></div>
+
+                    <div style="text-align:center;font-weight:800;margin-top:7px;">
+                        1 hundred
+                    </div>
+
+                </div>
+
+                <div class="rods" id="fourRods"></div>
+
+                <div class="base10-label">
+                    140 = 1 hundred and 4 tens = 14 tens
+                </div>
+
+            </div>
+
+            <div class="question">
+
+                120 ÷ 10 =
+                <input class="answer" data-answer="12">
+
+                <br>
+
+                170 ÷ 10 =
+                <input class="answer" data-answer="17">
+
+                <br>
+
+                <input class="answer" data-answer="23">
+                = 230 ÷ 10
+
+                <br>
+
+                <input class="answer" data-answer="26">
+                = 260 ÷ 10
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity3')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 4 -->
+
+        <div class="card activity-card" id="activity4">
+
+            <h3>⬇️ 4. Place Value Chart — Jack's Method</h3>
+
+            <div class="instructions">
+                When we divide by 10, every digit moves one place to the right.
+            </div>
+
+            <div class="pv-container">
+
+                <table class="place-table">
+
+                    <tr>
+                        <th>H</th>
+                        <th>T</th>
+                        <th>O</th>
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <div class="place-dots">
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                            </div>
+                            3
+                        </td>
+
+                        <td>
+                            <div class="place-dots">
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                            </div>
+                            4
+                        </td>
+
+                        <td>0</td>
+
+                    </tr>
+
+                    <tr>
+                        <td colspan="3">
+                            <strong>340</strong>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+                <div class="arrow-down">
+                    ↓ ÷ 10 ↓
+                </div>
+
+
+                <table class="place-table">
+
+                    <tr>
+                        <th>H</th>
+                        <th>T</th>
+                        <th>O</th>
+                    </tr>
+
+                    <tr>
+
+                        <td>0</td>
+
+                        <td>
+                            <div class="place-dots">
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                            </div>
+                            3
+                        </td>
+
+                        <td>
+                            <div class="place-dots">
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                                <span class="pv-dot"></span>
+                            </div>
+                            4
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td colspan="3">
+                            <strong>34</strong>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="question">
+
+                480 ÷ 10 =
+                <input class="answer" data-answer="48">
+
+                <br>
+
+                620 ÷ 10 =
+                <input class="answer" data-answer="62">
+
+                <br>
+
+                930 ÷ 10 =
+                <input class="answer" data-answer="93">
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity4')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 5 -->
+
+        <div class="card activity-card" id="activity5">
+
+            <h3>💷 5. Money Word Problems</h3>
+
+            <div class="money-box">
+
+                <div class="coin">£1</div>
+                <div class="coin">£1</div>
+                <div class="coin">£1</div>
+                <div class="coin">£1</div>
+
+                <div style="font-weight:800;">
+                    ... 20 coins!
+                </div>
+
+            </div>
+
+            <div class="question">
+
+                Ten friends share twenty £1 coins equally.
+
+                <br>
+
+                Each friend gets £
+                <input class="answer currency-input" data-answer="2">
+
+                <br><br>
+
+                If the box has £120:
+
+                <br>
+
+                Each friend gets £
+                <input class="answer currency-input" data-answer="12">
+
+                <br><br>
+
+                If each friend receives 90p:
+
+                <br>
+
+                Total money =
+                <input class="answer currency-input" data-answer="900">
+                p
+
+                or £
+                <input class="answer currency-input" data-answer="9">
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity5')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECTION 2
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div class="section-number">2</div>
+            <h2>Multiples of 10 & 100 Word Problems</h2>
+        </div>
+
+
+        <!-- ACTIVITY 6 -->
+
+        <div class="card activity-card" id="activity6">
+
+            <h3>⚙️ 6. Function Machines</h3>
+
+            <p>
+                Which function machine does
+                <strong>NOT</strong> multiply by 100?
+            </p>
+
+            <div class="machine-list">
+
+                <div class="machine">
+
+                    <div class="machine-box">
+                        3p
+                    </div>
+
+                    <div class="machine-operation">
+                        × ?
+                    </div>
+
+                    <div class="machine-box">
+                        £3
+                    </div>
+
+                </div>
+
+
+                <div class="machine">
+
+                    <div class="machine-box">
+                        15p
+                    </div>
+
+                    <div class="machine-operation">
+                        × ?
+                    </div>
+
+                    <div class="machine-box">
+                        £1.50
+                    </div>
+
+                </div>
+
+
+                <div class="machine">
+
+                    <div class="machine-box">
+                        30p
+                    </div>
+
+                    <div class="machine-operation">
+                        × ?
+                    </div>
+
+                    <div class="machine-box">
+                        £30
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="radio-choice">
+
+                <div class="radio-card" data-value="1">
+                    Machine 1
+                </div>
+
+                <div class="radio-card" data-value="2">
+                    Machine 2
+                </div>
+
+                <div class="radio-card" data-value="3">
+                    Machine 3
+                </div>
+
+            </div>
+
+
+            <button class="btn" onclick="checkActivity6()">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 7 -->
+
+        <div class="card activity-card" id="activity7">
+
+            <h3>📐 7. Scale Plan Room</h3>
+
+            <p>
+                The plan is 6 cm long and 2 cm wide.
+                The real room is 100 times the size.
+            </p>
+
+            <div class="room-wrap">
+
+                <div class="room">
+
+                    <span class="length-label">
+                        6 cm
+                    </span>
+
+                    ROOM
+
+                    <span class="width-label">
+                        2 cm
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="question">
+
+                Actual length =
+                <input class="answer" data-answer="6">
+                m
+
+                <br>
+
+                Actual width =
+                <input class="answer" data-answer="2">
+                m
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity7')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 8 -->
+
+        <div class="card activity-card" id="activity8">
+
+            <h3>🎈 8. Balloon Word Problem</h3>
+
+            <div class="balloon-area">
+
+                <div class="balloon-group">
+
+                    <div class="balloon"></div>
+
+                    <div class="balloon-number">
+                        Huan: 4
+                    </div>
+
+                </div>
+
+
+                <div class="balloon-group">
+
+                    <div
+                        class="balloon"
+                        style="background:#55BCEB;"
+                    ></div>
+
+                    <div class="balloon-number">
+                        Brett: 40
+                    </div>
+
+                </div>
+
+
+                <div class="balloon-group">
+
+                    <div
+                        class="balloon"
+                        style="background:#F7931E;"
+                    ></div>
+
+                    <div class="balloon-number">
+                        Nijah: 400
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="question">
+
+                Huan has 4 balloons.<br>
+
+                Brett has 10 times as many: 40.<br>
+
+                Nijah has 100 times as many: 400.
+
+                <br><br>
+
+                How many balloons do they have altogether?
+
+                <br>
+
+                <input class="answer" data-answer="444">
+                balloons
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity8')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECTION 3
+    ====================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>Multiples of 9 & Fact Families</h2>
+        </div>
+
+
+        <!-- ACTIVITY 9 -->
+
+        <div class="card activity-card" id="activity9">
+
+            <h3>🍊 9. Orange Array & Division</h3>
+
+            <p>
+                Count the oranges carefully.
+                There are 6 rows with 4 oranges in each row.
+            </p>
+
+            <div class="orange-array" id="orangeArray"></div>
+
+
+            <div class="question">
+
+                There are
+                <input class="answer" data-answer="6">
+                rows of 4 oranges.
+
+                <br>
+
+                There are
+                <input class="answer" data-answer="24">
+                oranges in total.
+
+                <br>
+
+                <input class="answer" data-answer="6">
+                ×
+                <input class="answer" data-answer="4">
+                =
+                <input class="answer" data-answer="24">
+
+                <br><br>
+
+                36 oranges are shared into 9 boxes.
+
+                <br>
+
+                There are
+                <input class="answer" data-answer="4">
+                oranges in each box.
+
+            </div>
+
+            <button class="btn" onclick="checkActivity('activity9')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 10 -->
+
+        <div class="card activity-card" id="activity10">
+
+            <h3>🔢 10. Number Tracks & Sequences</h3>
+
+            <p>
+                <strong>Track 1 — Count in 9s:</strong>
+            </p>
+
+            <div class="number-track">
+
+                <div class="track-number">9</div>
+                <div class="track-number">18</div>
+                <div class="track-number">27</div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="36"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="45"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="54"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="63"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="72"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="81"
+                    >
+                </div>
+
+            </div>
+
+
+            <p>
+                <strong>Track 2:</strong>
+            </p>
+
+            <div class="number-track">
+
+                <div class="track-number">18</div>
+
+                <div class="track-number">27</div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="36"
+                    >
+                </div>
+
+                <div class="track-number">45</div>
+
+                <div class="track-number">54</div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="63"
+                    >
+                </div>
+
+                <div class="track-number">72</div>
+
+                <div class="track-number">81</div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="90"
+                    >
+                </div>
+
+                <div class="track-number missing">
+                    <input
+                        class="track-input"
+                        data-answer="99"
+                    >
+                </div>
+
+                <div class="track-number">108</div>
+
+            </div>
+
+
+            <button class="btn" onclick="checkActivity('activity10')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 11 -->
+
+        <div class="card activity-card" id="activity11">
+
+            <h3>🧠 11. Annie's Strategy</h3>
+
+            <div class="instructions">
+                Annie knows that:
+                <strong>9 × N = 10 × N − N</strong>
+            </div>
+
+
+            <div class="question">
+
+                9 × 3 =
+                10 ×
+                <input class="answer" data-answer="3">
+                −
+                <input class="answer" data-answer="3">
+
+                <br>
+
+                9 × 6 =
+                10 ×
+                <input class="answer" data-answer="6">
+                −
+                <input class="answer" data-answer="6">
+
+                <br>
+
+                9 × 8 =
+                10 ×
+                <input class="answer" data-answer="8">
+                −
+                <input class="answer" data-answer="8">
+
+                <br>
+
+                9 × 9 =
+                10 ×
+                <input class="answer" data-answer="9">
+                −
+                <input class="answer" data-answer="9">
+
+            </div>
+
+
+            <button class="btn" onclick="checkActivity('activity11')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY 12 -->
+
+        <div class="card activity-card" id="activity12">
+
+            <h3>📊 12. Bar Models</h3>
+
+
+            <div class="bar-model">
+
+                <strong>
+                    Model 1: 63 split into 9 equal parts
+                </strong>
+
+                <div class="bar">
+
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+                    <div class="bar-part">?</div>
+
+                </div>
+
+                63 ÷ 9 =
+                <input class="answer" data-answer="7">
+
+            </div>
+
+
+            <div class="bar-model">
+
+                <strong>
+                    Model 2: 9 units of 5
+                </strong>
+
+                <div class="bar">
+
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+                    <div class="bar-part">5</div>
+
+                </div>
+
+                Total =
+                <input class="answer" data-answer="45">
+
+            </div>
+
+
+            <button class="btn" onclick="checkActivity('activity12')">
+                🔎 Check Answer
+            </button>
+
+            <div class="feedback"></div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     GIF FEEDBACK MODAL
+========================================================= -->
+
+<div class="modal" id="feedbackModal">
+
+    <div class="modal-card">
+
+        <button
+            class="modal-close"
+            onclick="closeModal()"
+        >
+            ×
+        </button>
+
+        <h2 id="modalTitle">
+            Great Job!
+        </h2>
+
+        <img
+            id="modalGif"
+            src=""
+            alt="Tom and Jerry feedback"
+        >
+
+        <p id="modalMessage">
+            Keep going!
+        </p>
+
+        <button
+            class="btn"
+            onclick="closeModal()"
+        >
+            Continue 🧀
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   GIF ARRAYS
+============================================================ */
+
+const happyGifs = [
+    "https://th.bing.com/th/id/OIP.rLm6iAIjx6iGrNp9ZkA3pgHaFa?w=227&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+    "https://media.giphy.com/media/SjxtmBS267NOU/giphy.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif.gif",
+    "https://www.gifcen.com/wp-content/uploads/2021/09/tom-and-jerry-gif-12.gif",
+    "https://www.icegif.com/wp-content/uploads/tom-and-jerry-icegif-25.gif"
+];
+
+const wrongGifs = [
+    "https://gifdb.com/images/thumbnail/jerry-from-tom-and-jerry-is-giving-a-thumbs-up-and-smiling-5z4rxy4jx7v1o7am.gif",
+    "https://media.giphy.com/media/KicQlFsDHdhAs/giphy.gif",
+    "https://media.giphy.com/media/MLHzHuG02FVUQ/giphy.gif",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGo1b2Q5NXd0ZjdwMHFoMm5idWwxcWxwcm0ycXM1bzFmanMzYzBuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/89JYxSZmqebwJNUzLe/giphy.gif",
+    "https://gifdb.com/images/high/mad-angry-tom-2jyv5oslyy49z7dq.gif",
+    "https://gifdb.com/images/high/tom-and-jerry-blowing-dynamite-fail-v4kgczzwvxt1c4vw.gif"
+];
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+const completedActivities = new Set();
+
+let selectedMachine = null;
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function normalize(value){
+
+    return String(value)
+        .trim()
+        .replace(/\s+/g,"")
+        .toLowerCase();
+
+}
+
+
+function randomItem(array){
+
+    return array[
+        Math.floor(Math.random()*array.length)
+    ];
+
+}
+
+
+function markInput(input,correct){
+
+    input.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    if(correct){
+
+        input.classList.add("correct");
+
+    }else{
+
+        input.classList.add("incorrect");
+
+    }
+
+}
+
+
+/* ============================================================
+   SCORE
+============================================================ */
+
+function updateScore(){
+
+    const score =
+        completedActivities.size;
+
+    document.getElementById("scoreDisplay")
+        .textContent = score + " / 12";
+
+
+    if(score === 12){
+
+        const banner =
+            document.getElementById("completionBanner");
+
+        banner.style.display = "block";
+
+        banner.classList.remove("pop");
+
+        void banner.offsetWidth;
+
+        banner.classList.add("pop");
+
+    }
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+function showModal(correct,message){
+
+    const modal =
+        document.getElementById("feedbackModal");
+
+    const title =
+        document.getElementById("modalTitle");
+
+    const gif =
+        document.getElementById("modalGif");
+
+    const text =
+        document.getElementById("modalMessage");
+
+
+    if(correct){
+
+        title.textContent =
+            "🎉 Fantastic!";
+
+        gif.src =
+            randomItem(happyGifs);
+
+        text.textContent =
+            message ||
+            "You got it right!";
+
+    }else{
+
+        title.textContent =
+            "😹 Oops!";
+
+        gif.src =
+            randomItem(wrongGifs);
+
+        text.textContent =
+            message ||
+            "Have another look and try again!";
+
+    }
+
+
+    modal.classList.add("show");
+
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("feedbackModal")
+        .classList.remove("show");
+
+}
+
+
+/* ============================================================
+   UNIVERSAL ACTIVITY CHECKER
+   IMPORTANT:
+   It ONLY checks inputs inside the selected activity.
+============================================================ */
+
+function checkActivity(activityId){
+
+    const activity =
+        document.getElementById(activityId);
+
+    if(!activity){
+        return;
+    }
+
+
+    /*
+        CRITICAL:
+        querySelectorAll is performed on the activity element,
+        NOT the whole document.
+    */
+
+    const inputs =
+        activity.querySelectorAll(
+            "input[data-answer]"
+        );
+
+
+    let allCorrect = true;
+
+
+    inputs.forEach(input=>{
+
+        const expected =
+            normalize(input.dataset.answer);
+
+        const actual =
+            normalize(input.value);
+
+        const correct =
+            actual === expected;
+
+        markInput(
+            input,
+            correct
+        );
+
+        if(!correct){
+            allCorrect = false;
+        }
+
+    });
+
+
+    const feedback =
+        activity.querySelector(".feedback");
+
+
+    if(allCorrect){
+
+        completedActivities.add(activityId);
+
+        updateScore();
+
+
+        feedback.textContent =
+            "✓ Excellent! All answers in this activity are correct!";
+
+        feedback.className =
+            "feedback good";
+
+
+        showModal(
+            true,
+            "Excellent! You completed this activity!"
+        );
+
+
+    }else{
+
+        /*
+            If the student previously completed the activity
+            and then changes an answer incorrectly, remove it
+            from completed status.
+        */
+
+        completedActivities.delete(activityId);
+
+        updateScore();
+
+
+        feedback.textContent =
+            "✗ Some answers are incorrect. Check the red boxes and try again.";
+
+        feedback.className =
+            "feedback bad";
+
+
+        showModal(
+            false,
+            "Check the red answers and try again."
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   ACTIVITY 6 — FUNCTION MACHINE
+============================================================ */
+
+document
+    .querySelectorAll("#activity6 .radio-card")
+    .forEach(card=>{
+
+        card.addEventListener("click",()=>{
+
+            document
+                .querySelectorAll(
+                    "#activity6 .radio-card"
+                )
+                .forEach(c=>{
+                    c.classList.remove(
+                        "selected",
+                        "correct",
+                        "incorrect"
+                    );
+                });
+
+
+            card.classList.add("selected");
+
+            selectedMachine =
+                card.dataset.value;
+
+        });
+
+    });
+
+
+function checkActivity6(){
+
+    const activity =
+        document.getElementById("activity6");
+
+    const feedback =
+        activity.querySelector(".feedback");
+
+
+    document
+        .querySelectorAll("#activity6 .radio-card")
+        .forEach(card=>{
+            card.classList.remove(
+                "correct",
+                "incorrect"
+            );
+        });
+
+
+    if(selectedMachine === null){
+
+        feedback.textContent =
+            "✗ Please choose a function machine first.";
+
+        feedback.className =
+            "feedback bad";
+
+        showModal(
+            false,
+            "Choose Machine 1, 2, or 3 first!"
+        );
+
+        return;
+    }
+
+
+    if(selectedMachine === "2"){
+
+        document
+            .querySelector(
+                '#activity6 .radio-card[data-value="2"]'
+            )
+            .classList.add("correct");
+
+
+        completedActivities.add("activity6");
+
+        updateScore();
+
+
+        feedback.textContent =
+            "✓ Correct! Machine 2 multiplies by 10.";
+
+        feedback.className =
+            "feedback good";
+
+
+        showModal(
+            true,
+            "Correct! 15p × 10 = 150p = £1.50."
+        );
+
+
+    }else{
+
+        document
+            .querySelector(
+                `#activity6 .radio-card[data-value="${selectedMachine}"]`
+            )
+            .classList.add("incorrect");
+
+
+        completedActivities.delete("activity6");
+
+        updateScore();
+
+
+        feedback.textContent =
+            "✗ Not quite. Look carefully at the pence-to-pounds conversion.";
+
+        feedback.className =
+            "feedback bad";
+
+
+        showModal(
+            false,
+            "Remember: £1 = 100p. Which machine uses ×10?"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   GENERATE 50 COUNTERS
+============================================================ */
+
+function createCounters(){
+
+    const container =
+        document.getElementById("counterArray");
+
+    for(let i=0;i<50;i++){
+
+        const counter =
+            document.createElement("div");
+
+        counter.className =
+            "counter";
+
+        container.appendChild(counter);
+
+    }
+
+}
+
+
+/* ============================================================
+   GENERATE 100-SQUARE BASE TEN FLAT
+============================================================ */
+
+function createHundredFlat(){
+
+    const flat =
+        document.getElementById("hundredFlat");
+
+    for(let i=0;i<100;i++){
+
+        const square =
+            document.createElement("span");
+
+        flat.appendChild(square);
+
+    }
+
+}
+
+
+/* ============================================================
+   CREATE TEN ROD
+============================================================ */
+
+function createRod(){
+
+    const rod =
+        document.createElement("div");
+
+    rod.className =
+        "rod";
+
+
+    for(let i=0;i<10;i++){
+
+        const segment =
+            document.createElement("span");
+
+        rod.appendChild(segment);
+
+    }
+
+    return rod;
+
+}
+
+
+function createRods(){
+
+    const container =
+        document.getElementById("fourRods");
+
+
+    for(let i=0;i<4;i++){
+
+        container.appendChild(
+            createRod()
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   GENERATE 24 ORANGES
+============================================================ */
+
+function createOranges(){
+
+    const container =
+        document.getElementById("orangeArray");
+
+
+    /*
+        6 rows × 4 oranges = 24.
+    */
+
+    for(let row=0;row<6;row++){
+
+        for(let col=0;col<4;col++){
+
+            const orange =
+                document.createElement("div");
+
+            orange.className =
+                "orange";
+
+            container.appendChild(orange);
+
+        }
+
+    }
+
+}
+
+
+/* ============================================================
+   MODAL OUTSIDE CLICK
+============================================================ */
+
+document
+    .getElementById("feedbackModal")
+    .addEventListener("click",event=>{
+
+        if(
+            event.target.id ===
+            "feedbackModal"
+        ){
+
+            closeModal();
+
+        }
+
+    });
+
+
+/* ============================================================
+   ESCAPE TO CLOSE MODAL
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(event.key === "Escape"){
+            closeModal();
+        }
+
+    }
+);
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+createCounters();
+
+createHundredFlat();
+
+createRods();
+
+createOranges();
+
+updateScore();
+
+</script>
+
+</body>
+</html>

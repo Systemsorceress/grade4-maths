@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>9 Times Table Adventure</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap');
+
+:root{
+    --green:#9fd8a5;
+    --green-dark:#4f9c62;
+    --green-deep:#39794b;
+    --green-light:#eaf7e9;
+
+    --yellow:#f7dc70;
+    --yellow-light:#fff7cf;
+
+    --cream:#fffdf5;
+    --white:#ffffff;
+
+    --ink:#27362c;
+    --muted:#718075;
+
+    --red:#e87373;
+    --red-light:#fff0f0;
+
+    --border:#dfe8dc;
+
+    --shadow:
+        0 10px 28px rgba(50,80,55,.10);
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+
+    background:
+        radial-gradient(
+            circle at 4% 4%,
+            #e4f6df 0 11%,
+            transparent 12%
+        ),
+        radial-gradient(
+            circle at 96% 3%,
+            #fff0a7 0 10%,
+            transparent 11%
+        ),
+        var(--cream);
+
+    color:var(--ink);
+
+    font-family:
+        Nunito,
+        Arial,
+        sans-serif;
+}
+
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    max-width:1450px;
+    margin:auto;
+    padding:20px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:18px;
+
+    margin-bottom:20px;
+}
+
+.title h1{
+    margin:0;
+
+    font-size:
+        clamp(30px,4vw,50px);
+
+    line-height:1;
+}
+
+.subtitle{
+    margin-top:7px;
+
+    color:var(--muted);
+
+    font-weight:800;
+}
+
+.score{
+    background:white;
+
+    border:2px solid var(--border);
+
+    border-radius:18px;
+
+    padding:11px 17px;
+
+    font-weight:900;
+
+    white-space:nowrap;
+
+    box-shadow:var(--shadow);
+}
+
+.score span{
+    color:var(--green-dark);
+
+    font-size:1.3rem;
+}
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.lesson-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:18px;
+}
+
+.card{
+    background:
+        rgba(255,255,255,.97);
+
+    border:2px solid var(--border);
+
+    border-radius:24px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+}
+
+.card.full{
+    grid-column:1 / -1;
+}
+
+.card h2{
+    margin:0 0 5px;
+
+    font-size:22px;
+}
+
+.instructions{
+    margin-bottom:15px;
+
+    color:var(--muted);
+
+    font-weight:700;
+}
+
+.feedback{
+    min-height:25px;
+
+    margin-top:9px;
+
+    font-weight:900;
+}
+
+.good{
+    color:var(--green-dark);
+}
+
+.bad{
+    color:var(--red);
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.answer{
+    width:65px;
+
+    height:42px;
+
+    border:
+        2px solid
+        #d5ded1;
+
+    border-radius:10px;
+
+    background:white;
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    outline:none;
+}
+
+.answer:focus{
+    border-color:var(--green-dark);
+}
+
+.answer.correct{
+    border-color:var(--green-dark);
+
+    background:var(--green-light);
+}
+
+.answer.wrong{
+    border-color:var(--red);
+
+    background:var(--red-light);
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.check{
+    border:0;
+
+    background:var(--green-dark);
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:10px 17px;
+
+    font-weight:900;
+
+    margin-top:10px;
+
+    transition:.15s;
+}
+
+.check:hover{
+    transform:translateY(-2px);
+
+    background:var(--green-deep);
+}
+
+.check:active{
+    transform:translateY(0);
+}
+
+/* =========================================================
+   TASK 1 — SEQUENCE
+========================================================= */
+
+.sequence{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    flex-wrap:wrap;
+
+    margin:18px 0;
+}
+
+.sequence-box{
+    min-width:75px;
+
+    height:54px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:13px;
+
+    border:2px solid #cddac9;
+
+    background:var(--green-light);
+
+    font-size:20px;
+
+    font-weight:900;
+}
+
+.sequence-box input{
+    width:65px;
+
+    height:40px;
+
+    border:2px solid #d1dbce;
+
+    border-radius:9px;
+
+    text-align:center;
+
+    font-weight:900;
+
+    font-size:18px;
+}
+
+.sequence-arrow{
+    font-size:22px;
+
+    font-weight:900;
+
+    color:var(--green-dark);
+}
+
+/* =========================================================
+   TASK 2 — MULTIPLES GRID
+========================================================= */
+
+.multiple-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:10px;
+
+    max-width:620px;
+
+    margin:18px auto;
+}
+
+.multiple-number{
+    aspect-ratio:1.45;
+
+    border:
+        3px solid
+        var(--border);
+
+    border-radius:13px;
+
+    background:white;
+
+    color:var(--ink);
+
+    font-size:18px;
+
+    font-weight:900;
+
+    transition:.13s;
+}
+
+.multiple-number:hover{
+    transform:translateY(-2px);
+
+    border-color:var(--green);
+}
+
+.multiple-number.selected{
+    background:var(--yellow-light);
+
+    border-color:#d3b934;
+}
+
+.multiple-number.correct{
+    background:var(--green-light);
+
+    border-color:var(--green-dark);
+
+    color:var(--green-deep);
+}
+
+.multiple-number.wrong{
+    background:var(--red-light);
+
+    border-color:var(--red);
+}
+
+/* =========================================================
+   TASK 3 — ANNIE
+========================================================= */
+
+.annie{
+    background:
+        linear-gradient(
+            135deg,
+            var(--yellow-light),
+            #fffdf2
+        );
+
+    border:2px dashed #ddc45d;
+
+    border-radius:18px;
+
+    padding:17px;
+
+    margin:15px 0;
+}
+
+.annie-title{
+    text-align:center;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    color:var(--green-deep);
+
+    margin-bottom:12px;
+}
+
+.annie-equation{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    flex-wrap:wrap;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    margin:10px 0;
+}
+
+.annie-equation input{
+    width:60px;
+
+    height:40px;
+
+    border:2px solid #d5ded1;
+
+    border-radius:9px;
+
+    text-align:center;
+
+    font-weight:900;
+
+    font-size:17px;
+}
+
+/* =========================================================
+   TASK 4 — WORD PROBLEMS
+========================================================= */
+
+.problem{
+    background:
+        var(--green-light);
+
+    border:
+        2px solid
+        #c7e4c8;
+
+    border-radius:17px;
+
+    padding:15px;
+
+    margin-bottom:14px;
+
+    font-weight:800;
+
+    line-height:1.5;
+}
+
+.problem strong{
+    color:var(--green-deep);
+}
+
+.problem-answer{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    margin-top:12px;
+
+    font-weight:900;
+}
+
+/* =========================================================
+   TASK 5 — MATCHING
+========================================================= */
+
+.match-grid{
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:22px;
+}
+
+.match-heading{
+    text-align:center;
+
+    font-weight:900;
+
+    color:var(--green-deep);
+
+    margin-bottom:8px;
+}
+
+.match-column{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:9px;
+}
+
+.match-card{
+    width:100%;
+
+    border:
+        3px solid
+        var(--border);
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:13px;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    transition:.15s;
+}
+
+.match-card:hover{
+    transform:translateY(-2px);
+
+    border-color:var(--green);
+}
+
+.match-card.selected{
+    background:var(--yellow-light);
+
+    border-color:#d2b83c;
+}
+
+.match-card.matched{
+    background:var(--green-light);
+
+    border-color:var(--green-dark);
+
+    color:var(--green-deep);
+
+    cursor:default;
+}
+
+/* =========================================================
+   SCRATCHPAD
+========================================================= */
+
+.scratch-toggle{
+    position:fixed;
+
+    right:18px;
+    bottom:18px;
+
+    z-index:1000;
+
+    border:0;
+
+    background:var(--green-dark);
+
+    color:white;
+
+    border-radius:18px;
+
+    padding:13px 18px;
+
+    font-weight:900;
+
+    box-shadow:
+        0 10px 30px
+        rgba(45,90,55,.3);
+
+    transition:.15s;
+}
+
+.scratch-toggle:hover{
+    transform:translateY(-3px);
+}
+
+.scratch{
+    position:fixed;
+
+    right:18px;
+    bottom:76px;
+
+    width:
+        min(
+            460px,
+            calc(100vw - 36px)
+        );
+
+    background:white;
+
+    border:
+        2px solid
+        var(--border);
+
+    border-radius:21px;
+
+    padding:13px;
+
+    z-index:999;
+
+    box-shadow:
+        0 20px 55px
+        rgba(30,55,35,.25);
+
+    display:none;
+}
+
+.scratch.open{
+    display:block;
+}
+
+.scratch-title{
+    font-weight:900;
+
+    margin-bottom:9px;
+}
+
+.scratch-tools{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:9px;
+}
+
+.scratch-tools button{
+    border:
+        2px solid
+        #d9e1d5;
+
+    background:white;
+
+    border-radius:9px;
+
+    padding:7px 10px;
+
+    font-weight:900;
+}
+
+.scratch-tools button.active{
+    background:var(--yellow-light);
+
+    border-color:#d4b938;
+}
+
+#colourPicker{
+    width:43px;
+
+    height:34px;
+
+    padding:2px;
+
+    border:
+        2px solid
+        #d9e1d5;
+
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+/*
+THE IMPORTANT CANVAS SETTINGS.
+
+touch-action:none means:
+mouse dragging = drawing
+finger dragging = drawing
+stylus dragging = drawing
+
+instead of the browser scrolling the page.
+*/
+
+#scratchCanvas{
+    display:block;
+
+    width:100%;
+
+    height:260px;
+
+    border:
+        2px dashed
+        #cad7c6;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            #edf2ea 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            #edf2ea 1px,
+            transparent 1px
+        );
+
+    background-size:25px 25px;
+
+    touch-action:none;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+    -webkit-touch-callout:none;
+
+    cursor:crosshair;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+
+    top:18px;
+
+    transform:
+        translate(-50%,-150%);
+
+    background:var(--ink);
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:30px;
+
+    font-weight:900;
+
+    z-index:3000;
+
+    transition:.3s;
+}
+
+.toast.show{
+    transform:
+        translate(-50%,0);
+}
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti{
+    position:fixed;
+
+    top:-20px;
+
+    width:9px;
+
+    height:14px;
+
+    z-index:4000;
+
+    animation:
+        fall 1.4s linear forwards;
+}
+
+@keyframes fall{
+
+    to{
+        transform:
+            translateY(110vh)
+            rotate(600deg);
+
+        opacity:0;
+    }
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+    .lesson-grid{
+        grid-template-columns:1fr;
+    }
+
+    .card.full{
+        grid-column:auto;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .app{
+        padding:12px;
+    }
+
+    .header{
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .multiple-grid{
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .match-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sequence-box{
+        min-width:64px;
+    }
+
+    .scratch{
+        right:10px;
+
+        width:
+            calc(100vw - 20px);
+
+        bottom:72px;
+    }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="title">
+
+        <h1>🌿 9 Times Table Adventure!</h1>
+
+        <div class="subtitle">
+            Count in 9s • Find multiples • Partition • Solve!
+        </div>
+
+    </div>
+
+    <div class="score">
+        ⭐ Score:
+        <span id="score">0</span>
+    </div>
+
+</header>
+
+
+<main class="lesson-grid">
+
+
+<!-- =====================================================
+TASK 1
+===================================================== -->
+
+<section class="card">
+
+<h2>🔢 1. Count in 9s</h2>
+
+<div class="instructions">
+Complete the sequence. Remember: add 9 each time!
+</div>
+
+<div
+    class="sequence"
+    id="sequence"
+></div>
+
+<button
+    class="check"
+    id="sequenceCheck"
+>
+Check Sequence
+</button>
+
+<div
+    class="feedback"
+    id="sequenceFeedback"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+TASK 2
+===================================================== -->
+
+<section class="card">
+
+<h2>🌟 2. Find the Multiples of 9</h2>
+
+<div class="instructions">
+Click every number that is a multiple of 9.
+</div>
+
+<div
+    class="multiple-grid"
+    id="multipleGrid"
+></div>
+
+<button
+    class="check"
+    id="multipleCheck"
+>
+Check Multiples
+</button>
+
+<div
+    class="feedback"
+    id="multipleFeedback"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+TASK 3
+===================================================== -->
+
+<section class="card">
+
+<h2>🧩 3. Annie's Partitioning Method</h2>
+
+<div class="instructions">
+Annie knows that 9 × n is the same as 10 × n − n.
+</div>
+
+<div class="annie">
+
+<div class="annie-title">
+9 × n = 10 × n − n
+</div>
+
+
+<div class="annie-equation">
+
+9 × 3
+
+=
+
+10 ×
+
+<input
+    id="a1"
+    class="answer"
+    type="number"
+>
+
+−
+
+<input
+    id="a2"
+    class="answer"
+    type="number"
+>
+
+=
+
+<input
+    id="a3"
+    class="answer"
+    type="number"
+>
+
+</div>
+
+
+<div class="annie-equation">
+
+9 × 7
+
+=
+
+10 ×
+
+<input
+    id="b1"
+    class="answer"
+    type="number"
+>
+
+−
+
+<input
+    id="b2"
+    class="answer"
+    type="number"
+>
+
+=
+
+<input
+    id="b3"
+    class="answer"
+    type="number"
+>
+
+</div>
+
+
+<div class="annie-equation">
+
+9 × 8
+
+=
+
+10 ×
+
+<input
+    id="c1"
+    class="answer"
+    type="number"
+>
+
+−
+
+<input
+    id="c2"
+    class="answer"
+    type="number"
+>
+
+=
+
+<input
+    id="c3"
+    class="answer"
+    type="number"
+>
+
+</div>
+
+</div>
+
+<button
+    class="check"
+    id="annieCheck"
+>
+Check Annie's Method
+</button>
+
+<div
+    class="feedback"
+    id="annieFeedback"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+TASK 4
+===================================================== -->
+
+<section class="card">
+
+<h2>📚 4. Word Problems</h2>
+
+<div class="instructions">
+Read carefully. Use division to solve each problem.
+</div>
+
+
+<div class="problem">
+
+<strong>Problem A</strong>
+
+<br><br>
+
+Mrs Trent has 36 boxes of pencils.
+She shares them equally between
+9 classes.
+
+<br><br>
+
+How many boxes of pencils does
+each class get?
+
+<div class="problem-answer">
+
+<input
+    id="problemA"
+    class="answer"
+    type="number"
+>
+
+boxes
+
+</div>
+
+</div>
+
+
+<div class="problem">
+
+<strong>Problem B</strong>
+
+<br><br>
+
+Tommy packs 72 eggs into boxes.
+Each box contains 9 eggs.
+
+<br><br>
+
+How many boxes does he need?
+
+<div class="problem-answer">
+
+<input
+    id="problemB"
+    class="answer"
+    type="number"
+>
+
+boxes
+
+</div>
+
+</div>
+
+
+<button
+    class="check"
+    id="problemCheck"
+>
+Check Answers
+</button>
+
+<div
+    class="feedback"
+    id="problemFeedback"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+TASK 5
+===================================================== -->
+
+<section class="card full">
+
+<h2>🔄 5. Match the Inverse Operations</h2>
+
+<div class="instructions">
+Choose a multiplication fact on the left.
+Then choose its matching division fact on the right.
+</div>
+
+<div class="match-grid">
+
+<div>
+
+<div class="match-heading">
+Multiplication
+</div>
+
+<div
+    class="match-column"
+    id="multiplicationColumn"
+></div>
+
+</div>
+
+
+<div>
+
+<div class="match-heading">
+Inverse Division
+</div>
+
+<div
+    class="match-column"
+    id="divisionColumn"
+></div>
+
+</div>
+
+</div>
+
+<div
+    class="feedback"
+    id="matchFeedback"
+></div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+SCRATCHPAD
+===================================================== -->
+
+<button
+    class="scratch-toggle"
+    id="scratchToggle"
+>
+✏️ Scratchpad
+</button>
+
+
+<div
+    class="scratch"
+    id="scratch"
+>
+
+<div class="scratch-title">
+📝 Digital Whiteboard
+</div>
+
+<div class="scratch-tools">
+
+<button
+    id="pen"
+    class="active"
+>
+✏️ Pen
+</button>
+
+<button
+    id="eraser"
+>
+🧽 Eraser
+</button>
+
+<input
+    id="colourPicker"
+    type="color"
+    value="#27362c"
+    title="Choose pen colour"
+>
+
+<button
+    id="clear"
+>
+🗑️ Clear
+</button>
+
+</div>
+
+
+<canvas
+    id="scratchCanvas"
+></canvas>
+
+</div>
+
+
+<div
+    class="toast"
+    id="toast"
+>
+Correct! 🎉
+</div>
+
+
+<script>
+
+/* =========================================================
+GLOBAL GAME FUNCTIONS
+========================================================= */
+
+let score=0;
+
+function addScore(amount=1){
+
+    score += amount;
+
+    document
+        .getElementById("score")
+        .textContent=score;
+
+}
+
+
+function feedback(
+    id,
+    message,
+    correct
+){
+
+    const element =
+        document.getElementById(id);
+
+    element.textContent=message;
+
+    element.className =
+        "feedback "+
+        (
+            correct
+            ? "good"
+            : "bad"
+        );
+
+}
+
+
+function celebrate(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+
+    const colours=[
+        "#9fd8a5",
+        "#f7dc70",
+        "#73bb7f",
+        "#ffe99b",
+        "#c9eacb"
+    ];
+
+
+    for(
+        let i=0;
+        i<28;
+        i++
+    ){
+
+        const piece =
+            document.createElement("div");
+
+        piece.className="confetti";
+
+        piece.style.left =
+            Math.random()*100+
+            "vw";
+
+        piece.style.background =
+            colours[
+                i%colours.length
+            ];
+
+        piece.style.animationDelay =
+            Math.random()*.3+
+            "s";
+
+        document.body.appendChild(
+            piece
+        );
+
+        setTimeout(
+            ()=>piece.remove(),
+            1600
+        );
+
+    }
+
+
+    setTimeout(
+        ()=>toast.classList.remove("show"),
+        1400
+    );
+
+}
+
+
+/* =========================================================
+TASK 1 — SEQUENCE
+========================================================= */
+
+const sequenceValues=[
+    18,
+    27,
+    null,
+    45,
+    54,
+    null,
+    72,
+    81,
+    null,
+    null,
+    108
+];
+
+const sequenceAnswers=[
+    36,
+    63,
+    90,
+    99
+];
+
+const sequence =
+    document.getElementById(
+        "sequence"
+    );
+
+
+let blankIndex=0;
+
+
+sequenceValues.forEach(
+    value=>{
+
+        if(value===null){
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+            box.className=
+                "sequence-box";
+
+            box.innerHTML=`
+                <input
+                    type="number"
+                    class="sequence-input"
+                    data-answer="${sequenceAnswers[blankIndex]}"
+                >
+            `;
+
+            sequence.appendChild(box);
+
+            blankIndex++;
+
+        }else{
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+            box.className=
+                "sequence-box";
+
+            box.textContent=value;
+
+            sequence.appendChild(box);
+
+        }
+
+    }
+);
+
+
+document
+    .getElementById(
+        "sequenceCheck"
+    )
+    .onclick=()=>{
+
+        const inputs =
+            document.querySelectorAll(
+                ".sequence-input"
+            );
+
+        let correct=0;
+
+
+        inputs.forEach(input=>{
+
+            const ok =
+                Number(input.value) ===
+                Number(input.dataset.answer);
+
+
+            input.classList.toggle(
+                "correct",
+                ok
+            );
+
+            input.classList.toggle(
+                "wrong",
+                !ok
+            );
+
+
+            if(ok)
+                correct++;
+
+        });
+
+
+        feedback(
+            "sequenceFeedback",
+
+            `${correct}/${inputs.length} correct!`,
+
+            correct===inputs.length
+        );
+
+
+        if(
+            correct===
+            inputs.length
+        ){
+
+            addScore(2);
+
+            celebrate(
+                "Fantastic counting in 9s! 🔢"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+TASK 2 — MULTIPLES
+========================================================= */
+
+const multipleNumbers=[
+    54,
+    108,
+    18,
+    24,
+    9,
+    67,
+    72,
+    37,
+    45,
+    81,
+    31,
+    90,
+    56,
+    27,
+    64
+];
+
+
+const multipleGrid =
+    document.getElementById(
+        "multipleGrid"
+    );
+
+
+multipleNumbers.forEach(
+    number=>{
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+        button.className=
+            "multiple-number";
+
+        button.textContent=
+            number;
+
+        button.dataset.number=
+            number;
+
+
+        button.onclick=()=>{
+
+            button.classList.toggle(
+                "selected"
+            );
+
+        };
+
+
+        multipleGrid.appendChild(
+            button
+        );
+
+    }
+);
+
+
+document
+    .getElementById(
+        "multipleCheck"
+    )
+    .onclick=()=>{
+
+        const buttons =
+            document.querySelectorAll(
+                ".multiple-number"
+            );
+
+        let allCorrect=true;
+
+        buttons.forEach(
+            button=>{
+
+                const number =
+                    Number(
+                        button.dataset.number
+                    );
+
+                const shouldSelect =
+                    number%9===0;
+
+                const selected =
+                    button.classList.contains(
+                        "selected"
+                    );
+
+
+                button.classList.remove(
+                    "correct",
+                    "wrong"
+                );
+
+
+                if(shouldSelect){
+
+                    button.classList.add(
+                        "correct"
+                    );
+
+                }
+
+
+                if(
+                    shouldSelect !==
+                    selected
+                ){
+
+                    button.classList.add(
+                        "wrong"
+                    );
+
+                    allCorrect=false;
+
+                }
+
+            }
+        );
+
+
+        feedback(
+            "multipleFeedback",
+
+            allCorrect
+            ? "Perfect! You found every multiple of 9!"
+            : "Some numbers need changing. Remember: multiples of 9 are 9, 18, 27, 36, 45...",
+
+            allCorrect
+        );
+
+
+        if(allCorrect){
+
+            addScore(2);
+
+            celebrate(
+                "Multiples of 9 mastered! 🌟"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+TASK 3 — ANNIE
+========================================================= */
+
+const annieAnswers=[
+    ["a1",3],
+    ["a2",3],
+    ["a3",27],
+
+    ["b1",7],
+    ["b2",7],
+    ["b3",63],
+
+    ["c1",8],
+    ["c2",8],
+    ["c3",72]
+];
+
+
+document
+    .getElementById(
+        "annieCheck"
+    )
+    .onclick=()=>{
+
+        let correct=0;
+
+
+        annieAnswers.forEach(
+            ([id,answer])=>{
+
+                const input =
+                    document.getElementById(
+                        id
+                    );
+
+                const ok =
+                    Number(input.value)===
+                    answer;
+
+
+                input.classList.toggle(
+                    "correct",
+                    ok
+                );
+
+                input.classList.toggle(
+                    "wrong",
+                    !ok
+                );
+
+
+                if(ok)
+                    correct++;
+
+            }
+        );
+
+
+        feedback(
+            "annieFeedback",
+
+            `${correct}/${annieAnswers.length} correct!`,
+
+            correct===
+            annieAnswers.length
+        );
+
+
+        if(
+            correct===
+            annieAnswers.length
+        ){
+
+            addScore(2);
+
+            celebrate(
+                "Annie's method mastered! 🧩"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+TASK 4 — WORD PROBLEMS
+========================================================= */
+
+document
+    .getElementById(
+        "problemCheck"
+    )
+    .onclick=()=>{
+
+        const answers=[
+            [
+                "problemA",
+                4
+            ],
+            [
+                "problemB",
+                8
+            ]
+        ];
+
+
+        let correct=0;
+
+
+        answers.forEach(
+            ([id,answer])=>{
+
+                const input =
+                    document.getElementById(
+                        id
+                    );
+
+                const ok =
+                    Number(input.value)===
+                    answer;
+
+
+                input.classList.toggle(
+                    "correct",
+                    ok
+                );
+
+                input.classList.toggle(
+                    "wrong",
+                    !ok
+                );
+
+
+                if(ok)
+                    correct++;
+
+            }
+        );
+
+
+        feedback(
+            "problemFeedback",
+
+            `${correct}/2 correct!`,
+
+            correct===2
+        );
+
+
+        if(correct===2){
+
+            addScore(2);
+
+            celebrate(
+                "Excellent problem solving! 📚"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+TASK 5 — INVERSE MATCHING
+========================================================= */
+
+const pairs=[
+    {
+        multiplication:"7 × 9 = 63",
+        division:"63 ÷ 9 = 7"
+    },
+
+    {
+        multiplication:"8 × 9 = 72",
+        division:"72 ÷ 9 = 8"
+    },
+
+    {
+        multiplication:"6 × 9 = 54",
+        division:"54 ÷ 9 = 6"
+    },
+
+    {
+        multiplication:"5 × 9 = 45",
+        division:"45 ÷ 9 = 5"
+    },
+
+    {
+        multiplication:"9 × 9 = 81",
+        division:"81 ÷ 9 = 9"
+    }
+];
+
+
+const multiplicationColumn =
+    document.getElementById(
+        "multiplicationColumn"
+    );
+
+const divisionColumn =
+    document.getElementById(
+        "divisionColumn"
+    );
+
+
+pairs.forEach(
+    (pair,index)=>{
+
+        const left =
+            document.createElement(
+                "button"
+            );
+
+        left.className=
+            "match-card";
+
+        left.textContent=
+            pair.multiplication;
+
+        left.dataset.index=
+            index;
+
+        multiplicationColumn.appendChild(
+            left
+        );
+
+
+        const right =
+            document.createElement(
+                "button"
+            );
+
+        right.className=
+            "match-card";
+
+        right.textContent=
+            pair.division;
+
+        right.dataset.index=
+            index;
+
+        divisionColumn.appendChild(
+            right
+        );
+
+    }
+);
+
+
+let selectedLeft=null;
+
+let matched=0;
+
+
+document
+    .querySelectorAll(
+        "#multiplicationColumn .match-card"
+    )
+    .forEach(
+        card=>{
+
+            card.onclick=()=>{
+
+                if(
+                    card.classList.contains(
+                        "matched"
+                    )
+                )
+                    return;
+
+
+                document
+                    .querySelectorAll(
+                        "#multiplicationColumn .match-card"
+                    )
+                    .forEach(
+                        c =>
+                            c.classList.remove(
+                                "selected"
+                            )
+                    );
+
+
+                card.classList.add(
+                    "selected"
+                );
+
+
+                selectedLeft =
+                    Number(
+                        card.dataset.index
+                    );
+
+            };
+
+        }
+    );
+
+
+document
+    .querySelectorAll(
+        "#divisionColumn .match-card"
+    )
+    .forEach(
+        card=>{
+
+            card.onclick=()=>{
+
+                if(
+                    selectedLeft===null
+                )
+                    return;
+
+
+                const rightIndex =
+                    Number(
+                        card.dataset.index
+                    );
+
+
+                if(
+                    selectedLeft===
+                    rightIndex
+                ){
+
+                    const left =
+                        document.querySelector(
+                            `#multiplicationColumn .match-card[data-index="${selectedLeft}"]`
+                        );
+
+
+                    left.classList.remove(
+                        "selected"
+                    );
+
+                    left.classList.add(
+                        "matched"
+                    );
+
+                    card.classList.add(
+                        "matched"
+                    );
+
+
+                    matched++;
+
+                    selectedLeft=null;
+
+
+                    feedback(
+                        "matchFeedback",
+
+                        `${matched}/${pairs.length} pairs matched!`,
+
+                        true
+                    );
+
+
+                    if(
+                        matched===
+                        pairs.length
+                    ){
+
+                        addScore(3);
+
+                        celebrate(
+                            "All inverse pairs matched! 🔄🎉"
+                        );
+
+                    }
+
+                }else{
+
+                    feedback(
+                        "matchFeedback",
+
+                        "That division fact doesn't match. Try another one!",
+
+                        false
+                    );
+
+
+                    card.classList.add(
+                        "selected"
+                    );
+
+
+                    setTimeout(
+                        ()=>{
+                            card.classList.remove(
+                                "selected"
+                            );
+                        },
+                        400
+                    );
+
+                }
+
+            };
+
+        }
+    );
+
+
+/* =========================================================
+SCRATCHPAD
+========================================================= */
+
+const scratch =
+    document.getElementById(
+        "scratch"
+    );
+
+const canvas =
+    document.getElementById(
+        "scratchCanvas"
+    );
+
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+
+let drawing=false;
+
+let activePointerId=null;
+
+let lastX=0;
+
+let lastY=0;
+
+let tool="pen";
+
+let penColour=
+    document.getElementById(
+        "colourPicker"
+    ).value;
+
+
+/*
+Resize canvas correctly.
+
+The CSS width/height and the actual
+canvas resolution are synchronized.
+*/
+
+function resizeCanvas(){
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    let backup=null;
+
+
+    /*
+    Preserve existing drawing.
+    */
+
+    if(
+        canvas.width>0 &&
+        canvas.height>0
+    ){
+
+        backup =
+            document.createElement(
+                "canvas"
+            );
+
+        backup.width =
+            canvas.width;
+
+        backup.height =
+            canvas.height;
+
+
+        backup
+            .getContext("2d")
+            .drawImage(
+                canvas,
+                0,
+                0
+            );
+
+    }
+
+
+    canvas.width =
+        Math.max(
+            1,
+            Math.round(
+                rect.width*dpr
+            )
+        );
+
+
+    canvas.height =
+        Math.max(
+            1,
+            Math.round(
+                rect.height*dpr
+            )
+        );
+
+
+    /*
+    From now on all coordinates are
+    normal CSS pixels.
+    */
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    ctx.lineCap="round";
+
+    ctx.lineJoin="round";
+
+
+    /*
+    Restore previous drawing.
+    */
+
+    if(backup){
+
+        ctx.drawImage(
+            backup,
+            0,
+            0,
+            backup.width/dpr,
+            backup.height/dpr
+        );
+
+    }
+
+}
+
+
+/*
+Get pointer position relative
+to canvas.
+*/
+
+function getPosition(e){
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    return{
+
+        x:
+            e.clientX -
+            rect.left,
+
+        y:
+            e.clientY -
+            rect.top
+
+    };
+
+}
+
+
+/*
+CRITICAL TOUCH/STYLUS FIX.
+
+Without this, mobile browsers can
+interpret drawing as scrolling.
+*/
+
+canvas.style.touchAction=
+    "none";
+
+
+/*
+START DRAWING
+
+Supports:
+Mouse
+Finger
+Stylus
+Pen tablet
+*/
+
+canvas.addEventListener(
+    "pointerdown",
+    function(e){
+
+        /*
+        Ignore right-click.
+        */
+
+        if(
+            e.pointerType==="mouse" &&
+            e.button!==0
+        ){
+
+            return;
+
+        }
+
+
+        drawing=true;
+
+        activePointerId=
+            e.pointerId;
+
+
+        /*
+        Pointer capture means the
+        canvas continues receiving
+        pointer movement even if the
+        pointer moves very quickly.
+        */
+
+        canvas.setPointerCapture(
+            e.pointerId
+        );
+
+
+        const p =
+            getPosition(e);
+
+
+        lastX=p.x;
+
+        lastY=p.y;
+
+
+        /*
+        Draw an immediate dot.
+
+        This makes stylus taps work too.
+        */
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            tool==="eraser"
+                ? 11
+                : 2,
+            0,
+            Math.PI*2
+        );
+
+
+        ctx.fillStyle=
+            tool==="eraser"
+                ? "#ffffff"
+                : penColour;
+
+
+        ctx.fill();
+
+
+        e.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/*
+CONTINUOUS DRAWING
+*/
+
+canvas.addEventListener(
+    "pointermove",
+    function(e){
+
+        if(!drawing)
+            return;
+
+
+        if(
+            e.pointerId !==
+            activePointerId
+        ){
+
+            return;
+
+        }
+
+
+        const p =
+            getPosition(e);
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            lastX,
+            lastY
+        );
+
+        ctx.lineTo(
+            p.x,
+            p.y
+        );
+
+
+        if(
+            tool==="eraser"
+        ){
+
+            ctx.strokeStyle=
+                "#ffffff";
+
+            ctx.lineWidth=
+                24;
+
+        }else{
+
+            ctx.strokeStyle=
+                penColour;
+
+            ctx.lineWidth=
+                4;
+
+        }
+
+
+        ctx.stroke();
+
+
+        lastX=p.x;
+
+        lastY=p.y;
+
+
+        e.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/*
+STOP DRAWING
+*/
+
+function stopDrawing(e){
+
+    if(
+        e.pointerId !==
+        activePointerId
+    ){
+
+        return;
+
+    }
+
+
+    drawing=false;
+
+    activePointerId=null;
+
+
+    try{
+
+        canvas.releasePointerCapture(
+            e.pointerId
+        );
+
+    }catch(error){}
+
+}
+
+
+canvas.addEventListener(
+    "pointerup",
+    stopDrawing
+);
+
+
+canvas.addEventListener(
+    "pointercancel",
+    stopDrawing
+);
+
+
+/*
+OPEN/CLOSE SCRATCHPAD
+*/
+
+document
+    .getElementById(
+        "scratchToggle"
+    )
+    .onclick=()=>{
+
+        scratch.classList.toggle(
+            "open"
+        );
+
+
+        /*
+        Resize after opening because
+        the canvas may previously have
+        been display:none.
+        */
+
+        if(
+            scratch.classList.contains(
+                "open"
+            )
+        ){
+
+            setTimeout(
+                resizeCanvas,
+                30
+            );
+
+        }
+
+    };
+
+
+/*
+PEN
+*/
+
+document
+    .getElementById(
+        "pen"
+    )
+    .onclick=()=>{
+
+        tool="pen";
+
+
+        document
+            .getElementById(
+                "pen"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+        document
+            .getElementById(
+                "eraser"
+            )
+            .classList.remove(
+                "active"
+            );
+
+    };
+
+
+/*
+ERASER
+*/
+
+document
+    .getElementById(
+        "eraser"
+    )
+    .onclick=()=>{
+
+        tool="eraser";
+
+
+        document
+            .getElementById(
+                "eraser"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+        document
+            .getElementById(
+                "pen"
+            )
+            .classList.remove(
+                "active"
+            );
+
+    };
+
+
+/*
+COLOR PICKER
+*/
+
+document
+    .getElementById(
+        "colourPicker"
+    )
+    .addEventListener(
+        "input",
+        function(){
+
+            penColour=
+                this.value;
+
+
+            tool="pen";
+
+
+            document
+                .getElementById(
+                    "pen"
+                )
+                .classList.add(
+                    "active"
+                );
+
+
+            document
+                .getElementById(
+                    "eraser"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+        }
+    );
+
+
+/*
+CLEAR
+*/
+
+document
+    .getElementById(
+        "clear"
+    )
+    .onclick=()=>{
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+
+        ctx.clearRect(
+            0,
+            0,
+            rect.width,
+            rect.height
+        );
+
+    };
+
+
+/*
+WINDOW RESIZE
+*/
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/*
+INITIAL SETUP
+*/
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        setTimeout(
+            resizeCanvas,
+            100
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>

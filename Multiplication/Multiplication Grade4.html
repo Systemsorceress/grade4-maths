@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Problem Solving - Area & Money Calculations</title>
+  <style>
+    :root {
+      --primary-green: #8cc63f;
+      --border-green: #7ab332;
+      --bg-light: #f9fbf7;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --correct-color: #4caf50;
+      --incorrect-color: #f44336;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #4a7c13;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    /* Card Styling */
+    .card {
+      background: var(--card-bg);
+      border: 3px solid var(--primary-green);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 45px;
+      height: 45px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid var(--primary-green);
+    }
+
+    p, li {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 25px;
+    }
+
+    .input-group {
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 8px 12px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--primary-green);
+    }
+
+    input.correct {
+      border-color: var(--correct-color);
+      background-color: #e8f8e8;
+    }
+
+    input.incorrect {
+      border-color: var(--incorrect-color);
+      background-color: #fde8e8;
+    }
+
+    button.check-btn {
+      margin-top: 15px;
+      background-color: var(--primary-green);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.check-btn:hover {
+      background-color: var(--border-green);
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    /* Floating Scratchpad Styling */
+    #scratchpad-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    #scratchpad-modal {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 360px;
+      height: 440px;
+      background: white;
+      border: 3px solid #ff9800;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      z-index: 1000;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .scratchpad-header {
+      background: #ff9800;
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .scratchpad-header button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .scratchpad-toolbar {
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      background: #fff3e0;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-btn {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .tool-btn.active {
+      background: #ffe0b2;
+      border-color: #ff9800;
+    }
+
+    canvas {
+      flex: 1;
+      cursor: crosshair;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>For Hareem & Hasnain</h1>
+
+  <div class="container">
+    
+    <!-- Task 1 -->
+    <div class="card" id="task1">
+      <div class="card-badge">🏷️</div>
+      <p><strong>Scott has 3 times as much money as Kim.</strong></p>
+      <p>Kim has 3 times as much money as Amir.</p>
+      <p>Kim has <strong>£12</strong>.</p>
+      <p>How much money do Scott and Amir each have?</p>
+
+      <div class="input-group">
+        <label for="scott-money">Scott has £</label>
+        <input type="number" id="scott-money" placeholder="?">
+      </div>
+
+      <div class="input-group">
+        <label for="amir-money">Amir has £</label>
+        <input type="number" id="amir-money" placeholder="?">
+      </div>
+
+      <button class="check-btn" onclick="checkTask1()">Check Answers</button>
+      <div class="feedback" id="feedback1"></div>
+    </div>
+
+    <!-- Task 2 -->
+    <div class="card" id="task2">
+      <div class="card-badge">🍬</div>
+      <p><strong>Bags of sweets cost £3 each.</strong></p>
+      <ul>
+        <li>Ron buys 3 bags.</li>
+        <li>Dani buys 9 bags.</li>
+        <li>Aisha buys 4 bags.</li>
+      </ul>
+
+      <p><strong>1. How much does each person spend?</strong></p>
+      <div class="input-group">
+        <label for="ron-spend">Ron: £</label>
+        <input type="number" id="ron-spend" placeholder="?">
+      </div>
+      <div class="input-group">
+        <label for="dani-spend">Dani: £</label>
+        <input type="number" id="dani-spend" placeholder="?">
+      </div>
+      <div class="input-group">
+        <label for="aisha-spend">Aisha: £</label>
+        <input type="number" id="aisha-spend" placeholder="?">
+      </div>
+
+      <p><strong>2. How much more does Dani spend than Aisha?</strong></p>
+      <div class="input-group">
+        <label for="dani-more">Difference: £</label>
+        <input type="number" id="dani-more" placeholder="?">
+      </div>
+
+      <p><strong>3. How much do the children spend in total?</strong></p>
+      <div class="input-group">
+        <label for="total-spend">Total: £</label>
+        <input type="number" id="total-spend" placeholder="?">
+      </div>
+
+      <button class="check-btn" onclick="checkTask2()">Check Answers</button>
+      <div class="feedback" id="feedback2"></div>
+    </div>
+
+  </div>
+
+  <!-- Scratchpad Controls -->
+  <button id="scratchpad-toggle" onclick="toggleScratchpad()">✏️ Scratchpad</button>
+
+  <div id="scratchpad-modal">
+    <div class="scratchpad-header">
+      <span>Rough Work Scratchpad</span>
+      <button onclick="toggleScratchpad()">✖</button>
+    </div>
+    <div class="scratchpad-toolbar">
+      <button class="tool-btn active" id="pen-btn" onclick="setTool('pen')">✏️ Pen</button>
+      <button class="tool-btn" id="eraser-btn" onclick="setTool('eraser')">🧹 Eraser</button>
+      <input type="color" id="color-picker" value="#000000" onchange="changeColor(this.value)">
+      <button class="tool-btn" onclick="clearCanvas()">🗑️ Clear</button>
+    </div>
+    <canvas id="scratchpad-canvas"></canvas>
+  </div>
+
+  <script>
+    // Task 1 Validation
+    function checkTask1() {
+      const scottInput = document.getElementById('scott-money');
+      const amirInput = document.getElementById('amir-money');
+      const feedback = document.getElementById('feedback1');
+
+      const scottCorrect = parseInt(scottInput.value) === 36;
+      const amirCorrect = parseInt(amirInput.value) === 4;
+
+      scottInput.className = scottCorrect ? 'correct' : 'incorrect';
+      amirInput.className = amirCorrect ? 'correct' : 'incorrect';
+
+      if (scottCorrect && amirCorrect) {
+        feedback.style.color = 'var(--correct-color)';
+        feedback.textContent = '🎉 Brilliant! Scott has £36 (3 × £12) and Amir has £4 (£12 ÷ 3).';
+      } else {
+        feedback.style.color = 'var(--incorrect-color)';
+        feedback.textContent = '❌ Try again! Hint: Scott has 3 times Kim\'s £12, and Kim has 3 times Amir\'s money.';
+      }
+    }
+
+    // Task 2 Validation
+    function checkTask2() {
+      const ron = document.getElementById('ron-spend');
+      const dani = document.getElementById('dani-spend');
+      const aisha = document.getElementById('aisha-spend');
+      const diff = document.getElementById('dani-more');
+      const total = document.getElementById('total-spend');
+      const feedback = document.getElementById('feedback2');
+
+      const ronCorrect = parseInt(ron.value) === 9;
+      const daniCorrect = parseInt(dani.value) === 27;
+      const aishaCorrect = parseInt(aisha.value) === 12;
+      const diffCorrect = parseInt(diff.value) === 15;
+      const totalCorrect = parseInt(total.value) === 48;
+
+      ron.className = ronCorrect ? 'correct' : 'incorrect';
+      dani.className = daniCorrect ? 'correct' : 'incorrect';
+      aisha.className = aishaCorrect ? 'correct' : 'incorrect';
+      diff.className = diffCorrect ? 'correct' : 'incorrect';
+      total.className = totalCorrect ? 'correct' : 'incorrect';
+
+      if (ronCorrect && daniCorrect && aishaCorrect && diffCorrect && totalCorrect) {
+        feedback.style.color = 'var(--correct-color)';
+        feedback.textContent = '🌟 Fantastic work! All calculations are correct!';
+      } else {
+        feedback.style.color = 'var(--incorrect-color)';
+        feedback.textContent = '❌ Some answers need checking. Use the scratchpad to multiply each bag count by £3!';
+      }
+    }
+
+    // Scratchpad Logic
+    const canvas = document.getElementById('scratchpad-canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let tool = 'pen';
+    let currentColor = '#000000';
+
+    function initCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+    }
+
+    function toggleScratchpad() {
+      const modal = document.getElementById('scratchpad-modal');
+      const isVisible = modal.style.display === 'flex';
+      modal.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) {
+        setTimeout(initCanvas, 100);
+      }
+    }
+
+    function setTool(t) {
+      tool = t;
+      document.getElementById('pen-btn').classList.toggle('active', t === 'pen');
+      document.getElementById('eraser-btn').classList.toggle('active', t === 'eraser');
+    }
+
+    function changeColor(color) {
+      currentColor = color;
+      if (tool === 'eraser') setTool('pen');
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function startDrawing(e) {
+      drawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const pos = getPos(e);
+      ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : currentColor;
+      ctx.lineWidth = tool === 'eraser' ? 15 : 3;
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      drawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+  </script>
+</body>
+</html>
